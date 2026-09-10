@@ -91,6 +91,7 @@ export interface HouseholdProfile {
   shoesOff: boolean;
   frequentEntertaining: boolean;
   shortTermRental: boolean;
+  olderAdultConsiderations: boolean;
   accessibilityConsiderations: boolean;
   fragileObjects: boolean;
   plants: boolean;
