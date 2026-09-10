@@ -44,7 +44,7 @@ export const services: ServiceDef[] = [
       "A detailed reset for homes that need more attention, including build-up, edges, and the places routine cleaning tends to pass over.",
     includes: [
       "Everything in a Standard Clean, taken further",
-      "Detail work on edges, corners and trim",
+      "Detail work on edges, corners, and reachable trim",
       "Attention to build-up in kitchen and bath",
       "Hand-detailing of reachable fixtures and surfaces",
       "Careful finishing pass room by room",
@@ -60,10 +60,10 @@ export const services: ServiceDef[] = [
       "An empty-home clean for transitions, whether you are handing keys over or walking into a space that should feel genuinely new.",
     includes: [
       "Whole-home detail clean for an empty or near-empty home",
-      "Interior detail of cabinets and drawers on request",
       "Kitchen and bathroom detailing",
-      "Floors, baseboards and reachable trim",
-      "Final walk-through finish",
+      "Dusting and wiping of reachable surfaces and fixtures",
+      "Vacuuming and mopping of floors",
+      "Final room-by-room finishing pass",
     ],
   },
 ];
