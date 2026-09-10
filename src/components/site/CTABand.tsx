@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
-import { business } from "@/config/business";
 import { Button } from "@/components/ui/button";
+import { business } from "@/config/business";
 
 export function CTABand({
   title = "Ready for a calmer home?",
@@ -11,13 +11,13 @@ export function CTABand({
   intro?: string;
 }) {
   return (
-    <section className="bg-ink text-background">
+    <section className="bg-night text-night-foreground">
       <div className="container-page py-16 md:py-20">
         <div className="max-w-2xl">
-          <h2 className="text-3xl text-background md:text-4xl">{title}</h2>
-          <p className="mt-4 text-base leading-relaxed text-background/75">{intro}</p>
+          <h2 className="text-3xl text-night-foreground md:text-4xl">{title}</h2>
+          <p className="mt-4 text-base leading-relaxed text-night-foreground/75">{intro}</p>
         </div>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button asChild size="lg" variant="secondary">
             <Link to="/booking">Request Service</Link>
           </Button>
@@ -25,7 +25,7 @@ export function CTABand({
             asChild
             size="lg"
             variant="outline"
-            className="border-background/40 bg-transparent text-background hover:bg-background/10 hover:text-background"
+            className="border-night-foreground/40 bg-transparent text-night-foreground hover:bg-night-foreground/10 hover:text-night-foreground"
           >
             <Link to="/quote">Get a Custom Quote</Link>
           </Button>
@@ -33,7 +33,7 @@ export function CTABand({
             asChild
             size="lg"
             variant="ghost"
-            className="text-background hover:bg-background/10 hover:text-background"
+            className="text-night-foreground hover:bg-night-foreground/10 hover:text-night-foreground"
           >
             <a href={business.phoneHref}>Call {business.phoneDisplay}</a>
           </Button>
