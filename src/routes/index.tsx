@@ -15,9 +15,9 @@ import linens from "@/assets/detail-linens.jpg";
 export const Route = createFileRoute("/")({
   head: () =>
     seo({
-      title: "Tranquility Level Cleaning — House Cleaning in Dallas–Fort Worth",
+      title: "Tranquility Level Cleaning | House Cleaning in Dallas-Fort Worth",
       description:
-        "Come home to tranquility. Standard, deep, and move-in/move-out cleaning across Dallas–Fort Worth. Clear pricing from $145, recurring savings up to 20%.",
+        "Come home to tranquility. Standard, deep, and move-in/move-out cleaning across Dallas-Fort Worth with clear pricing from $145 and recurring savings up to 20%.",
       path: "/",
     }),
   component: Home,
@@ -27,7 +27,7 @@ const whyPoints = [
   {
     icon: Leaf,
     title: "A calmer home, not just a cleaner one",
-    body: "We clean with the feel of the room in mind — order, light, and surfaces that invite you to relax when you walk in.",
+    body: "We clean with the feel of the room in mind: order, light, and surfaces that invite you to relax when you walk in.",
   },
   {
     icon: ShieldCheck,
@@ -37,12 +37,12 @@ const whyPoints = [
   {
     icon: Sparkles,
     title: "Detail where it actually shows",
-    body: "Edges, trim, fixtures and the corners routine cleaning tends to pass over — the parts you notice long after we've gone.",
+    body: "Edges, trim, fixtures, and the corners routine cleaning tends to pass over. These are the parts you notice long after we've gone.",
   },
   {
     icon: MessagesSquare,
     title: "Built around your space",
-    body: "Pets, layout, delicate surfaces, product preferences and unusual scope are all discussed up front, not improvised.",
+    body: "Pets, layout, delicate surfaces, product preferences, and unusual scope are discussed up front instead of improvised.",
   },
 ];
 
@@ -67,17 +67,13 @@ const steps = [
 function Home() {
   return (
     <>
-      {/* Hero */}
       <section className="border-b border-border bg-sand">
         <div className="container-page grid gap-10 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16">
           <div>
-            <p className="eyebrow">Dallas–Fort Worth cleaning service</p>
-            <h1 className="mt-4 text-[2.6rem] leading-[1.05] md:text-6xl">
-              Come home to tranquility.
-            </h1>
+            <p className="eyebrow">Dallas-Fort Worth cleaning service</p>
+            <h1 className="mt-4 text-[2.6rem] leading-[1.05] md:text-6xl">Come home to tranquility.</h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Professional cleaning designed to make your home feel lighter and easier to live in
-              — thoughtful, consistent, and shaped around the way you actually use your space.
+              Professional cleaning designed to make your home feel lighter and easier to live in. Thoughtful, consistent, and shaped around the way you actually use your space.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">
@@ -88,9 +84,7 @@ function Home() {
               </Button>
             </div>
             <p className="mt-6 text-sm text-muted-foreground">
-              Standard cleans from{" "}
-              <span className="font-semibold text-ink">{money(services[0].basePrice)}</span> for a
-              standard average 1 bed / 1 bath home · Recurring savings up to 20%
+              Standard cleans from <span className="font-semibold text-ink">{money(services[0].basePrice)}</span> for a standard average 1 bed / 1 bath home. Recurring savings up to 20%.
             </p>
           </div>
 
@@ -103,20 +97,18 @@ function Home() {
               className="aspect-4/3 w-full rounded-xl object-cover shadow-lift"
             />
             <div className="mt-4 rounded-lg border border-border bg-card px-5 py-4 text-sm text-muted-foreground shadow-soft sm:absolute sm:-bottom-8 sm:left-6 sm:mt-0 sm:max-w-xs">
-              <span className="font-semibold text-ink">Serving DFW</span> — Dallas, Fort Worth,
-              Arlington, Plano and surrounding communities.
+              <span className="font-semibold text-ink">Serving DFW:</span> Dallas, Fort Worth, Arlington, Plano, and surrounding communities.
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services */}
       <section className="section">
         <div className="container-page">
           <SectionHeading
             eyebrow="Services"
             title="Cleaning shaped to the moment you're in"
-            intro="Whether it's regular upkeep, a full reset, or a home in transition — each service has a defined scope and an approved starting price."
+            intro="Whether it's regular upkeep, a full reset, or a home in transition, each service has a defined scope and an approved starting price."
           />
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {services.map((service) => (
@@ -126,21 +118,12 @@ function Home() {
                 className="group flex flex-col rounded-xl border border-border bg-card p-7 shadow-soft transition-colors hover:border-moss"
               >
                 <h3 className="text-2xl">{service.name}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                  {service.description}
-                </p>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
                 <p className="mt-6 text-sm font-semibold text-ink">
-                  From {money(service.basePrice)}{" "}
-                  <span className="font-normal text-muted-foreground">
-                    · standard average 1 bed / 1 bath
-                  </span>
+                  From {money(service.basePrice)} <span className="font-normal text-muted-foreground">for a standard average 1 bed / 1 bath</span>
                 </p>
                 <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-moss">
-                  Learn more{" "}
-                  <ArrowRight
-                    className="size-4 transition-transform group-hover:translate-x-1"
-                    aria-hidden="true"
-                  />
+                  Learn more <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </span>
               </Link>
             ))}
@@ -151,23 +134,17 @@ function Home() {
             >
               <h3 className="text-2xl">Commercial / Office Cleaning</h3>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                Offices, suites and light commercial spaces. Always quoted after a consultation —
-                never priced like a residential checkout.
+                Offices, suites, and light commercial spaces. Commercial work is always quoted after a consultation and is never priced like residential checkout.
               </p>
               <p className="mt-6 text-sm font-semibold text-ink">Custom quote</p>
               <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-moss">
-                Request a consultation{" "}
-                <ArrowRight
-                  className="size-4 transition-transform group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
+                Request a consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Why */}
       <section className="section bg-sand">
         <div className="container-page">
           <SectionHeading
@@ -187,7 +164,6 @@ function Home() {
         </div>
       </section>
 
-      {/* How it works */}
       <section className="section">
         <div className="container-page">
           <SectionHeading eyebrow="How it works" title="Three simple steps" />
@@ -203,7 +179,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Pricing */}
       <section className="section bg-sand">
         <div className="container-page">
           <SectionHeading
@@ -217,14 +192,13 @@ function Home() {
         </div>
       </section>
 
-      {/* Recurring savings */}
       <section className="section">
         <div className="container-page grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <SectionHeading
               eyebrow="Recurring service"
               title="Keep it going, and pay less each visit"
-              intro="Recurring savings apply to the service price only — add-ons are always charged at their listed rate."
+              intro="Recurring savings apply to the service price only. Add-ons are always charged at their listed rate."
             />
             <dl className="mt-8 divide-y divide-border rounded-xl border border-border bg-card shadow-soft">
               {frequencies.map((f) => (
@@ -234,10 +208,7 @@ function Home() {
                     <span className="ml-2 text-xs text-moss">{f.note}</span>
                   </dt>
                   <dd className="text-sm text-muted-foreground">
-                    Standard clean{" "}
-                    <span className="font-semibold text-ink">
-                      {money(servicePrice("standard", f.id))}
-                    </span>
+                    Standard clean <span className="font-semibold text-ink">{money(servicePrice("standard", f.id))}</span>
                   </dd>
                 </div>
               ))}
@@ -254,16 +225,13 @@ function Home() {
         </div>
       </section>
 
-      {/* Virtual consultation */}
       <section className="section bg-accent/40">
         <div className="container-page grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
             <p className="eyebrow">Virtual consultation</p>
             <h2 className="mt-3 text-3xl md:text-4xl">Larger, unusual, or partial-home scope?</h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Some homes shouldn't be priced by a calculator. Homes around 3,000 sq ft and larger,
-              partial-home requests, specialty surfaces, and commercial spaces are all reviewed
-              with you directly so the number you get is the number that fits.
+              Some homes should not be priced by a calculator. Homes around 3,000 sq ft and larger, partial-home requests, specialty surfaces, and commercial spaces are reviewed directly so the quote reflects the actual work involved.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
@@ -277,34 +245,26 @@ function Home() {
         </div>
       </section>
 
-      {/* Service area */}
       <section className="section">
         <div className="container-page">
           <SectionHeading
             eyebrow="Service area"
-            title="Across Dallas–Fort Worth"
+            title="Across Dallas-Fort Worth"
             intro="We serve the DFW metroplex and consider surrounding communities on request."
           />
           <ul className="mt-8 flex flex-wrap gap-2">
             {cities.map((city) => (
-              <li
-                key={city}
-                className="rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground/80"
-              >
+              <li key={city} className="rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground/80">
                 {city}
               </li>
             ))}
           </ul>
-          <Link
-            to="/service-area"
-            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline"
-          >
+          <Link to="/service-area" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">
             See the full service area <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         </div>
       </section>
 
-      {/* FAQ preview */}
       <section className="section bg-sand">
         <div className="container-page">
           <SectionHeading eyebrow="Questions" title="Good things to know" />
@@ -319,10 +279,7 @@ function Home() {
               </div>
             ))}
           </div>
-          <Link
-            to="/faq"
-            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline"
-          >
+          <Link to="/faq" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">
             Read all FAQs <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         </div>
