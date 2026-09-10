@@ -1,7 +1,7 @@
 /**
  * Centralized, typed pricing configuration.
  * Base pricing assumes a standard average 1-bedroom / 1-full-bath home.
- * These values are business-approved — do not derive or invent new ones.
+ * These values are business-approved. Do not derive or invent new ones.
  */
 
 export type ServiceId = "standard" | "deep" | "move";
@@ -25,7 +25,7 @@ export const services: ServiceDef[] = [
     basePrice: 145,
     route: "/residential-cleaning",
     description:
-      "Consistent upkeep for a home that already feels cared for — surfaces, floors, kitchen and bath refreshed on a rhythm that suits you.",
+      "Consistent upkeep for a home that already feels cared for. Surfaces, floors, kitchen, and bath are refreshed on a rhythm that suits you.",
     includes: [
       "Kitchen surfaces, exterior of appliances, sink",
       "Bathroom sink, toilet, tub or shower, mirrors",
@@ -41,7 +41,7 @@ export const services: ServiceDef[] = [
     basePrice: 215,
     route: "/deep-cleaning",
     description:
-      "A detailed reset for homes that need more attention — build-up, edges, and the places routine cleaning tends to pass over.",
+      "A detailed reset for homes that need more attention, including build-up, edges, and the places routine cleaning tends to pass over.",
     includes: [
       "Everything in a Standard Clean, taken further",
       "Detail work on edges, corners and trim",
@@ -57,7 +57,7 @@ export const services: ServiceDef[] = [
     basePrice: 235,
     route: "/move-in-move-out-cleaning",
     description:
-      "An empty-home clean for transitions — handing keys over, or walking into a space that feels genuinely new.",
+      "An empty-home clean for transitions, whether you are handing keys over or walking into a space that should feel genuinely new.",
     includes: [
       "Whole-home detail clean for an empty or near-empty home",
       "Interior detail of cabinets and drawers on request",
@@ -83,15 +83,15 @@ export const frequencies: FrequencyDef[] = [
 ];
 
 export function getService(id: ServiceId): ServiceDef {
-  const s = services.find((x) => x.id === id);
-  if (!s) throw new Error(`Unknown service: ${id}`);
-  return s;
+  const service = services.find((item) => item.id === id);
+  if (!service) throw new Error(`Unknown service: ${id}`);
+  return service;
 }
 
 export function getFrequency(id: FrequencyId): FrequencyDef {
-  const f = frequencies.find((x) => x.id === id);
-  if (!f) throw new Error(`Unknown frequency: ${id}`);
-  return f;
+  const frequency = frequencies.find((item) => item.id === id);
+  if (!frequency) throw new Error(`Unknown frequency: ${id}`);
+  return frequency;
 }
 
 /** Discounts apply only to the service subtotal, never to add-ons. */
@@ -100,23 +100,15 @@ export function servicePrice(service: ServiceId, frequency: FrequencyId): number
   return Math.round(base * (1 - getFrequency(frequency).discount));
 }
 
-/* ---------------------------------------------------------------------- */
-/* Add-on matrix                                                           */
-/* ---------------------------------------------------------------------- */
-
 export type AddOnGroup = "scope" | "laundry" | "detail";
 
 export interface AddOnDef {
   id: string;
   name: string;
   group: AddOnGroup;
-  /** Per-service price. A single number means the price is the same everywhere. */
   price: number | Record<ServiceId, number>;
-  /** Quantity-based rather than a yes/no selection. */
   quantity?: boolean;
-  /** Priced from — final amount may need review. */
   startingAt?: boolean;
-  /** Derived from the scope step (room counts) instead of chosen as an extra. */
   derived?: boolean;
   unit?: string;
   note?: string;
@@ -191,7 +183,7 @@ export const addOns: AddOnDef[] = [
   },
   {
     id: "laundry-wdf",
-    name: "Laundry — wash, dry & fold",
+    name: "Laundry: wash, dry & fold",
     group: "laundry",
     price: 20,
     quantity: true,
@@ -199,7 +191,7 @@ export const addOns: AddOnDef[] = [
   },
   {
     id: "laundry-fold",
-    name: "Laundry — fold only",
+    name: "Laundry: fold only",
     group: "laundry",
     price: 13,
     quantity: true,
@@ -233,17 +225,12 @@ export function addOnPrice(addOn: AddOnDef, service: ServiceId): number {
 }
 
 export function getAddOn(id: string): AddOnDef {
-  const a = addOns.find((x) => x.id === id);
-  if (!a) throw new Error(`Unknown add-on: ${id}`);
-  return a;
+  const addOn = addOns.find((item) => item.id === id);
+  if (!addOn) throw new Error(`Unknown add-on: ${id}`);
+  return addOn;
 }
 
-/** Add-ons the customer picks directly (scope rooms are derived from counts). */
-export const selectableAddOns = addOns.filter((a) => !a.derived);
-
-/* ---------------------------------------------------------------------- */
-/* Scope + estimate                                                        */
-/* ---------------------------------------------------------------------- */
+export const selectableAddOns = addOns.filter((addOn) => !addOn.derived);
 
 export const BASE_BEDROOMS = 1;
 export const BASE_FULL_BATHS = 1;
@@ -282,7 +269,6 @@ export interface EstimateInput {
   service: ServiceId;
   frequency: FrequencyId;
   scope: ScopeCounts;
-  /** Selectable add-on id -> quantity (1 for yes/no items). */
   extras: Record<string, number>;
   sqft?: number | null;
   partialHome?: boolean;
@@ -327,23 +313,23 @@ export function buildEstimate(input: EstimateInput): Estimate {
   const serviceSubtotal = servicePrice(input.service, input.frequency);
   const discountAmount = basePrice - serviceSubtotal;
 
-  const s = input.scope;
+  const scope = input.scope;
   const derived: (EstimateLine | null)[] = [
-    line("extra-bedroom", Math.max(0, s.bedrooms - BASE_BEDROOMS), input.service),
-    line("extra-full-bath", Math.max(0, s.fullBaths - BASE_FULL_BATHS), input.service),
-    line("half-bath", s.halfBaths, input.service),
-    line("living-room", s.livingRooms, input.service),
-    line("dining-room", s.diningRooms, input.service),
-    line("office", s.offices, input.service),
-    line("laundry-room", s.laundryRooms, input.service),
+    line("extra-bedroom", Math.max(0, scope.bedrooms - BASE_BEDROOMS), input.service),
+    line("extra-full-bath", Math.max(0, scope.fullBaths - BASE_FULL_BATHS), input.service),
+    line("half-bath", scope.halfBaths, input.service),
+    line("living-room", scope.livingRooms, input.service),
+    line("dining-room", scope.diningRooms, input.service),
+    line("office", scope.offices, input.service),
+    line("laundry-room", scope.laundryRooms, input.service),
   ];
 
   const chosen = Object.entries(input.extras).map(([id, qty]) =>
     line(id, qty, input.service),
   );
 
-  const addOnLines = [...derived, ...chosen].filter((l): l is EstimateLine => l !== null);
-  const addOnTotal = addOnLines.reduce((sum, l) => sum + l.total, 0);
+  const addOnLines = [...derived, ...chosen].filter((item): item is EstimateLine => item !== null);
+  const addOnTotal = addOnLines.reduce((sum, item) => sum + item.total, 0);
 
   const reviewFlags: string[] = [];
   if (input.sqft && input.sqft >= CUSTOM_REVIEW_SQFT) {
@@ -356,7 +342,7 @@ export function buildEstimate(input: EstimateInput): Estimate {
       "Cleaning only part of the home is custom scope and is quoted after a short consultation.",
     );
   }
-  if (addOnLines.some((l) => l.startingAt)) {
+  if (addOnLines.some((item) => item.startingAt)) {
     reviewFlags.push(
       "Some selected items are priced starting at a minimum and may be adjusted after review.",
     );
@@ -371,7 +357,7 @@ export function buildEstimate(input: EstimateInput): Estimate {
     addOnLines,
     addOnTotal,
     total: serviceSubtotal + addOnTotal,
-    hasStartingAt: addOnLines.some((l) => l.startingAt),
+    hasStartingAt: addOnLines.some((item) => item.startingAt),
     reviewFlags,
   };
 }
