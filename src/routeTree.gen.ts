@@ -10,33 +10,167 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as BookingRouteImport } from './routes/booking'
+import { Route as CommercialCleaningRouteImport } from './routes/commercial-cleaning'
+import { Route as DeepCleaningRouteImport } from './routes/deep-cleaning'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as MoveInMoveOutCleaningRouteImport } from './routes/move-in-move-out-cleaning'
+import { Route as QuoteRouteImport } from './routes/quote'
+import { Route as ResidentialCleaningRouteImport } from './routes/residential-cleaning'
+import { Route as ServiceAreaRouteImport } from './routes/service-area'
+import { Route as ServicesRouteImport } from './routes/services'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingRoute = BookingRouteImport.update({
+  id: '/booking',
+  path: '/booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommercialCleaningRoute = CommercialCleaningRouteImport.update({
+  id: '/commercial-cleaning',
+  path: '/commercial-cleaning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeepCleaningRoute = DeepCleaningRouteImport.update({
+  id: '/deep-cleaning',
+  path: '/deep-cleaning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoveInMoveOutCleaningRoute = MoveInMoveOutCleaningRouteImport.update({
+  id: '/move-in-move-out-cleaning',
+  path: '/move-in-move-out-cleaning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuoteRoute = QuoteRouteImport.update({
+  id: '/quote',
+  path: '/quote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResidentialCleaningRoute = ResidentialCleaningRouteImport.update({
+  id: '/residential-cleaning',
+  path: '/residential-cleaning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServiceAreaRoute = ServiceAreaRouteImport.update({
+  id: '/service-area',
+  path: '/service-area',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/booking': typeof BookingRoute
+  '/commercial-cleaning': typeof CommercialCleaningRoute
+  '/deep-cleaning': typeof DeepCleaningRoute
+  '/faq': typeof FaqRoute
+  '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
+  '/quote': typeof QuoteRoute
+  '/residential-cleaning': typeof ResidentialCleaningRoute
+  '/service-area': typeof ServiceAreaRoute
+  '/services': typeof ServicesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/booking': typeof BookingRoute
+  '/commercial-cleaning': typeof CommercialCleaningRoute
+  '/deep-cleaning': typeof DeepCleaningRoute
+  '/faq': typeof FaqRoute
+  '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
+  '/quote': typeof QuoteRoute
+  '/residential-cleaning': typeof ResidentialCleaningRoute
+  '/service-area': typeof ServiceAreaRoute
+  '/services': typeof ServicesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/booking': typeof BookingRoute
+  '/commercial-cleaning': typeof CommercialCleaningRoute
+  '/deep-cleaning': typeof DeepCleaningRoute
+  '/faq': typeof FaqRoute
+  '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
+  '/quote': typeof QuoteRoute
+  '/residential-cleaning': typeof ResidentialCleaningRoute
+  '/service-area': typeof ServiceAreaRoute
+  '/services': typeof ServicesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/booking'
+    | '/commercial-cleaning'
+    | '/deep-cleaning'
+    | '/faq'
+    | '/move-in-move-out-cleaning'
+    | '/quote'
+    | '/residential-cleaning'
+    | '/service-area'
+    | '/services'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/booking'
+    | '/commercial-cleaning'
+    | '/deep-cleaning'
+    | '/faq'
+    | '/move-in-move-out-cleaning'
+    | '/quote'
+    | '/residential-cleaning'
+    | '/service-area'
+    | '/services'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/booking'
+    | '/commercial-cleaning'
+    | '/deep-cleaning'
+    | '/faq'
+    | '/move-in-move-out-cleaning'
+    | '/quote'
+    | '/residential-cleaning'
+    | '/service-area'
+    | '/services'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  BookingRoute: typeof BookingRoute
+  CommercialCleaningRoute: typeof CommercialCleaningRoute
+  DeepCleaningRoute: typeof DeepCleaningRoute
+  FaqRoute: typeof FaqRoute
+  MoveInMoveOutCleaningRoute: typeof MoveInMoveOutCleaningRoute
+  QuoteRoute: typeof QuoteRoute
+  ResidentialCleaningRoute: typeof ResidentialCleaningRoute
+  ServiceAreaRoute: typeof ServiceAreaRoute
+  ServicesRoute: typeof ServicesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +182,91 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking': {
+      id: '/booking'
+      path: '/booking'
+      fullPath: '/booking'
+      preLoaderRoute: typeof BookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/commercial-cleaning': {
+      id: '/commercial-cleaning'
+      path: '/commercial-cleaning'
+      fullPath: '/commercial-cleaning'
+      preLoaderRoute: typeof CommercialCleaningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/deep-cleaning': {
+      id: '/deep-cleaning'
+      path: '/deep-cleaning'
+      fullPath: '/deep-cleaning'
+      preLoaderRoute: typeof DeepCleaningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/move-in-move-out-cleaning': {
+      id: '/move-in-move-out-cleaning'
+      path: '/move-in-move-out-cleaning'
+      fullPath: '/move-in-move-out-cleaning'
+      preLoaderRoute: typeof MoveInMoveOutCleaningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quote': {
+      id: '/quote'
+      path: '/quote'
+      fullPath: '/quote'
+      preLoaderRoute: typeof QuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/residential-cleaning': {
+      id: '/residential-cleaning'
+      path: '/residential-cleaning'
+      fullPath: '/residential-cleaning'
+      preLoaderRoute: typeof ResidentialCleaningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/service-area': {
+      id: '/service-area'
+      path: '/service-area'
+      fullPath: '/service-area'
+      preLoaderRoute: typeof ServiceAreaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  BookingRoute: BookingRoute,
+  CommercialCleaningRoute: CommercialCleaningRoute,
+  DeepCleaningRoute: DeepCleaningRoute,
+  FaqRoute: FaqRoute,
+  MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
+  QuoteRoute: QuoteRoute,
+  ResidentialCleaningRoute: ResidentialCleaningRoute,
+  ServiceAreaRoute: ServiceAreaRoute,
+  ServicesRoute: ServicesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
