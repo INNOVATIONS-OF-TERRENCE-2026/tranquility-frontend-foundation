@@ -50,8 +50,8 @@ export interface StudioRoom {
   priority: RoomPriority;
   focusAreas: FocusArea[];
   notes: string;
-  photoUrl?: string;
-  photoName?: string;
+  photoUrl?: string | undefined;
+  photoName?: string | undefined;
 }
 
 export type StyleId =
