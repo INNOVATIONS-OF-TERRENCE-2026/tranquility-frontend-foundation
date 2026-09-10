@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { business, cities } from "@/config/business";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -24,10 +25,7 @@ function NotFoundComponent() {
           The page may have moved, or the address may be incorrect. Return home or use the main navigation to continue.
         </p>
         <div className="mt-8">
-          <Link
-            to="/"
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
+          <Link to="/" className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
             Return home
           </Link>
         </div>
@@ -63,10 +61,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             Try again
           </button>
-          <a
-            href="/"
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-input bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
-          >
+          <a href="/" className="inline-flex min-h-11 items-center justify-center rounded-md border border-input bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent">
             Return home
           </a>
         </div>
@@ -86,19 +81,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Professional residential, deep, move-in, move-out, and commercial cleaning across Dallas-Fort Worth with clear pricing and custom quote options.",
       },
-      { name: "author", content: "Tranquility Level Cleaning" },
+      { name: "author", content: business.legalName },
       { name: "theme-color", content: "#f6f1e8" },
-      { property: "og:title", content: "Tranquility Level Cleaning" },
-      {
-        property: "og:description",
-        content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth.",
-      },
+      { property: "og:title", content: business.legalName },
+      { property: "og:description", content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: business.legalName },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "manifest", href: "/site.webmanifest" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CleaningService",
+          name: business.legalName,
+          url: "https://tranquility.cleaning",
+          telephone: business.phoneDisplay,
+          email: business.email,
+          areaServed: cities.map((name) => ({ "@type": "City", name })),
+          slogan: business.tagline,
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -110,14 +119,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
+      <head><HeadContent /></head>
       <body>
-        <a
-          href="#main-content"
-          className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-md bg-ink px-4 py-2 text-sm font-semibold text-background transition-transform focus:translate-y-0"
-        >
+        <a href="#main-content" className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-md bg-ink px-4 py-2 text-sm font-semibold text-background transition-transform focus:translate-y-0">
           Skip to content
         </a>
         {children}
