@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Tranquility Level Cleaning — design system.
+ * Tranquility Level Cleaning design system.
  * Warm ivory, soft stone, muted moss, oak and charcoal. All colors in oklch.
  */
 
@@ -115,6 +115,7 @@
   }
 
   body {
+    min-width: 320px;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -147,6 +148,7 @@
   html {
     scroll-behavior: auto;
   }
+
   *,
   *::before,
   *::after {
@@ -156,7 +158,6 @@
   }
 }
 
-/* Editorial eyebrow label */
 @utility eyebrow {
   font-family: var(--font-sans);
   font-size: 0.72rem;
@@ -166,7 +167,6 @@
   color: var(--color-moss);
 }
 
-/* Page section rhythm */
 @utility section {
   padding-block: 4.5rem;
 
