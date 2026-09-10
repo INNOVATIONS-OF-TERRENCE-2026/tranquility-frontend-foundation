@@ -1,5 +1,5 @@
 import { Clipboard, Download, Printer, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { paletteById, styleOptions } from "@/config/studio";
@@ -18,7 +18,9 @@ export function Blueprint({ state }: { state: StudioState }) {
       await navigator.clipboard.writeText(blueprintText(state));
       setStatus("Blueprint copied to your clipboard.");
     } catch {
-      setStatus("Copy was unavailable in this browser. You can still print or download the blueprint.");
+      setStatus(
+        "Copy was unavailable in this browser. You can still print or download the blueprint.",
+      );
     }
   }
 
@@ -51,13 +53,20 @@ export function Blueprint({ state }: { state: StudioState }) {
           <p className="eyebrow">Final profile</p>
           <h2 className="mt-2 text-4xl">Tranquility Home Care Blueprint</h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            A browser-generated planning summary of your cleaning scope, home preferences, and items that may need a consultation. Nothing in this blueprint is stored on the website.
+            A browser-generated planning summary of your cleaning scope, home preferences, and
+            items that may need a consultation. Nothing in this blueprint is stored on the website.
           </p>
         </div>
         <div className="rounded-xl border border-moss/40 bg-accent/45 px-5 py-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-moss">Estimated total</p>
-          <p className="mt-1 font-display text-4xl text-ink">${estimate.total.toLocaleString("en-US")}</p>
-          <p className="text-xs text-muted-foreground">per visit, before any custom review adjustment</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-moss">
+            Estimated total
+          </p>
+          <p className="mt-1 font-display text-4xl text-ink">
+            ${estimate.total.toLocaleString("en-US")}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            per visit, before any custom review adjustment
+          </p>
         </div>
       </div>
 
@@ -65,16 +74,29 @@ export function Blueprint({ state }: { state: StudioState }) {
         <BlueprintSection title="Service plan">
           <dl className="space-y-3 text-sm">
             <Pair label="Cleaning type" value={estimate.service.name} />
-            <Pair label="Frequency" value={`${estimate.frequency.name} (${estimate.frequency.note})`} />
-            <Pair label="Base service subtotal" value={`$${estimate.serviceSubtotal.toLocaleString("en-US")}`} />
-            <Pair label="Approved room charges and add-ons" value={`$${estimate.addOnTotal.toLocaleString("en-US")}`} />
-            <Pair label="Approximate square footage" value={state.squareFeet || "Not provided"} />
+            <Pair
+              label="Frequency"
+              value={`${estimate.frequency.name} (${estimate.frequency.note})`}
+            />
+            <Pair
+              label="Base service subtotal"
+              value={`$${estimate.serviceSubtotal.toLocaleString("en-US")}`}
+            />
+            <Pair
+              label="Approved room charges and add-ons"
+              value={`$${estimate.addOnTotal.toLocaleString("en-US")}`}
+            />
+            <Pair
+              label="Approximate square footage"
+              value={state.squareFeet || "Not provided"}
+            />
           </dl>
         </BlueprintSection>
 
         <BlueprintSection title="Interior preference profile">
           <p className="text-sm text-muted-foreground">
-            Primary style: <span className="font-semibold text-ink">{primaryStyle ?? "Not selected"}</span>
+            Primary style:{" "}
+            <span className="font-semibold text-ink">{primaryStyle ?? "Not selected"}</span>
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             Palette: <span className="font-semibold text-ink">{palette?.name ?? "Not selected"}</span>
@@ -86,7 +108,11 @@ export function Blueprint({ state }: { state: StudioState }) {
                   key={`${color}-${index}`}
                   className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-2.5 text-xs font-medium text-ink"
                 >
-                  <span className="size-6 rounded-full border border-border" style={{ backgroundColor: color }} aria-hidden="true" />
+                  <span
+                    className="size-6 rounded-full border border-border"
+                    style={{ backgroundColor: color }}
+                    aria-hidden="true"
+                  />
                   {color.toUpperCase()}
                 </span>
               ))}
@@ -96,27 +122,40 @@ export function Blueprint({ state }: { state: StudioState }) {
 
         <BlueprintSection title="Rooms included">
           <ul className="space-y-3">
-            {state.rooms.filter((room) => room.included).map((room) => (
-              <li key={room.id} className="rounded-lg border border-border bg-background p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-semibold text-ink">{room.label}</span>
-                  <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">{room.priority}</span>
-                </div>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Focus: {room.focusAreas.length ? room.focusAreas.join(", ") : "No specific focus selected"}
-                </p>
-                {room.notes && <p className="mt-2 text-xs leading-relaxed text-muted-foreground">Notes: {room.notes}</p>}
-              </li>
-            ))}
+            {state.rooms
+              .filter((room) => room.included)
+              .map((room) => (
+                <li key={room.id} className="rounded-lg border border-border bg-background p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-semibold text-ink">{room.label}</span>
+                    <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">
+                      {room.priority}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    Focus:{" "}
+                    {room.focusAreas.length
+                      ? room.focusAreas.join(", ")
+                      : "No specific focus selected"}
+                  </p>
+                  {room.notes && (
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                      Notes: {room.notes}
+                    </p>
+                  )}
+                </li>
+              ))}
           </ul>
         </BlueprintSection>
 
         <BlueprintSection title="Rooms excluded">
           {state.rooms.some((room) => !room.included) ? (
             <ul className="space-y-2 text-sm text-muted-foreground">
-              {state.rooms.filter((room) => !room.included).map((room) => (
-                <li key={room.id}>• {room.label}</li>
-              ))}
+              {state.rooms
+                .filter((room) => !room.included)
+                .map((room) => (
+                  <li key={room.id}>• {room.label}</li>
+                ))}
             </ul>
           ) : (
             <p className="text-sm text-muted-foreground">No configured rooms are excluded.</p>
@@ -125,19 +164,49 @@ export function Blueprint({ state }: { state: StudioState }) {
 
         <BlueprintSection title="Materials and surface awareness">
           <dl className="space-y-3 text-sm">
-            <Pair label="Flooring" value={state.materials.flooring.join(", ") || "Not specified"} />
-            <Pair label="Countertops" value={state.materials.countertops.join(", ") || "Not specified"} />
-            <Pair label="Metals and finishes" value={state.materials.metals.join(", ") || "Not specified"} />
-            <Pair label="Sensitive surfaces" value={state.materials.sensitiveSurfaces.join(", ") || "None noted"} />
+            <Pair
+              label="Flooring"
+              value={state.materials.flooring.join(", ") || "Not specified"}
+            />
+            <Pair
+              label="Countertops"
+              value={state.materials.countertops.join(", ") || "Not specified"}
+            />
+            <Pair
+              label="Metals and finishes"
+              value={state.materials.metals.join(", ") || "Not specified"}
+            />
+            <Pair
+              label="Sensitive surfaces"
+              value={state.materials.sensitiveSurfaces.join(", ") || "None noted"}
+            />
           </dl>
         </BlueprintSection>
 
         <BlueprintSection title="Household and product context">
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p>Pets: <span className="font-semibold text-ink">{state.household.pets ? state.household.petTypes || "Yes" : "No"}</span></p>
-            <p>Product preferences: <span className="font-semibold text-ink">{state.productPreferences.join(", ") || "None selected"}</span></p>
-            {state.productNotes && <p>Product notes: <span className="text-ink">{state.productNotes}</span></p>}
-            {state.household.notes && <p>Household notes: <span className="text-ink">{state.household.notes}</span></p>}
+            <p>
+              Pets:{" "}
+              <span className="font-semibold text-ink">
+                {state.household.pets ? state.household.petTypes || "Yes" : "No"}
+              </span>
+            </p>
+            <p>
+              Product preferences:{" "}
+              <span className="font-semibold text-ink">
+                {state.productPreferences.join(", ") || "None selected"}
+              </span>
+            </p>
+            {state.productNotes && (
+              <p>
+                Product notes: <span className="text-ink">{state.productNotes}</span>
+              </p>
+            )}
+            {state.household.notes && (
+              <p>
+                Household notes: <span className="text-ink">{state.household.notes}</span>
+              </p>
+            )}
           </div>
         </BlueprintSection>
 
@@ -145,7 +214,9 @@ export function Blueprint({ state }: { state: StudioState }) {
           <p className="text-sm text-muted-foreground">
             {state.protectedItems.join(", ") || "No protected categories selected"}
           </p>
-          {state.protectedNotes && <p className="mt-3 text-sm leading-relaxed text-ink">{state.protectedNotes}</p>}
+          {state.protectedNotes && (
+            <p className="mt-3 text-sm leading-relaxed text-ink">{state.protectedNotes}</p>
+          )}
         </BlueprintSection>
 
         <BlueprintSection title="Items requiring review">
@@ -175,12 +246,16 @@ export function Blueprint({ state }: { state: StudioState }) {
           <Download className="size-4" aria-hidden="true" /> Download Blueprint
         </Button>
       </div>
-      {status && <p className="mt-3 text-sm text-moss" role="status">{status}</p>}
+      {status && (
+        <p className="mt-3 text-sm text-moss" role="status">
+          {status}
+        </p>
+      )}
     </div>
   );
 }
 
-function BlueprintSection({ title, children }: { title: string; children: React.ReactNode }) {
+function BlueprintSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="border-t border-border pt-5">
       <h3 className="text-xl">{title}</h3>
