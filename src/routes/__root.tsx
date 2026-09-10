@@ -16,10 +16,10 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <main id="main-content" className="flex flex-1 items-center justify-center bg-sand px-4 py-24">
+    <section className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24" aria-labelledby="not-found-title">
       <div className="max-w-lg rounded-2xl border border-border bg-card p-8 text-center shadow-soft md:p-12">
         <p className="eyebrow">404</p>
-        <h1 className="mt-4 text-4xl md:text-5xl">This page is not here.</h1>
+        <h1 id="not-found-title" className="mt-4 text-4xl md:text-5xl">This page is not here.</h1>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
           The page may have moved, or the address may be incorrect. Return home or use the main navigation to continue.
         </p>
@@ -32,7 +32,7 @@ function NotFoundComponent() {
           </Link>
         </div>
       </div>
-    </main>
+    </section>
   );
 }
 
@@ -45,10 +45,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <main id="main-content" className="flex flex-1 items-center justify-center bg-sand px-4 py-24">
+    <section className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24" aria-labelledby="error-title">
       <div className="max-w-lg rounded-2xl border border-border bg-card p-8 text-center shadow-soft md:p-12">
         <p className="eyebrow">Something went wrong</p>
-        <h1 className="mt-4 text-4xl">This page did not load.</h1>
+        <h1 id="error-title" className="mt-4 text-4xl">This page did not load.</h1>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
           Try the page again. If the issue continues, you can return home and contact Tranquility directly.
         </p>
@@ -71,7 +71,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           </a>
         </div>
       </div>
-    </main>
+    </section>
   );
 }
 
