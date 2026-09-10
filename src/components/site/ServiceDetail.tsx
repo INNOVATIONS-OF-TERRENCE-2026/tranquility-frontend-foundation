@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 
 import { PageHero, SectionHeading } from "./PageHero";
 import { CTABand } from "./CTABand";
@@ -28,13 +28,10 @@ export function ServiceDetail({ serviceId, eyebrow, intro, bestFor, notes }: Ser
   return (
     <>
       <PageHero eyebrow={eyebrow} title={service.name} intro={intro}>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <Button asChild size="lg">
-            <Link to="/booking" search={{ service: service.id }}>Request this service</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link to="/quote">Get a custom quote</Link>
-          </Button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button asChild size="lg"><Link to="/booking" search={{ service: service.id }}>Request this service</Link></Button>
+          <Button asChild size="lg" variant="secondary"><Link to="/studio">Customize in Studio</Link></Button>
+          <Button asChild size="lg" variant="outline"><Link to="/quote">Get a custom quote</Link></Button>
         </div>
       </PageHero>
 
@@ -45,55 +42,48 @@ export function ServiceDetail({ serviceId, eyebrow, intro, bestFor, notes }: Ser
             <ul className="mt-8 space-y-3">
               {service.includes.map((item) => (
                 <li key={item} className="flex gap-3 text-sm leading-relaxed text-foreground/85">
-                  <Check className="mt-0.5 size-4 shrink-0 text-moss" aria-hidden="true" />
-                  <span>{item}</span>
+                  <Check className="mt-0.5 size-4 shrink-0 text-moss" aria-hidden="true" />{item}
                 </li>
               ))}
             </ul>
 
             <h3 className="mt-10 text-xl">Best suited for</h3>
-            <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-              {bestFor.map((item) => (
-                <li key={item} className="flex gap-2.5">
-                  <Check className="mt-0.5 size-4 shrink-0 text-moss" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+              {bestFor.map((item) => <li key={item}>• {item}</li>)}
             </ul>
 
-            {notes && (
-              <p className="mt-8 rounded-lg border border-border bg-muted p-5 text-sm leading-relaxed text-muted-foreground">{notes}</p>
-            )}
+            {notes && <p className="mt-8 border-l-2 border-moss bg-sand/60 px-5 py-4 text-sm leading-relaxed text-muted-foreground">{notes}</p>}
+
+            <div className="mt-10 border-t border-border pt-8">
+              <div className="flex items-start gap-3">
+                <Sparkles className="mt-1 size-5 shrink-0 text-moss" aria-hidden="true" />
+                <div>
+                  <h3 className="text-2xl">Want to map the home first?</h3>
+                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                    Tranquility Studio lets you organize rooms, cleaning priorities, surfaces, product preferences, and protected areas before you send a service request.
+                  </p>
+                  <Link to="/studio" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-moss hover:underline">Open Tranquility Studio</Link>
+                </div>
+              </div>
+            </div>
           </div>
 
           <aside className="rounded-xl border border-border bg-card p-6 shadow-soft lg:sticky lg:top-32">
             <p className="eyebrow">Pricing</p>
             <p className="mt-3 font-display text-4xl text-ink">{money(service.basePrice)}</p>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">
-              One-time, standard average 1 bed / 1 bath home
-            </p>
+            <p className="text-xs tracking-wide text-muted-foreground uppercase">One-time, standard average 1 bed / 1 bath home</p>
             <dl className="mt-6 space-y-2 border-t border-border pt-5 text-sm">
-              {frequencies.filter((item) => item.id !== "onetime").map((item) => (
-                <div key={item.id} className="flex items-baseline justify-between gap-3">
-                  <dt className="text-muted-foreground">
-                    {item.name} <span className="text-xs text-moss">({item.note})</span>
-                  </dt>
-                  <dd className="font-semibold text-ink">{money(servicePrice(service.id, item.id))}</dd>
+              {frequencies.filter((frequency) => frequency.id !== "onetime").map((frequency) => (
+                <div key={frequency.id} className="flex items-baseline justify-between gap-3">
+                  <dt className="text-muted-foreground">{frequency.name} <span className="text-xs text-moss">({frequency.note})</span></dt>
+                  <dd className="font-semibold text-ink">{money(servicePrice(service.id, frequency.id))}</dd>
                 </div>
               ))}
             </dl>
-            <Button asChild className="mt-6 w-full">
-              <Link to="/booking" search={{ service: service.id }}>Build my estimate</Link>
-            </Button>
+            <Button asChild className="mt-6 w-full"><Link to="/booking" search={{ service: service.id }}>Build my estimate</Link></Button>
+            <Button asChild variant="secondary" className="mt-2 w-full"><Link to="/studio">Open Studio</Link></Button>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{PRICING_DISCLOSURE}</p>
-            <img
-              src={roomLight}
-              alt="Sunlit room with light oak flooring and clean baseboards"
-              width={1408}
-              height={1008}
-              loading="lazy"
-              className="mt-6 hidden rounded-lg object-cover lg:block"
-            />
+            <img src={roomLight} alt="Sunlit room with light oak flooring and clean baseboards" width={1408} height={1008} loading="lazy" className="mt-6 hidden rounded-lg object-cover lg:block" />
           </aside>
         </div>
       </section>
