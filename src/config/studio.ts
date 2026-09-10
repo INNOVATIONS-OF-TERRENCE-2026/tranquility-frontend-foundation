@@ -63,30 +63,101 @@ export const focusAreas: { id: FocusArea; label: string }[] = [
 ];
 
 export const styleOptions: { id: StyleId; label: string; note: string }[] = [
-  { id: "organic-modern", label: "Organic Modern", note: "Warm restraint, natural texture, clean form" },
-  { id: "modern-luxe", label: "Modern Luxe", note: "Polished surfaces, contrast, tailored detail" },
+  {
+    id: "organic-modern",
+    label: "Organic Modern",
+    note: "Warm restraint, natural texture, clean form",
+  },
+  {
+    id: "modern-luxe",
+    label: "Modern Luxe",
+    note: "Polished surfaces, contrast, tailored detail",
+  },
   { id: "contemporary", label: "Contemporary", note: "Current, edited, balanced" },
   { id: "minimal", label: "Minimal", note: "Quiet surfaces and visual breathing room" },
-  { id: "transitional", label: "Transitional", note: "Classic structure with modern ease" },
-  { id: "warm-neutral", label: "Warm Neutral", note: "Soft taupe, ivory, oak and linen tones" },
-  { id: "moody-modern", label: "Moody Modern", note: "Deep neutrals with controlled warmth" },
-  { id: "natural-earthy", label: "Natural / Earthy", note: "Grounded greens, wood and stone" },
+  {
+    id: "transitional",
+    label: "Transitional",
+    note: "Classic structure with modern ease",
+  },
+  {
+    id: "warm-neutral",
+    label: "Warm Neutral",
+    note: "Soft taupe, ivory, oak and linen tones",
+  },
+  {
+    id: "moody-modern",
+    label: "Moody Modern",
+    note: "Deep neutrals with controlled warmth",
+  },
+  {
+    id: "natural-earthy",
+    label: "Natural / Earthy",
+    note: "Grounded greens, wood and stone",
+  },
   { id: "soft-glam", label: "Soft Glam", note: "Refined shine with calm softness" },
-  { id: "cozy-layered", label: "Cozy / Layered", note: "Comfort, texture and lived-in warmth" },
+  {
+    id: "cozy-layered",
+    label: "Cozy / Layered",
+    note: "Comfort, texture and lived-in warmth",
+  },
 ];
 
 export const palettes: StudioPalette[] = [
-  { id: "warm", name: "Warm", colors: ["#F4E8D6", "#C9A57A", "#876D57", "#4C3C31"] },
-  { id: "cool", name: "Cool", colors: ["#E9EEF0", "#BCC9CB", "#7C9295", "#40585C"] },
-  { id: "neutral", name: "Neutral", colors: ["#F3EFE8", "#D8D0C3", "#9D9489", "#514C47"] },
-  { id: "earthy", name: "Earthy", colors: ["#E7E0CE", "#A8AD8B", "#6D775C", "#56483B"] },
-  { id: "moody", name: "Dark / Moody", colors: ["#B9ADA0", "#6A625C", "#393A37", "#202422"] },
-  { id: "airy", name: "Bright / Airy", colors: ["#FBF9F3", "#E7E2D8", "#D9E1DA", "#AEB9B0"] },
+  {
+    id: "warm",
+    name: "Warm",
+    colors: ["#F4E8D6", "#C9A57A", "#876D57", "#4C3C31"],
+  },
+  {
+    id: "cool",
+    name: "Cool",
+    colors: ["#E9EEF0", "#BCC9CB", "#7C9295", "#40585C"],
+  },
+  {
+    id: "neutral",
+    name: "Neutral",
+    colors: ["#F3EFE8", "#D8D0C3", "#9D9489", "#514C47"],
+  },
+  {
+    id: "earthy",
+    name: "Earthy",
+    colors: ["#E7E0CE", "#A8AD8B", "#6D775C", "#56483B"],
+  },
+  {
+    id: "moody",
+    name: "Dark / Moody",
+    colors: ["#B9ADA0", "#6A625C", "#393A37", "#202422"],
+  },
+  {
+    id: "airy",
+    name: "Bright / Airy",
+    colors: ["#FBF9F3", "#E7E2D8", "#D9E1DA", "#AEB9B0"],
+  },
 ];
 
 export const materialOptions: Record<keyof MaterialProfile, string[]> = {
-  flooring: ["Hardwood", "Engineered wood", "Laminate", "Tile", "Stone", "Vinyl", "Carpet", "Rugs", "Other"],
-  countertops: ["Quartz", "Granite", "Marble", "Butcher block", "Laminate", "Concrete", "Other", "Unsure"],
+  flooring: [
+    "Hardwood",
+    "Engineered wood",
+    "Laminate",
+    "Tile",
+    "Stone",
+    "Vinyl",
+    "Carpet",
+    "Rugs",
+    "Other",
+  ],
+  countertops: [
+    "Quartz",
+    "Granite",
+    "Marble",
+    "Butcher block",
+    "Laminate",
+    "Concrete",
+    "Other",
+    "Unsure",
+  ],
   metals: ["Stainless steel", "Brass", "Chrome", "Matte black", "Bronze", "Mixed", "Other"],
   sensitiveSurfaces: [
     "Natural stone",
@@ -134,6 +205,7 @@ export const defaultHousehold: HouseholdProfile = {
   shoesOff: false,
   frequentEntertaining: false,
   shortTermRental: false,
+  olderAdultConsiderations: false,
   accessibilityConsiderations: false,
   fragileObjects: false,
   plants: false,
