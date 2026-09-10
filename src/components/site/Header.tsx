@@ -24,8 +24,8 @@ export function Header() {
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
     };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -74,13 +74,13 @@ export function Header() {
 
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
             className="inline-flex size-11 items-center justify-center rounded-md border border-border text-ink lg:hidden"
           >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
           </button>
         </div>
       </div>
@@ -88,7 +88,7 @@ export function Header() {
       {open && (
         <div
           id="mobile-menu"
-          className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-border bg-background lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-border bg-background md:top-[7.25rem] lg:hidden"
         >
           <nav aria-label="Mobile" className="container-page flex flex-col py-4">
             {nav.map((item) => (
