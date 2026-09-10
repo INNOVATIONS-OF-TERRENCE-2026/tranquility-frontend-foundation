@@ -8,9 +8,9 @@ import { business, cities } from "@/config/business";
 export const Route = createFileRoute("/service-area")({
   head: () =>
     seo({
-      title: "Service Area — Dallas–Fort Worth Cleaning | Tranquility Level Cleaning",
+      title: "Service Area | Dallas-Fort Worth Cleaning | Tranquility Level Cleaning",
       description:
-        "We clean homes and offices across Dallas, Fort Worth, Arlington, Plano, Frisco, McKinney and surrounding DFW communities.",
+        "We clean homes and offices across Dallas, Fort Worth, Arlington, Plano, Frisco, McKinney, and surrounding DFW communities.",
       path: "/service-area",
     }),
   component: ServiceAreaPage,
@@ -21,13 +21,16 @@ function ServiceAreaPage() {
     <>
       <PageHero
         eyebrow="Service area"
-        title="Serving Dallas–Fort Worth"
+        title="Serving Dallas-Fort Worth"
         intro={`Tranquility Level Cleaning works across ${business.serviceAreaLabel}.`}
       />
 
       <section className="section">
         <div className="container-page">
-          <SectionHeading title="Cities we serve" />
+          <SectionHeading
+            title="Cities we serve"
+            intro="These are core communities within our current service area. Surrounding locations may also be considered."
+          />
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {cities.map((city) => (
               <li
@@ -39,15 +42,14 @@ function ServiceAreaPage() {
             ))}
           </ul>
           <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Don't see your community listed? Surrounding communities may still be considered — get
-            in touch and we'll let you know whether we can serve your address.
+            Don't see your community listed? Surrounding communities may still be considered. Get in touch and we'll let you know whether we can serve your address.
           </p>
         </div>
       </section>
 
       <CTABand
         title="Nearby but not listed?"
-        intro="Reach out with your address and we'll tell you honestly whether we can cover it."
+        intro="Reach out with your address and we'll tell you whether we can cover it."
       />
     </>
   );
