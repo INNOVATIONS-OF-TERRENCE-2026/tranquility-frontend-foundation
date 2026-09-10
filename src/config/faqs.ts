@@ -7,7 +7,7 @@ export const faqs: Faq[] = [
   {
     question: "What determines pricing?",
     answer:
-      "Pricing starts from the cleaning type you choose — Standard, Deep, or Move-In/Move-Out — based on a standard average 1-bedroom, 1-full-bath home. From there, only approved add-ons and additional rooms are applied. We do not price your home as a square-footage formula.",
+      "Pricing starts from the cleaning type you choose: Standard, Deep, or Move-In/Move-Out, based on a standard average 1-bedroom, 1-full-bath home. From there, only approved add-ons and additional rooms are applied. We do not price your home using a square-footage formula.",
   },
   {
     question: "Why can the final price change?",
@@ -17,7 +17,7 @@ export const faqs: Faq[] = [
   {
     question: "What are the recurring-service savings?",
     answer:
-      "Weekly service saves 20%, bi-weekly saves 15%, and monthly saves 10%. Savings apply to the service price only — add-ons are charged at their listed rate.",
+      "Weekly service saves 20%, bi-weekly saves 15%, and monthly saves 10%. Savings apply to the service price only. Add-ons are charged at their listed rate.",
   },
   {
     question: "What happens with large or custom homes?",
@@ -27,17 +27,17 @@ export const faqs: Faq[] = [
   {
     question: "Can I request only part of my home?",
     answer:
-      "Yes. Cleaning a specific set of rooms — for example one bedroom and two bathrooms in a larger home — is custom scope. Request a quote and we'll price the actual rooms you want serviced.",
+      "Yes. Cleaning a specific set of rooms, for example one bedroom and two bathrooms in a larger home, is custom scope. Request a quote and we'll price the actual rooms you want serviced.",
   },
   {
     question: "What about pets?",
     answer:
-      "Pets are welcome to stay as long as they aren't a distraction or hindrance to the work. Anxious, aggressive, or disruptive animals should be safely secured while we're in the home. Let us know about your pets when you request service.",
+      "Pets are welcome to stay as long as they are not a distraction or hindrance to the work. Anxious, aggressive, or disruptive animals should be safely secured while we're in the home. Let us know about your pets when you request service.",
   },
   {
     question: "Do you provide supplies and equipment?",
     answer:
-      "Yes — we bring the supplies and equipment needed for the service you've requested.",
+      "Yes. We bring the supplies and equipment needed for the service you've requested.",
   },
   {
     question: "Can I request my own or non-toxic products?",
@@ -77,6 +77,6 @@ export const faqs: Faq[] = [
   {
     question: "Is tipping required?",
     answer:
-      "No. Tipping is never required or expected — it's simply a courtesy some customers choose to offer.",
+      "No. Tipping is never required or expected. It is simply a courtesy some customers choose to offer.",
   },
 ];
