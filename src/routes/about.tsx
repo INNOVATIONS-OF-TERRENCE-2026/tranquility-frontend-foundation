@@ -9,9 +9,9 @@ import linens from "@/assets/detail-linens.jpg";
 export const Route = createFileRoute("/about")({
   head: () =>
     seo({
-      title: "About Tranquility Level Cleaning — DFW Cleaning Service",
+      title: "About Tranquility Level Cleaning | DFW Cleaning Service",
       description:
-        "Thoughtful, respectful, detail-oriented cleaning across Dallas–Fort Worth, built on clear expectations and consistent work.",
+        "Thoughtful, respectful, detail-oriented cleaning across Dallas-Fort Worth, built on clear expectations and consistent work.",
       path: "/about",
     }),
   component: AboutPage,
@@ -28,11 +28,11 @@ const values = [
   },
   {
     title: "Consistency",
-    body: "The same standard every visit, so the home holds its calm between cleans instead of resetting each time.",
+    body: "The same standard every visit helps the home hold its calm between cleans instead of resetting each time.",
   },
   {
     title: "Thoughtful handling",
-    body: "Pets, layout quirks, delicate materials and special conditions are planned for, not improvised on the day.",
+    body: "Pets, layout quirks, delicate materials, and special conditions are planned for instead of improvised on the day.",
   },
 ];
 
@@ -42,7 +42,7 @@ function AboutPage() {
       <PageHero
         eyebrow="About"
         title="Cleaning that makes a home feel lighter"
-        intro={`${business.legalName} is a Dallas–Fort Worth cleaning service built around a simple idea: a well-kept home should feel calmer to come back to.`}
+        intro={`${business.legalName} is a Dallas-Fort Worth cleaning service built around a simple idea: a well-kept home should feel calmer to come back to.`}
       />
 
       <section className="section">
@@ -51,20 +51,13 @@ function AboutPage() {
             <SectionHeading title="Our approach" />
             <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground">
               <p>
-                Most cleaning is measured in checklists. We think about the result you actually
-                live with — surfaces that feel finished, rooms that feel settled, and a home that
-                asks less of you at the end of the day.
+                Most cleaning is measured in checklists. We think about the result you actually live with: surfaces that feel finished, rooms that feel settled, and a home that asks less of you at the end of the day.
               </p>
               <p>
-                That means being deliberate about scope. We price from a standard average home and
-                add only what your space genuinely needs, rather than running your home through a
-                square-footage formula. When something falls outside the ordinary — a larger
-                property, a partial-home request, specialty surfaces — we talk it through instead
-                of guessing.
+                That means being deliberate about scope. We price from a standard average home and add only what your space genuinely needs instead of running your home through a square-footage formula. When something falls outside the ordinary, such as a larger property, a partial-home request, or specialty surfaces, we talk it through instead of guessing.
               </p>
               <p>
-                It also means being honest about what we can and can't do. Everything we commit to
-                is confirmed with you first, in plain language.
+                It also means being clear about what we can and cannot do. Everything we commit to is confirmed with you first, in plain language.
               </p>
             </div>
           </div>
