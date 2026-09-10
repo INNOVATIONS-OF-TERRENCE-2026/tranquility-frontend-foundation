@@ -9,9 +9,11 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "check:punctuation": "node scripts/check-no-em-dash.mjs",
-    "verify": "bun run check:punctuation && bun run lint && bun run build"
+    "verify": "bun run check:punctuation && bun run format:check && bun run lint && bun run typecheck && bun run build"
   },
   "overrides": {
     "rolldown": "1.2.1"
