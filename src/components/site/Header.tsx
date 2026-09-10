@@ -3,9 +3,9 @@ import { Menu, Phone, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Logo } from "./Logo";
-import { business } from "@/config/business";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { business } from "@/config/business";
 
 const nav = [
   { to: "/services", label: "Services" },
@@ -16,11 +16,20 @@ const nav = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "select:not([disabled])",
+  "input:not([disabled])",
+  "textarea:not([disabled])",
+  "[tabindex]:not([tabindex='-1'])",
+].join(",");
+
 export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const lastPathRef = useRef(pathname);
 
   useEffect(() => {
@@ -32,14 +41,38 @@ export function Header() {
 
   useEffect(() => {
     if (!open) return;
+
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    window.requestAnimationFrame(() => firstLinkRef.current?.focus());
+
+    const getFocusable = () =>
+      Array.from(menuRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? []).filter(
+        (element) => !element.hasAttribute("disabled") && element.tabIndex !== -1,
+      );
+
+    window.requestAnimationFrame(() => getFocusable()[0]?.focus());
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         setOpen(false);
         window.requestAnimationFrame(() => triggerRef.current?.focus());
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
@@ -52,10 +85,13 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="hidden bg-ink/95 text-[0.72rem] tracking-wide text-background md:block">
+      <div className="hidden bg-night/95 text-[0.72rem] tracking-wide text-night-foreground md:block">
         <div className="container-page flex h-9 items-center justify-between">
           <span>Serving {business.serviceAreaLabel}</span>
-          <a href={business.phoneHref} className="transition-opacity hover:opacity-80 hover:underline">
+          <a
+            href={business.phoneHref}
+            className="transition-opacity hover:opacity-80 hover:underline"
+          >
             {business.phoneDisplay}
           </a>
         </div>
@@ -106,7 +142,11 @@ export function Header() {
               aria-label={open ? "Close menu" : "Open menu"}
               className="inline-flex size-11 items-center justify-center rounded-md border border-border bg-card text-ink shadow-sm"
             >
-              {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+              {open ? (
+                <X className="size-5" aria-hidden="true" />
+              ) : (
+                <Menu className="size-5" aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
@@ -114,14 +154,14 @@ export function Header() {
 
       {open && (
         <div
+          ref={menuRef}
           id="mobile-menu"
           className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-border bg-background md:top-[7.25rem] xl:hidden"
         >
           <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-4">
-            {nav.map((item, index) => (
+            {nav.map((item) => (
               <Link
                 key={item.to}
-                ref={index === 0 ? firstLinkRef : undefined}
                 to={item.to}
                 className="flex min-h-14 items-center border-b border-border/70 py-3 text-lg text-ink"
                 activeProps={{ className: "text-moss font-semibold" }}
@@ -138,7 +178,9 @@ export function Header() {
             ))}
 
             <div className="mt-6 rounded-xl border border-border bg-sand p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-moss">Appearance</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-moss">
+                Appearance
+              </p>
               <div className="mt-3">
                 <ThemeToggle />
               </div>
