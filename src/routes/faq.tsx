@@ -14,9 +14,9 @@ import {
 export const Route = createFileRoute("/faq")({
   head: () => ({
     ...seo({
-      title: "Cleaning Service FAQs — Tranquility Level Cleaning",
+      title: "Cleaning Service FAQs | Tranquility Level Cleaning",
       description:
-        "How pricing works, recurring savings, pets, supplies, large or partial-home scope, consultations and more — answered plainly.",
+        "Clear answers about pricing, recurring savings, pets, supplies, large or partial-home scope, consultations, add-ons, and commercial cleaning.",
       path: "/faq",
     }),
     scripts: [
@@ -25,10 +25,10 @@ export const Route = createFileRoute("/faq")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: faqs.map((f) => ({
+          mainEntity: faqs.map((faq) => ({
             "@type": "Question",
-            name: f.question,
-            acceptedAnswer: { "@type": "Answer", text: f.answer },
+            name: faq.question,
+            acceptedAnswer: { "@type": "Answer", text: faq.answer },
           })),
         }),
       },
@@ -43,17 +43,17 @@ function FaqPage() {
       <PageHero
         eyebrow="FAQ"
         title="Questions, answered plainly"
-        intro="If something isn't covered here, call or email us — we'd rather tell you directly than leave you guessing."
+        intro="If something is not covered here, call or email us. We would rather answer directly than leave you guessing."
       />
 
       <section className="section">
         <div className="container-page max-w-3xl">
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((f, i) => (
-              <AccordionItem key={f.question} value={`item-${i}`}>
-                <AccordionTrigger className="text-left text-base">{f.question}</AccordionTrigger>
+          <Accordion type="single" collapsible className="w-full rounded-2xl border border-border bg-card px-5 shadow-soft md:px-7">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={faq.question} value={`item-${index}`}>
+                <AccordionTrigger className="text-left text-base">{faq.question}</AccordionTrigger>
                 <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                  {f.answer}
+                  {faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
