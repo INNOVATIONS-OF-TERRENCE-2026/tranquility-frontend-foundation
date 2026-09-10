@@ -1,13 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, Phone, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Menu, Phone, Sparkles, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import { Logo } from "./Logo";
 import { business } from "@/config/business";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const nav = [
   { to: "/services", label: "Services" },
+  { to: "/studio", label: "Tranquility Studio" },
   { to: "/service-area", label: "Service Area" },
   { to: "/about", label: "About" },
   { to: "/faq", label: "FAQ" },
@@ -16,22 +18,35 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const lastPathRef = useRef(pathname);
 
   useEffect(() => {
-    setOpen(false);
+    if (lastPathRef.current !== pathname) {
+      setOpen(false);
+      lastPathRef.current = pathname;
+    }
   }, [pathname]);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => firstLinkRef.current?.focus());
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        window.requestAnimationFrame(() => triggerRef.current?.focus());
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
 
@@ -40,30 +55,38 @@ export function Header() {
       <div className="hidden bg-ink/95 text-[0.72rem] tracking-wide text-background md:block">
         <div className="container-page flex h-9 items-center justify-between">
           <span>Serving {business.serviceAreaLabel}</span>
-          <a href={business.phoneHref} className="hover:underline">
+          <a href={business.phoneHref} className="transition-opacity hover:opacity-80 hover:underline">
             {business.phoneDisplay}
           </a>
         </div>
       </div>
 
-      <div className="border-b border-border/70 bg-background/90 backdrop-blur-md">
-        <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
+      <div className="border-b border-border/70 bg-background/92 shadow-[0_1px_0_color-mix(in_oklab,var(--color-border)_70%,transparent)] backdrop-blur-xl">
+        <div className="container-page flex h-16 items-center justify-between gap-3 md:h-20">
           <Logo />
 
-          <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">
+          <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex 2xl:gap-7">
             {nav.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="text-sm text-foreground/80 transition-colors hover:text-moss"
+                className="whitespace-nowrap text-sm text-foreground/80 transition-colors hover:text-moss"
                 activeProps={{ className: "text-moss font-semibold" }}
               >
-                {item.label}
+                {item.to === "/studio" ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Sparkles className="size-3.5" aria-hidden="true" />
+                    {item.label}
+                  </span>
+                ) : (
+                  item.label
+                )}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-2 xl:flex">
+            <ThemeToggle compact />
             <Button asChild variant="outline">
               <Link to="/quote">Get a Quote</Link>
             </Button>
@@ -72,45 +95,68 @@ export function Header() {
             </Button>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="inline-flex size-11 items-center justify-center rounded-md border border-border text-ink lg:hidden"
-          >
-            {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
-          </button>
+          <div className="flex items-center gap-2 xl:hidden">
+            <ThemeToggle compact />
+            <button
+              ref={triggerRef}
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="inline-flex size-11 items-center justify-center rounded-md border border-border bg-card text-ink shadow-sm"
+            >
+              {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+            </button>
+          </div>
         </div>
       </div>
 
       {open && (
         <div
           id="mobile-menu"
-          className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-border bg-background md:top-[7.25rem] lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-border bg-background md:top-[7.25rem] xl:hidden"
         >
-          <nav aria-label="Mobile" className="container-page flex flex-col py-4">
-            {nav.map((item) => (
+          <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-4">
+            {nav.map((item, index) => (
               <Link
                 key={item.to}
+                ref={index === 0 ? firstLinkRef : undefined}
                 to={item.to}
-                className="border-b border-border/70 py-4 text-lg text-ink"
-                activeProps={{ className: "text-moss" }}
+                className="flex min-h-14 items-center border-b border-border/70 py-3 text-lg text-ink"
+                activeProps={{ className: "text-moss font-semibold" }}
               >
-                {item.label}
+                {item.to === "/studio" ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Sparkles className="size-4" aria-hidden="true" />
+                    {item.label}
+                  </span>
+                ) : (
+                  item.label
+                )}
               </Link>
             ))}
-            <div className="mt-6 flex flex-col gap-3">
+
+            <div className="mt-6 rounded-xl border border-border bg-sand p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-moss">Appearance</p>
+              <div className="mt-3">
+                <ThemeToggle />
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 pb-[calc(1rem+env(safe-area-inset-bottom))]">
               <Button asChild size="lg">
                 <Link to="/booking">Request Service</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link to="/quote">Get a Custom Quote</Link>
               </Button>
+              <Button asChild size="lg" variant="secondary">
+                <Link to="/studio">Open Tranquility Studio</Link>
+              </Button>
               <a
                 href={business.phoneHref}
-                className="mt-2 inline-flex items-center justify-center gap-2 py-3 text-sm text-muted-foreground"
+                className="mt-2 inline-flex min-h-11 items-center justify-center gap-2 py-3 text-sm text-muted-foreground"
               >
                 <Phone className="size-4" aria-hidden="true" /> {business.phoneDisplay}
               </a>
