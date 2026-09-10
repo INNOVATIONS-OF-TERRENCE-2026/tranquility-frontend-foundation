@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FormEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import { PageHero, SectionHeading } from "@/components/site/PageHero";
