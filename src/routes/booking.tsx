@@ -23,6 +23,7 @@ export const Route = createFileRoute("/booking")({
 
 function BookingPage() {
   const search = Route.useSearch();
+
   return (
     <>
       <PageHero
@@ -32,7 +33,7 @@ function BookingPage() {
       />
       <section className="section">
         <div className="container-page">
-          <BookingFlow initialService={search.service} />
+          <BookingFlow {...(search.service ? { initialService: search.service } : {})} />
         </div>
       </section>
     </>
