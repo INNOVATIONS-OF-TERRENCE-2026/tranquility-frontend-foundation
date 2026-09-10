@@ -23,6 +23,7 @@ import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as ResidentialCleaningRouteImport } from './routes/residential-cleaning'
 import { Route as ServiceAreaRouteImport } from './routes/service-area'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TermsRouteImport } from './routes/terms'
 
 const IndexRoute = IndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => rootRouteImport } as any)
@@ -39,6 +40,7 @@ const QuoteRoute = QuoteRouteImport.update({ id: '/quote', path: '/quote', getPa
 const ResidentialCleaningRoute = ResidentialCleaningRouteImport.update({ id: '/residential-cleaning', path: '/residential-cleaning', getParentRoute: () => rootRouteImport } as any)
 const ServiceAreaRoute = ServiceAreaRouteImport.update({ id: '/service-area', path: '/service-area', getParentRoute: () => rootRouteImport } as any)
 const ServicesRoute = ServicesRouteImport.update({ id: '/services', path: '/services', getParentRoute: () => rootRouteImport } as any)
+const StudioRoute = StudioRouteImport.update({ id: '/studio', path: '/studio', getParentRoute: () => rootRouteImport } as any)
 const TermsRoute = TermsRouteImport.update({ id: '/terms', path: '/terms', getParentRoute: () => rootRouteImport } as any)
 
 export interface FileRoutesByFullPath {
@@ -56,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/residential-cleaning': typeof ResidentialCleaningRoute
   '/service-area': typeof ServiceAreaRoute
   '/services': typeof ServicesRoute
+  '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
 }
 export interface FileRoutesByTo extends FileRoutesByFullPath {}
@@ -75,6 +78,7 @@ export interface FileRoutesById {
   '/residential-cleaning': typeof ResidentialCleaningRoute
   '/service-area': typeof ServiceAreaRoute
   '/services': typeof ServicesRoute
+  '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +104,7 @@ export interface RootRouteChildren {
   ResidentialCleaningRoute: typeof ResidentialCleaningRoute
   ServiceAreaRoute: typeof ServiceAreaRoute
   ServicesRoute: typeof ServicesRoute
+  StudioRoute: typeof StudioRoute
   TermsRoute: typeof TermsRoute
 }
 
@@ -119,6 +124,7 @@ declare module '@tanstack/react-router' {
     '/residential-cleaning': { id: '/residential-cleaning'; path: '/residential-cleaning'; fullPath: '/residential-cleaning'; preLoaderRoute: typeof ResidentialCleaningRouteImport; parentRoute: typeof rootRouteImport }
     '/service-area': { id: '/service-area'; path: '/service-area'; fullPath: '/service-area'; preLoaderRoute: typeof ServiceAreaRouteImport; parentRoute: typeof rootRouteImport }
     '/services': { id: '/services'; path: '/services'; fullPath: '/services'; preLoaderRoute: typeof ServicesRouteImport; parentRoute: typeof rootRouteImport }
+    '/studio': { id: '/studio'; path: '/studio'; fullPath: '/studio'; preLoaderRoute: typeof StudioRouteImport; parentRoute: typeof rootRouteImport }
     '/terms': { id: '/terms'; path: '/terms'; fullPath: '/terms'; preLoaderRoute: typeof TermsRouteImport; parentRoute: typeof rootRouteImport }
   }
 }
@@ -138,6 +144,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResidentialCleaningRoute,
   ServiceAreaRoute,
   ServicesRoute,
+  StudioRoute,
   TermsRoute,
 }
 
