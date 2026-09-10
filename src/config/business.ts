@@ -6,7 +6,7 @@ export const business = {
   phoneHref: "tel:+19454023260",
   email: "tlcllc26@gmail.com",
   emailHref: "mailto:tlcllc26@gmail.com",
-  serviceAreaLabel: "Dallas–Fort Worth and surrounding communities",
+  serviceAreaLabel: "Dallas-Fort Worth and surrounding communities",
 } as const;
 
 export const cities = [
@@ -26,7 +26,6 @@ export const cities = [
   "Richardson",
 ] as const;
 
-/** Builds a mailto: link with an encoded subject and plain-text body. */
 export function mailtoLink(subject: string, body: string) {
   return `mailto:${business.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
