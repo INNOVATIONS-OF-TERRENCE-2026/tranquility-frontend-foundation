@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImagePlus, X } from "lucide-react";
 import { z } from "zod";
 
@@ -14,9 +14,9 @@ import { business, mailtoLink } from "@/config/business";
 export const Route = createFileRoute("/quote")({
   head: () =>
     seo({
-      title: "Custom Quote & Virtual Consultation — Tranquility Level Cleaning",
+      title: "Custom Quote & Virtual Consultation | Tranquility Level Cleaning",
       description:
-        "Request a custom cleaning quote or virtual consultation for large homes, partial-home scope, specialty work, or commercial spaces in Dallas–Fort Worth.",
+        "Request a custom cleaning quote or virtual consultation for large homes, partial-home scope, specialty work, or commercial spaces in Dallas-Fort Worth.",
       path: "/quote",
     }),
   component: QuotePage,
@@ -36,11 +36,12 @@ const schema = z.object({
 });
 
 type Values = z.infer<typeof schema>;
+type LocalPhoto = { name: string; url: string };
 
 const propertyTypes = [
-  { id: "residential", label: "Residential", note: "Large, unusual or partial-home scope" },
+  { id: "residential", label: "Residential", note: "Large, unusual, or partial-home scope" },
   { id: "commercial", label: "Commercial / Office", note: "Suites, offices, light commercial" },
-  { id: "specialty", label: "Specialty", note: "Post-renovation, unique surfaces, other" },
+  { id: "specialty", label: "Specialty", note: "Post-renovation, unique surfaces, or other needs" },
 ] as const;
 
 const contactPrefs = [
@@ -64,29 +65,45 @@ function QuotePage() {
     notes: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof Values, string>>>({});
-  const [photos, setPhotos] = useState<{ name: string; url: string }[]>([]);
+  const [photos, setPhotos] = useState<LocalPhoto[]>([]);
   const [ready, setReady] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const photosRef = useRef<LocalPhoto[]>([]);
 
-  const set = <K extends keyof Values>(key: K, v: Values[K]) => {
-    setValues((prev) => ({ ...prev, [key]: v }));
+  useEffect(() => {
+    photosRef.current = photos;
+  }, [photos]);
+
+  useEffect(
+    () => () => {
+      photosRef.current.forEach((photo) => URL.revokeObjectURL(photo.url));
+    },
+    [],
+  );
+
+  const set = <K extends keyof Values>(key: K, value: Values[K]) => {
+    setValues((previous) => ({ ...previous, [key]: value }));
     setReady(false);
   };
 
   function addPhotos(files: FileList | null) {
     if (!files) return;
+
+    const availableSlots = Math.max(0, 6 - photos.length);
     const next = Array.from(files)
-      .filter((f) => f.type.startsWith("image/"))
-      .slice(0, 6)
-      .map((f) => ({ name: f.name, url: URL.createObjectURL(f) }));
-    setPhotos((prev) => [...prev, ...next].slice(0, 6));
+      .filter((file) => file.type.startsWith("image/"))
+      .slice(0, availableSlots)
+      .map((file) => ({ name: file.name, url: URL.createObjectURL(file) }));
+
+    setPhotos((previous) => [...previous, ...next]);
+    if (fileRef.current) fileRef.current.value = "";
   }
 
   function removePhoto(index: number) {
-    setPhotos((prev) => {
-      const target = prev[index];
+    setPhotos((previous) => {
+      const target = previous[index];
       if (target) URL.revokeObjectURL(target.url);
-      return prev.filter((_, i) => i !== index);
+      return previous.filter((_, itemIndex) => itemIndex !== index);
     });
   }
 
@@ -94,12 +111,14 @@ function QuotePage() {
     const result = schema.safeParse(values);
     const next: Partial<Record<keyof Values, string>> = {};
     if (!result.success) {
-      for (const issue of result.error.issues) next[issue.path[0] as keyof Values] = issue.message;
+      for (const issue of result.error.issues) {
+        next[issue.path[0] as keyof Values] = issue.message;
+      }
     }
     setErrors(next);
-    const ok = Object.keys(next).length === 0;
-    setReady(ok);
-    return ok;
+    const valid = Object.keys(next).length === 0;
+    setReady(valid);
+    return valid;
   }
 
   const body = [
@@ -127,15 +146,15 @@ function QuotePage() {
       <PageHero
         eyebrow="Custom quote"
         title="Get a custom quote or virtual consultation"
-        intro="For larger homes, partial-home scope, specialty work, and commercial spaces — the situations a standard estimate shouldn't decide on its own."
+        intro="For larger homes, partial-home scope, specialty work, and commercial spaces. These are situations a standard estimate should not decide on its own."
       />
 
       <section className="section">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_18rem] lg:items-start">
           <form
             noValidate
-            onSubmit={(e) => {
-              e.preventDefault();
+            onSubmit={(event) => {
+              event.preventDefault();
               validate();
             }}
             className="space-y-8"
@@ -143,76 +162,32 @@ function QuotePage() {
             <fieldset>
               <legend className="text-lg">What kind of property?</legend>
               <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                {propertyTypes.map((p) => (
+                {propertyTypes.map((property) => (
                   <button
-                    key={p.id}
+                    key={property.id}
                     type="button"
-                    onClick={() => set("propertyType", p.id)}
-                    aria-pressed={values.propertyType === p.id}
-                    className={`rounded-lg border p-4 text-left ${
-                      values.propertyType === p.id
+                    onClick={() => set("propertyType", property.id)}
+                    aria-pressed={values.propertyType === property.id}
+                    className={`min-h-24 rounded-lg border p-4 text-left transition-colors ${
+                      values.propertyType === property.id
                         ? "border-moss bg-accent/40"
-                        : "border-border bg-card"
+                        : "border-border bg-card hover:border-moss/50"
                     }`}
                   >
-                    <span className="block text-sm font-medium text-ink">{p.label}</span>
-                    <span className="mt-1 block text-xs text-muted-foreground">{p.note}</span>
+                    <span className="block text-sm font-medium text-ink">{property.label}</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{property.note}</span>
                   </button>
                 ))}
               </div>
             </fieldset>
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <TextField
-                id="q-name"
-                label="Full name"
-                value={values.name}
-                error={errors.name}
-                onChange={(v) => set("name", v)}
-                autoComplete="name"
-              />
-              <TextField
-                id="q-email"
-                label="Email"
-                type="email"
-                value={values.email}
-                error={errors.email}
-                onChange={(v) => set("email", v)}
-                autoComplete="email"
-              />
-              <TextField
-                id="q-phone"
-                label="Phone"
-                type="tel"
-                value={values.phone}
-                error={errors.phone}
-                onChange={(v) => set("phone", v)}
-                autoComplete="tel"
-              />
-              <TextField
-                id="q-city"
-                label="City"
-                value={values.city}
-                error={errors.city}
-                onChange={(v) => set("city", v)}
-                autoComplete="address-level2"
-              />
-              <TextField
-                id="q-size"
-                label="Approximate size (optional)"
-                value={values.size ?? ""}
-                error={errors.size}
-                onChange={(v) => set("size", v)}
-                placeholder="e.g. 3,200 sq ft · 4 bed / 4 bath"
-              />
-              <TextField
-                id="q-timing"
-                label="Desired timing (optional)"
-                value={values.timing ?? ""}
-                error={errors.timing}
-                onChange={(v) => set("timing", v)}
-                placeholder="e.g. within two weeks"
-              />
+              <TextField id="q-name" label="Full name" value={values.name} error={errors.name} onChange={(value) => set("name", value)} autoComplete="name" />
+              <TextField id="q-email" label="Email" type="email" value={values.email} error={errors.email} onChange={(value) => set("email", value)} autoComplete="email" />
+              <TextField id="q-phone" label="Phone" type="tel" value={values.phone} error={errors.phone} onChange={(value) => set("phone", value)} autoComplete="tel" />
+              <TextField id="q-city" label="City" value={values.city} error={errors.city} onChange={(value) => set("city", value)} autoComplete="address-level2" />
+              <TextField id="q-size" label="Approximate size (optional)" value={values.size ?? ""} error={errors.size} onChange={(value) => set("size", value)} placeholder="e.g. 3,200 sq ft, 4 bed / 4 bath" />
+              <TextField id="q-timing" label="Desired timing (optional)" value={values.timing ?? ""} error={errors.timing} onChange={(value) => set("timing", value)} placeholder="e.g. within two weeks" />
             </div>
 
             <div>
@@ -221,30 +196,30 @@ function QuotePage() {
                 id="q-scope"
                 value={values.scope}
                 maxLength={1200}
-                onChange={(e) => set("scope", e.target.value)}
-                placeholder="Which rooms or areas, how the space is used, current condition, anything specialized"
+                onChange={(event) => set("scope", event.target.value)}
+                placeholder="Which rooms or areas, how the space is used, current condition, and anything specialized"
                 className="mt-2 min-h-32"
                 aria-invalid={Boolean(errors.scope)}
               />
-              {errors.scope && <p className="mt-1 text-xs text-destructive">{errors.scope}</p>}
+              {errors.scope && <p className="mt-1 text-xs text-destructive" role="alert">{errors.scope}</p>}
             </div>
 
             <fieldset>
               <legend className="text-sm font-medium text-ink">How should we reach you?</legend>
               <div className="mt-3 flex flex-wrap gap-2">
-                {contactPrefs.map((c) => (
+                {contactPrefs.map((preference) => (
                   <button
-                    key={c.id}
+                    key={preference.id}
                     type="button"
-                    onClick={() => set("contactPreference", c.id)}
-                    aria-pressed={values.contactPreference === c.id}
-                    className={`rounded-md border px-4 py-2.5 text-sm ${
-                      values.contactPreference === c.id
+                    onClick={() => set("contactPreference", preference.id)}
+                    aria-pressed={values.contactPreference === preference.id}
+                    className={`min-h-11 rounded-md border px-4 py-2.5 text-sm transition-colors ${
+                      values.contactPreference === preference.id
                         ? "border-moss bg-accent/50"
-                        : "border-border bg-card"
+                        : "border-border bg-card hover:border-moss/50"
                     }`}
                   >
-                    {c.label}
+                    {preference.label}
                   </button>
                 ))}
               </div>
@@ -256,22 +231,18 @@ function QuotePage() {
                 id="q-notes"
                 value={values.notes ?? ""}
                 maxLength={1200}
-                onChange={(e) => set("notes", e.target.value)}
+                onChange={(event) => set("notes", event.target.value)}
                 className="mt-2"
               />
             </div>
 
-            {/* Photos */}
             <div className="rounded-xl border border-border bg-card p-5">
               <h2 className="text-lg">Photos (optional)</h2>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                You can preview photos of the space here to help you describe it. In this version
-                of the site, selected files stay on your device — nothing is uploaded. Ask us for a
-                secure way to send photos and we'll arrange it.
+                You can preview photos of the space here to help describe it. In this version of the site, selected files stay on your device. Nothing is uploaded. Ask us for a secure way to send photos and we'll arrange it.
               </p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Please don't include IDs, financial documents, or other sensitive personal
-                information in photos.
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Please do not include IDs, financial documents, or other sensitive personal information in photos. You can select up to 6 images.
               </p>
               <input
                 ref={fileRef}
@@ -279,30 +250,32 @@ function QuotePage() {
                 accept="image/*"
                 multiple
                 className="sr-only"
-                onChange={(e) => addPhotos(e.target.files)}
+                onChange={(event) => addPhotos(event.target.files)}
               />
               <Button
                 type="button"
                 variant="outline"
                 className="mt-4 gap-2"
                 onClick={() => fileRef.current?.click()}
+                disabled={photos.length >= 6}
               >
-                <ImagePlus className="size-4" aria-hidden="true" /> Choose photos
+                <ImagePlus className="size-4" aria-hidden="true" />
+                {photos.length >= 6 ? "Photo limit reached" : "Choose photos"}
               </Button>
               {photos.length > 0 && (
                 <ul className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
-                  {photos.map((p, i) => (
-                    <li key={p.url} className="relative">
+                  {photos.map((photo, index) => (
+                    <li key={photo.url} className="relative">
                       <img
-                        src={p.url}
-                        alt={`Selected photo ${i + 1}: ${p.name}`}
+                        src={photo.url}
+                        alt={`Selected photo ${index + 1}: ${photo.name}`}
                         className="aspect-square w-full rounded-md object-cover"
                       />
                       <button
                         type="button"
-                        onClick={() => removePhoto(i)}
-                        aria-label={`Remove ${p.name}`}
-                        className="absolute -top-2 -right-2 inline-flex size-7 items-center justify-center rounded-full border border-border bg-card shadow-soft"
+                        onClick={() => removePhoto(index)}
+                        aria-label={`Remove ${photo.name}`}
+                        className="absolute -right-2 -top-2 inline-flex size-8 items-center justify-center rounded-full border border-border bg-card shadow-soft"
                       >
                         <X className="size-3.5" aria-hidden="true" />
                       </button>
@@ -313,37 +286,29 @@ function QuotePage() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button type="submit" size="lg">
-                Review my request
-              </Button>
+              <Button type="submit" size="lg">Review my request</Button>
               {ready && (
                 <Button asChild size="lg" variant="outline">
-                  <a href={mailtoLink(`Custom quote request — ${values.name}`, body)}>
-                    Send by email
-                  </a>
+                  <a href={mailtoLink(`Custom quote request: ${values.name}`, body)}>Send by email</a>
                 </Button>
               )}
             </div>
             {ready && (
-              <p className="text-sm text-moss">
-                Looks good. “Send by email” opens your email app with everything filled in — nothing
-                is stored on this site.
+              <p className="rounded-lg bg-accent/40 p-4 text-sm leading-relaxed text-accent-foreground" role="status">
+                Your required details are complete. Send by email opens your email app with the request filled in. Nothing is stored on this site.
               </p>
             )}
           </form>
 
-          <aside className="rounded-xl border border-border bg-sand p-6">
-            <h2 className="text-lg">Prefer to talk it through?</h2>
+          <aside className="rounded-xl border border-border bg-sand p-6 lg:sticky lg:top-32">
+            <p className="eyebrow">Direct help</p>
+            <h2 className="mt-3 text-xl">Prefer to talk it through?</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Call or email directly and we'll walk through the space with you.
             </p>
-            <div className="mt-4 flex flex-col gap-2">
-              <Button asChild>
-                <a href={business.phoneHref}>Call {business.phoneDisplay}</a>
-              </Button>
-              <Button asChild variant="outline">
-                <a href={business.emailHref}>Email us</a>
-              </Button>
+            <div className="mt-5 flex flex-col gap-2">
+              <Button asChild><a href={business.phoneHref}>Call {business.phoneDisplay}</a></Button>
+              <Button asChild variant="outline"><a href={business.emailHref}>Email us</a></Button>
             </div>
           </aside>
         </div>
@@ -365,7 +330,7 @@ function TextField({
   id: string;
   label: string;
   value: string;
-  onChange: (v: string) => void;
+  onChange: (value: string) => void;
   error?: string;
   type?: string;
   autoComplete?: string;
@@ -381,10 +346,10 @@ function TextField({
         placeholder={placeholder}
         autoComplete={autoComplete}
         aria-invalid={Boolean(error)}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         className="mt-2"
       />
-      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+      {error && <p className="mt-1 text-xs text-destructive" role="alert">{error}</p>}
     </div>
   );
 }
