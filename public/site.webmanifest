@@ -4,13 +4,14 @@
   "description": "Professional cleaning across Dallas-Fort Worth.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#06172c",
-  "theme_color": "#06172c",
+  "background_color": "#f4faf9",
+  "theme_color": "#0b2733",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "/tranquility-official-logo.webp",
+      "sizes": "256x256",
+      "type": "image/webp",
+      "purpose": "any"
     }
   ]
 }
