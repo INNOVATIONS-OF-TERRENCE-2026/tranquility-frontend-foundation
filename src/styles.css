@@ -5,8 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Tranquility Level Cleaning brand system.
- * Core palette: deep navy, champagne gold, warm ivory, polished silver and white.
+ * Tranquility Level Cleaning design system.
+ * The default identity is navy and champagne, while TLC Color Studio can
+ * replace the full semantic color system at runtime without sacrificing contrast.
  */
 
 @theme inline {
@@ -79,10 +80,10 @@
   --card-foreground: #10223a;
   --popover: #fffdf9;
   --popover-foreground: #10223a;
-  --primary: #d7b66f;
-  --primary-foreground: #071a34;
-  --secondary: #0b2343;
-  --secondary-foreground: #fffaf0;
+  --primary: #173b73;
+  --primary-foreground: #fffdf8;
+  --secondary: #d7b66f;
+  --secondary-foreground: #07111f;
   --muted: #f0ece5;
   --muted-foreground: #647084;
   --accent: #f1e2bd;
@@ -91,12 +92,12 @@
   --destructive-foreground: #fff8f2;
   --border: #d8d5d0;
   --input: #cbc7c0;
-  --ring: #c59a43;
+  --ring: #4f6f9e;
   --sand: #f4efe5;
   --stone-soft: #e6e4e0;
-  --moss: #b78a35;
-  --moss-soft: #dec487;
-  --oak: #c59a43;
+  --moss: #173b73;
+  --moss-soft: #6f8db8;
+  --oak: #d7b66f;
   --ink: #071a34;
   --night: #06182f;
   --night-foreground: #fbf6ea;
@@ -106,22 +107,26 @@
   --gold-soft: #f0d99f;
   --silver: #aeb6c2;
   --ivory: #fbf7ee;
-  --chart-1: #d7b66f;
-  --chart-2: #0e2a4d;
+  --palette-from: #173b73;
+  --palette-to: #d7b66f;
+  --palette-gradient: linear-gradient(135deg, #173b73 0%, #777988 48%, #d7b66f 100%);
+  --palette-shine: radial-gradient(circle at 24% 14%, rgb(255 255 255 / 0.5), transparent 24%), linear-gradient(135deg, #173b73 0%, #d7b66f 100%);
+  --chart-1: #173b73;
+  --chart-2: #d7b66f;
   --chart-3: #8f9bad;
   --chart-4: #c59a43;
   --chart-5: #d8d5d0;
   --sidebar: #f4efe5;
   --sidebar-foreground: #10223a;
-  --sidebar-primary: #d7b66f;
-  --sidebar-primary-foreground: #071a34;
+  --sidebar-primary: #173b73;
+  --sidebar-primary-foreground: #fffdf8;
   --sidebar-accent: #efe4ca;
   --sidebar-accent-foreground: #0b2343;
   --sidebar-border: #d8d5d0;
-  --sidebar-ring: #c59a43;
+  --sidebar-ring: #4f6f9e;
   --shadow-soft-token: 0 1px 2px rgb(7 26 52 / 0.06), 0 18px 50px -28px rgb(7 26 52 / 0.34);
   --shadow-lift-token: 0 8px 26px -16px rgb(7 26 52 / 0.26), 0 38px 90px -42px rgb(7 26 52 / 0.42);
-  --shadow-gold-token: 0 10px 34px -18px rgb(197 154 67 / 0.72);
+  --shadow-gold-token: 0 10px 34px -18px color-mix(in srgb, var(--palette-to) 72%, transparent);
 }
 
 .dark {
@@ -131,24 +136,24 @@
   --card-foreground: #fbf7ee;
   --popover: #0b2343;
   --popover-foreground: #fbf7ee;
-  --primary: #e2c27a;
-  --primary-foreground: #06172c;
-  --secondary: #f1e2bd;
-  --secondary-foreground: #071a34;
+  --primary: #6f8db8;
+  --primary-foreground: #fffdf8;
+  --secondary: #e2c27a;
+  --secondary-foreground: #07111f;
   --muted: #102b4c;
-  --muted-foreground: #b4bdca;
+  --muted-foreground: #c1cad6;
   --accent: #17375b;
   --accent-foreground: #f6e4b8;
   --destructive: #d66f69;
   --destructive-foreground: #fff7f2;
-  --border: #24415f;
-  --input: #31506d;
-  --ring: #e2c27a;
+  --border: #38516c;
+  --input: #48627d;
+  --ring: #91a8c7;
   --sand: #0b203a;
   --stone-soft: #122d4c;
-  --moss: #e2c27a;
-  --moss-soft: #f0d99f;
-  --oak: #d7b66f;
+  --moss: #91a8c7;
+  --moss-soft: #bfd0e6;
+  --oak: #e2c27a;
   --ink: #fbf7ee;
   --night: #041326;
   --night-foreground: #fbf7ee;
@@ -156,24 +161,28 @@
   --navy-soft: #0d2949;
   --gold: #e2c27a;
   --gold-soft: #f2dca8;
-  --silver: #bcc5d1;
+  --silver: #d7dee8;
   --ivory: #fbf7ee;
-  --chart-1: #e2c27a;
-  --chart-2: #f0d99f;
+  --palette-from: #173b73;
+  --palette-to: #d7b66f;
+  --palette-gradient: linear-gradient(135deg, #173b73 0%, #777988 48%, #d7b66f 100%);
+  --palette-shine: radial-gradient(circle at 24% 14%, rgb(255 255 255 / 0.5), transparent 24%), linear-gradient(135deg, #173b73 0%, #d7b66f 100%);
+  --chart-1: #91a8c7;
+  --chart-2: #e2c27a;
   --chart-3: #aeb8c7;
   --chart-4: #7f94ab;
   --chart-5: #31506d;
   --sidebar: #081d35;
   --sidebar-foreground: #fbf7ee;
-  --sidebar-primary: #e2c27a;
-  --sidebar-primary-foreground: #06172c;
+  --sidebar-primary: #91a8c7;
+  --sidebar-primary-foreground: #07111f;
   --sidebar-accent: #153555;
   --sidebar-accent-foreground: #f6e4b8;
-  --sidebar-border: #24415f;
-  --sidebar-ring: #e2c27a;
+  --sidebar-border: #38516c;
+  --sidebar-ring: #91a8c7;
   --shadow-soft-token: 0 2px 8px rgb(0 0 0 / 0.28), 0 20px 58px -30px rgb(0 0 0 / 0.8);
   --shadow-lift-token: 0 10px 30px -18px rgb(0 0 0 / 0.7), 0 46px 110px -46px rgb(0 0 0 / 0.95);
-  --shadow-gold-token: 0 12px 40px -20px rgb(226 194 122 / 0.58);
+  --shadow-gold-token: 0 12px 40px -20px color-mix(in srgb, var(--palette-to) 58%, transparent);
 }
 
 .brand-dark {
@@ -183,25 +192,31 @@
   --card-foreground: #fbf7ee;
   --popover: #0b2343;
   --popover-foreground: #fbf7ee;
-  --primary: #e2c27a;
-  --primary-foreground: #06172c;
-  --secondary: #f1e2bd;
-  --secondary-foreground: #071a34;
+  --primary: #6f8db8;
+  --primary-foreground: #fffdf8;
+  --secondary: #e2c27a;
+  --secondary-foreground: #07111f;
   --muted: #102b4c;
-  --muted-foreground: #b4bdca;
+  --muted-foreground: #c1cad6;
   --accent: #17375b;
   --accent-foreground: #f6e4b8;
-  --border: #284866;
-  --input: #355573;
-  --ring: #e2c27a;
+  --border: #38516c;
+  --input: #48627d;
+  --ring: #91a8c7;
   --sand: #0b203a;
   --stone-soft: #122d4c;
-  --moss: #e2c27a;
-  --moss-soft: #f0d99f;
-  --oak: #d7b66f;
+  --moss: #91a8c7;
+  --moss-soft: #bfd0e6;
+  --oak: #e2c27a;
   --ink: #fbf7ee;
   --night: #041326;
   --night-foreground: #fbf7ee;
+  --navy: #06172c;
+  --navy-soft: #0d2949;
+  --gold: #e2c27a;
+  --gold-soft: #f2dca8;
+  --silver: #d7dee8;
+  --ivory: #fbf7ee;
   color: var(--foreground);
 }
 
@@ -223,6 +238,7 @@
     font-family: var(--font-sans);
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
+    transition: background-color 220ms ease, color 220ms ease;
   }
 
   h1,
@@ -334,26 +350,30 @@
 
 @utility luxury-panel {
   background:
-    radial-gradient(circle at 15% 0%, rgb(226 194 122 / 0.12), transparent 30%),
-    linear-gradient(145deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.01));
-  border: 1px solid rgb(226 194 122 / 0.2);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), var(--shadow-soft-token);
+    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--gold) 17%, transparent), transparent 30%),
+    linear-gradient(145deg, color-mix(in srgb, var(--foreground) 6%, transparent), color-mix(in srgb, var(--foreground) 1%, transparent));
+  border: 1px solid color-mix(in srgb, var(--gold) 26%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent), var(--shadow-soft-token);
 }
 
 @utility gold-text {
-  color: #d7b66f;
-  background-image: linear-gradient(110deg, #a97827 0%, #f4dda4 38%, #d2aa59 68%, #f7e7bd 100%);
+  color: var(--color-moss);
+  background-image: var(--palette-shine);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 @utility gold-rule {
-  background: linear-gradient(90deg, transparent, #e2c27a 30%, #c5943c 70%, transparent);
+  background: var(--palette-gradient);
 }
 
 @utility navy-glass {
-  background: linear-gradient(180deg, rgb(4 19 38 / 0.96), rgb(7 26 52 / 0.91));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--night) 96%, transparent), color-mix(in srgb, var(--navy-soft) 91%, transparent));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+@utility palette-surface {
+  background-image: var(--palette-shine);
 }
