@@ -6,7 +6,7 @@ export interface ColorPalettePreset {
 }
 
 export const colorPalettes: ColorPalettePreset[] = [
-  { id: "royal-navy", name: "Royal Navy", primary: "#173B73", secondary: "#D7B66F" },
+  { id: "ocean-mist", name: "Ocean Mist", primary: "#2B7C87", secondary: "#8FD7D1" },
   { id: "sapphire", name: "Sapphire", primary: "#0757C9", secondary: "#6EC8FF" },
   { id: "emerald", name: "Emerald", primary: "#087A5A", secondary: "#65D6A8" },
   { id: "garnet", name: "Garnet", primary: "#9F1838", secondary: "#F07A8E" },
@@ -40,7 +40,7 @@ export const colorPalettes: ColorPalettePreset[] = [
   { id: "white-gold", name: "White Gold", primary: "#9D8A67", secondary: "#F5E7C4" },
 ];
 
-export const defaultColorPaletteId = "royal-navy";
+export const defaultColorPaletteId = "ocean-mist";
 
 export function getColorPalette(id: string | null | undefined): ColorPalettePreset {
   return colorPalettes.find((palette) => palette.id === id) ?? colorPalettes[0]!;
