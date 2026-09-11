@@ -1,19 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-import { StudioShell } from "@/components/studio/StudioShell";
-import { seo } from "@/lib/seo";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/studio")({
-  head: () =>
-    seo({
-      title: "TLC Studio | Personalized Cleaning Plan",
-      description:
-        "Use TLC Studio to build a personalized room-by-room cleaning plan, organize surfaces and household priorities, and create a Home Care Blueprint.",
-      path: "/studio",
-    }),
-  component: StudioPage,
+  beforeLoad: () => {
+    throw redirect({ to: "/services" });
+  },
+  component: () => null,
 });
-
-function StudioPage() {
-  return <StudioShell />;
-}
