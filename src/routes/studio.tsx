@@ -6,9 +6,9 @@ import { seo } from "@/lib/seo";
 export const Route = createFileRoute("/studio")({
   head: () =>
     seo({
-      title: "Tranquility Studio | Personalized Cleaning Plan",
+      title: "TLC Studio | Personalized Cleaning Plan",
       description:
-        "Build a personalized room-by-room cleaning preference plan, organize surfaces and household priorities, and create a Tranquility Home Care Blueprint.",
+        "Use TLC Studio to build a personalized room-by-room cleaning plan, organize surfaces and household priorities, and create a Home Care Blueprint.",
       path: "/studio",
     }),
   component: StudioPage,
