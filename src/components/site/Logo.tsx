@@ -4,29 +4,44 @@ export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link
       to="/"
-      className="group flex items-center gap-3 rounded-sm"
-      aria-label="Tranquility Level Cleaning — home"
+      className="group inline-flex min-w-0 items-center gap-3 rounded-md"
+      aria-label="Tranquility Level Cleaning home"
     >
       <span
         aria-hidden="true"
-        className="flex size-9 items-center justify-center rounded-full border border-moss/30 bg-accent/60"
+        className="relative flex size-11 shrink-0 items-center justify-center rounded-xl border border-gold/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(215,182,111,0.04))] shadow-gold md:size-12"
       >
-        <svg viewBox="0 0 24 24" className="size-5 text-moss" fill="none" aria-hidden="true">
+        <svg viewBox="0 0 64 64" className="size-9 md:size-10" fill="none" aria-hidden="true">
           <path
-            d="M12 3.5c3.6 2.6 5.6 5.5 5.6 8.6A5.6 5.6 0 0 1 12 17.7a5.6 5.6 0 0 1-5.6-5.6c0-3.1 2-6 5.6-8.6Z"
+            d="M12 18 32 6l20 12"
             stroke="currentColor"
-            strokeWidth="1.1"
+            className="text-moss"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
-          <path d="M12 20.5v-8.7" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+          <path d="M31 15v34" stroke="currentColor" className="text-ink" strokeWidth="5" strokeLinecap="round" />
+          <path d="M20 16h23" stroke="currentColor" className="text-ink" strokeWidth="5" strokeLinecap="round" />
+          <path
+            d="M18 45c8-13 17-18 29-19-3 13-10 22-23 27 5-7 9-14 12-22-6 5-11 10-18 14Z"
+            fill="currentColor"
+            className="text-moss"
+          />
+          <path d="M42 18h4v4h-4zM47 18h4v4h-4zM42 23h4v4h-4zM47 23h4v4h-4z" fill="currentColor" className="text-moss-soft" />
         </svg>
       </span>
-      <span className="leading-tight">
-        <span className="block font-display text-[1.05rem] tracking-tight text-ink">
+
+      <span className="min-w-0 leading-none">
+        <span className="block truncate font-display text-[1.28rem] font-semibold tracking-[-0.035em] text-ink md:text-[1.48rem]">
           Tranquility
         </span>
         {!compact && (
-          <span className="block text-[0.62rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-            Level Cleaning
+          <span className="mt-1 flex items-center gap-2">
+            <span className="h-px w-4 bg-moss/75" aria-hidden="true" />
+            <span className="truncate text-[0.58rem] font-bold uppercase tracking-[0.28em] text-muted-foreground md:text-[0.62rem]">
+              Level Cleaning
+            </span>
+            <span className="h-px w-4 bg-moss/75" aria-hidden="true" />
           </span>
         )}
       </span>
