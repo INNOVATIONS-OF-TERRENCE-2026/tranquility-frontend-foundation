@@ -1,6 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
-import { useRef, useState } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Gauge,
+  House,
+  ListChecks,
+  RotateCcw,
+  Sparkles,
+  WandSparkles,
+  Zap,
+} from "lucide-react";
+import { useMemo, useRef, useState } from "react";
 
 import { Blueprint } from "./Blueprint";
 import { EstimatePanel } from "./EstimatePanel";
@@ -15,13 +25,33 @@ import { StyleProfile } from "./StyleProfile";
 import { SurfaceProfile } from "./SurfaceProfile";
 import { useStudioTransfer } from "./StudioTransferProvider";
 import { Button } from "@/components/ui/button";
+import { money } from "@/config/pricing";
 import { createRoom, initialStudioState, studioSteps } from "@/config/studio";
-import { studioBookingDraft, studioReviewFlags } from "@/lib/studio";
+import {
+  buildStudioEstimate,
+  preferenceCompletion,
+  studioBookingDraft,
+  studioReviewFlags,
+} from "@/lib/studio";
 import type { RoomType, StudioRoom, StudioState, StudioStepId } from "@/types/studio";
 
 function freshState(): StudioState {
   return structuredClone(initialStudioState);
 }
+
+type StudioPreset = "simple" | "deep" | "move" | "detail";
+
+const presetCards: {
+  id: StudioPreset;
+  title: string;
+  note: string;
+  icon: typeof Zap;
+}[] = [
+  { id: "simple", title: "Easy upkeep", note: "Standard clean, recurring-ready setup", icon: Zap },
+  { id: "deep", title: "Deep reset", note: "Detail-focused one-time deep clean", icon: Sparkles },
+  { id: "move", title: "Fresh start", note: "Move-in or move-out setup", icon: House },
+  { id: "detail", title: "Detail first", note: "High-priority kitchen and bath focus", icon: WandSparkles },
+];
 
 export function StudioShell() {
   const [state, setState] = useState<StudioState>(freshState);
@@ -32,6 +62,9 @@ export function StudioShell() {
 
   const stepIndex = studioSteps.findIndex((item) => item.id === step);
   const reviewFlags = studioReviewFlags(state);
+  const estimate = useMemo(() => buildStudioEstimate(state), [state]);
+  const completion = useMemo(() => preferenceCompletion(state), [state]);
+  const includedRooms = state.rooms.filter((room) => room.included).length;
 
   function updateState(patch: Partial<StudioState>) {
     setState((current) => ({ ...current, ...patch }));
@@ -79,23 +112,125 @@ export function StudioShell() {
     setDraft(studioBookingDraft(state));
   }
 
+  function resetStudio() {
+    setState(freshState());
+    setStep("spaces");
+    setCompleted([]);
+    roomSequence.current = 10;
+  }
+
+  function applyPreset(preset: StudioPreset) {
+    const next = freshState();
+
+    if (preset === "simple") {
+      next.service = "standard";
+      next.frequency = "biweekly";
+      next.selectedStyles = ["warm-neutral"];
+      next.primaryStyle = "warm-neutral";
+      next.paletteId = "airy";
+    }
+
+    if (preset === "deep") {
+      next.service = "deep";
+      next.frequency = "onetime";
+      next.rooms = next.rooms.map((room) => ({ ...room, priority: "extra" }));
+      next.selectedStyles = ["organic-modern"];
+      next.primaryStyle = "organic-modern";
+      next.paletteId = "neutral";
+    }
+
+    if (preset === "move") {
+      next.service = "move";
+      next.frequency = "onetime";
+      next.rooms = next.rooms.map((room) => ({ ...room, priority: "highest" }));
+      next.selectedStyles = ["minimal"];
+      next.primaryStyle = "minimal";
+      next.paletteId = "airy";
+    }
+
+    if (preset === "detail") {
+      next.service = "deep";
+      next.frequency = "onetime";
+      next.rooms = next.rooms.map((room) => ({
+        ...room,
+        priority: room.type === "kitchen" || room.type === "full-bathroom" ? "highest" : "extra",
+      }));
+      next.selectedStyles = ["modern-luxe"];
+      next.primaryStyle = "modern-luxe";
+      next.paletteId = "moody";
+    }
+
+    setState(next);
+    setStep("spaces");
+    setCompleted([]);
+  }
+
   return (
     <section className="brand-dark relative overflow-hidden bg-background pb-28 text-foreground lg:pb-0">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_5%,rgba(226,194,122,0.14),transparent_24%),radial-gradient(circle_at_0%_70%,rgba(255,255,255,0.045),transparent_26%)]" aria-hidden="true" />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(circle_at_90%_5%,color-mix(in_srgb,var(--color-gold)_18%,transparent),transparent_24%),radial-gradient(circle_at_0%_70%,rgba(255,255,255,0.045),transparent_26%)]"
+        aria-hidden="true"
+      />
       <div className="container-page relative py-8 md:py-12 lg:py-14">
-        <div className="mb-8 grid gap-6 border-b border-gold/20 pb-8 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div className="mb-7 grid gap-6 border-b border-gold/20 pb-7 lg:grid-cols-[1fr_auto] lg:items-end">
           <div className="max-w-4xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 text-xs font-semibold text-gold-soft">
-              <Sparkles className="size-3.5" aria-hidden="true" /> Tranquility Studio
+              <Sparkles className="size-3.5" aria-hidden="true" /> TLC Studio
             </div>
             <p className="mt-5 text-[0.66rem] font-bold uppercase tracking-[0.22em] text-moss">Your space. Your standards.</p>
-            <h1 className="mt-3 text-4xl leading-[0.98] text-ink md:text-6xl lg:text-[4.75rem]">Customize your cleaning experience.</h1>
+            <h1 className="mt-3 text-4xl leading-[0.98] text-ink md:text-6xl lg:text-[4.75rem]">
+              Build your clean without the complexity.
+            </h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Configure rooms, cleaning priorities, materials, household preferences, protected areas, and approved service options in one guided workspace.
+              Start with a smart preset or build room by room. TLC Studio keeps scope, priorities, surfaces, household preferences, protected areas, and the live estimate in one guided workspace.
             </p>
           </div>
-          <div className="max-w-sm rounded-2xl border border-gold/20 bg-card/70 p-4 text-xs leading-relaxed text-muted-foreground shadow-soft">
-            Studio is a frontend planning tool. Photos stay on your device in this version, and nothing is presented as stored or analyzed when it is not.
+          <button
+            type="button"
+            onClick={resetStudio}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-xs font-semibold text-ink shadow-soft hover:bg-accent"
+          >
+            <RotateCcw className="size-3.5" aria-hidden="true" /> Reset Studio
+          </button>
+        </div>
+
+        <div className="mb-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {presetCards.map(({ id, title, note, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => applyPreset(id)}
+              className="group rounded-2xl border border-gold/20 bg-card/70 p-4 text-left shadow-soft transition hover:-translate-y-0.5 hover:border-gold/45 hover:bg-card"
+            >
+              <span className="flex size-9 items-center justify-center rounded-full border border-gold/25 bg-gold/5 text-moss">
+                <Icon className="size-4" aria-hidden="true" />
+              </span>
+              <span className="mt-4 block text-sm font-bold text-ink">{title}</span>
+              <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{note}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="mb-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-border bg-card/60 p-4">
+            <div className="flex items-center gap-2 text-moss"><Gauge className="size-4" aria-hidden="true" /><span className="text-[0.62rem] font-bold uppercase tracking-[0.16em]">Profile</span></div>
+            <p className="mt-2 font-display text-2xl text-ink">{completion}%</p>
+            <p className="mt-1 text-xs text-muted-foreground">Preference profile complete</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-card/60 p-4">
+            <div className="flex items-center gap-2 text-moss"><House className="size-4" aria-hidden="true" /><span className="text-[0.62rem] font-bold uppercase tracking-[0.16em]">Rooms</span></div>
+            <p className="mt-2 font-display text-2xl text-ink">{includedRooms}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Included in the current plan</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-card/60 p-4">
+            <div className="flex items-center gap-2 text-moss"><ListChecks className="size-4" aria-hidden="true" /><span className="text-[0.62rem] font-bold uppercase tracking-[0.16em]">Review</span></div>
+            <p className="mt-2 font-display text-2xl text-ink">{reviewFlags.length}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Items needing custom confirmation</p>
+          </div>
+          <div className="rounded-2xl border border-gold/25 bg-[var(--palette-gradient)] p-4 text-white shadow-lift">
+            <div className="flex items-center gap-2 text-white/80"><Sparkles className="size-4" aria-hidden="true" /><span className="text-[0.62rem] font-bold uppercase tracking-[0.16em]">Live estimate</span></div>
+            <p className="mt-2 font-display text-2xl text-white">{money(estimate.total)}</p>
+            <p className="mt-1 text-xs text-white/80">Updates as approved scope changes</p>
           </div>
         </div>
 
@@ -170,7 +305,7 @@ export function StudioShell() {
                 <Blueprint state={state} />
                 <div className="mt-10 rounded-2xl border border-gold/20 bg-sand p-6">
                   <p className="eyebrow">Next step</p>
-                  <h2 className="mt-2 text-3xl">Turn your plan into a service request.</h2>
+                  <h2 className="mt-2 text-3xl">Turn your TLC Studio plan into a service request.</h2>
                   <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                     Cleaning type, frequency, room quantities, approved add-ons, and square footage can transfer into the service request through temporary in-memory state. Names, addresses, photos, and household notes are not transferred or stored.
                   </p>
