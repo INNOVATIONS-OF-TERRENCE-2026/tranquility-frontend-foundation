@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { Blueprint } from "./Blueprint";
 import { EstimatePanel } from "./EstimatePanel";
 import { HouseholdProfile } from "./HouseholdProfile";
+import { MobileEstimateBar } from "./MobileEstimateBar";
 import { MoodBoard } from "./MoodBoard";
 import { PriorityWorkspace } from "./PriorityWorkspace";
 import { RoomManager } from "./RoomManager";
@@ -79,29 +80,33 @@ export function StudioShell() {
   }
 
   return (
-    <section className="section pt-8 md:pt-12">
-      <div className="container-page">
-        <div className="mb-8 flex flex-col gap-5 border-b border-border pb-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-moss/35 bg-accent/45 px-3 py-1.5 text-xs font-semibold text-moss">
+    <section className="brand-dark relative overflow-hidden bg-background pb-28 text-foreground lg:pb-0">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_5%,rgba(226,194,122,0.14),transparent_24%),radial-gradient(circle_at_0%_70%,rgba(255,255,255,0.045),transparent_26%)]" aria-hidden="true" />
+      <div className="container-page relative py-8 md:py-12 lg:py-14">
+        <div className="mb-8 grid gap-6 border-b border-gold/20 pb-8 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 text-xs font-semibold text-gold-soft">
               <Sparkles className="size-3.5" aria-hidden="true" /> Tranquility Studio
             </div>
-            <h1 className="mt-4 text-4xl leading-tight md:text-6xl">Design your cleaning experience around the way you actually live.</h1>
+            <p className="mt-5 text-[0.66rem] font-bold uppercase tracking-[0.22em] text-moss">Your space. Your standards.</p>
+            <h1 className="mt-3 text-4xl leading-[0.98] text-ink md:text-6xl lg:text-[4.75rem]">Customize your cleaning experience.</h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Build a visual room plan, organize cleaning priorities, document surfaces and household preferences, then leave with a personalized Home Care Blueprint.
+              Configure rooms, cleaning priorities, materials, household preferences, protected areas, and approved service options in one guided workspace.
             </p>
           </div>
-          <div className="max-w-sm rounded-xl border border-border bg-sand p-4 text-xs leading-relaxed text-muted-foreground">
-            Studio is a frontend planning tool. It does not upload photos, store household information, perform AI analysis, or add unapproved pricing.
+          <div className="max-w-sm rounded-2xl border border-gold/20 bg-card/70 p-4 text-xs leading-relaxed text-muted-foreground shadow-soft">
+            Studio is a frontend planning tool. Photos stay on your device in this version, and nothing is presented as stored or analyzed when it is not.
           </div>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[13rem_minmax(0,1fr)_20rem] xl:grid-cols-[14rem_minmax(0,1fr)_21rem]">
-          <aside className="lg:sticky lg:top-28 lg:self-start">
-            <StudioProgress current={step} completed={completed} onSelect={goTo} />
+        <div className="grid gap-6 lg:grid-cols-[13rem_minmax(0,1fr)_20rem] xl:grid-cols-[14rem_minmax(0,1fr)_21rem]">
+          <aside className="lg:sticky lg:top-32 lg:self-start">
+            <div className="luxury-panel rounded-2xl p-3">
+              <StudioProgress current={step} completed={completed} onSelect={goTo} />
+            </div>
           </aside>
 
-          <div className="min-w-0">
+          <div className="min-w-0 rounded-3xl border border-gold/20 bg-card/70 p-5 shadow-lift backdrop-blur-sm md:p-7">
             {step === "spaces" && (
               <>
                 <ServiceConfigurator
@@ -163,14 +168,14 @@ export function StudioShell() {
             {step === "blueprint" && (
               <>
                 <Blueprint state={state} />
-                <div className="mt-10 rounded-2xl border border-border bg-sand p-6">
+                <div className="mt-10 rounded-2xl border border-gold/20 bg-sand p-6">
                   <p className="eyebrow">Next step</p>
-                  <h2 className="mt-2 text-2xl">Turn your plan into a service request</h2>
+                  <h2 className="mt-2 text-3xl">Turn your plan into a service request.</h2>
                   <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                    Cleaning type, frequency, room quantities, approved add-ons, and square footage can move into the service request through temporary in-memory state. Names, addresses, photos, and household notes are not transferred or stored.
+                    Cleaning type, frequency, room quantities, approved add-ons, and square footage can transfer into the service request through temporary in-memory state. Names, addresses, photos, and household notes are not transferred or stored.
                   </p>
                   {reviewFlags.length > 0 && (
-                    <p className="mt-4 text-sm font-medium text-oak">
+                    <p className="mt-4 text-sm font-medium text-moss">
                       Your plan has {reviewFlags.length} review {reviewFlags.length === 1 ? "item" : "items"}. A custom quote may be the better path.
                     </p>
                   )}
@@ -178,7 +183,7 @@ export function StudioShell() {
                     <Button asChild size="lg" onClick={transferToBooking}>
                       <Link to="/booking">Continue to Request Service</Link>
                     </Button>
-                    <Button asChild size="lg" variant="outline">
+                    <Button asChild size="lg" variant="outline" className="border-gold/35">
                       <Link to="/quote">Request Custom Quote</Link>
                     </Button>
                   </div>
@@ -198,11 +203,13 @@ export function StudioShell() {
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="hidden min-w-0 lg:block">
             <EstimatePanel state={state} />
           </div>
         </div>
       </div>
+
+      <MobileEstimateBar state={state} />
     </section>
   );
 }
