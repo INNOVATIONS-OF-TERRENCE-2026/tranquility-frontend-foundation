@@ -43,15 +43,17 @@ function readableText(background: string) {
 function buildVariables(primary: string, secondary: string, dark: boolean): VariableSet {
   const lightBase = "#FCFBF8";
   const darkBase = "#050810";
-  const background = dark ? mixHex(darkBase, primary, 0.17) : mixHex(lightBase, primary, 0.045);
-  const card = dark ? mixHex("#0A1020", secondary, 0.1) : mixHex("#FFFFFF", secondary, 0.028);
+  const visiblePrimary = dark ? mixHex(primary, "#FFFFFF", 0.34) : primary;
+  const visibleSecondary = dark ? mixHex(secondary, "#FFFFFF", 0.12) : secondary;
+  const background = dark ? mixHex(darkBase, primary, 0.16) : mixHex(lightBase, primary, 0.04);
+  const card = dark ? mixHex("#0A1020", primary, 0.12) : mixHex("#FFFFFF", secondary, 0.025);
   const foreground = dark ? "#F8FAFC" : "#152136";
-  const mutedForeground = dark ? "#C6CEDA" : "#5D6879";
-  const border = dark ? mixHex("#334155", primary, 0.22) : mixHex("#D7DCE3", primary, 0.12);
-  const accent = dark ? mixHex("#111827", secondary, 0.24) : mixHex("#F7F8FA", secondary, 0.16);
-  const night = mixHex("#02050B", primary, 0.2);
-  const primarySoft = mixHex(primary, "#FFFFFF", dark ? 0.22 : 0.38);
-  const secondarySoft = mixHex(secondary, "#FFFFFF", dark ? 0.18 : 0.34);
+  const mutedForeground = dark ? "#C9D1DC" : "#5D6879";
+  const border = dark ? mixHex("#526174", primary, 0.18) : mixHex("#D2D7DE", primary, 0.1);
+  const accent = dark ? mixHex("#111827", primary, 0.25) : mixHex("#F7F8FA", secondary, 0.15);
+  const night = mixHex("#02050B", primary, 0.19);
+  const primarySoft = mixHex(visiblePrimary, "#FFFFFF", dark ? 0.14 : 0.38);
+  const secondarySoft = mixHex(visibleSecondary, "#FFFFFF", dark ? 0.12 : 0.34);
 
   return {
     "--background": background,
@@ -60,35 +62,35 @@ function buildVariables(primary: string, secondary: string, dark: boolean): Vari
     "--card-foreground": foreground,
     "--popover": card,
     "--popover-foreground": foreground,
-    "--primary": primary,
-    "--primary-foreground": readableText(primary),
-    "--secondary": secondary,
-    "--secondary-foreground": readableText(secondary),
-    "--muted": dark ? mixHex(background, "#FFFFFF", 0.06) : mixHex(background, "#000000", 0.035),
+    "--primary": visiblePrimary,
+    "--primary-foreground": readableText(visiblePrimary),
+    "--secondary": visibleSecondary,
+    "--secondary-foreground": readableText(visibleSecondary),
+    "--muted": dark ? mixHex(background, "#FFFFFF", 0.07) : mixHex(background, "#000000", 0.035),
     "--muted-foreground": mutedForeground,
     "--accent": accent,
     "--accent-foreground": dark ? "#F8FAFC" : "#101827",
     "--border": border,
-    "--input": mixHex(border, dark ? "#FFFFFF" : "#000000", dark ? 0.14 : 0.06),
+    "--input": mixHex(border, dark ? "#FFFFFF" : "#000000", dark ? 0.12 : 0.05),
     "--ring": primarySoft,
-    "--sand": dark ? mixHex(background, secondary, 0.08) : mixHex("#FAF7F0", secondary, 0.07),
-    "--stone-soft": dark ? mixHex(background, "#FFFFFF", 0.08) : mixHex("#EEF0F3", primary, 0.06),
-    "--moss": primary,
+    "--sand": dark ? mixHex(background, visibleSecondary, 0.07) : mixHex("#FAF7F0", secondary, 0.065),
+    "--stone-soft": dark ? mixHex(background, "#FFFFFF", 0.09) : mixHex("#EEF0F3", primary, 0.055),
+    "--moss": visiblePrimary,
     "--moss-soft": primarySoft,
-    "--oak": secondary,
-    "--ink": dark ? "#FFFFFF" : mixHex("#0A1729", primary, 0.08),
+    "--oak": visibleSecondary,
+    "--ink": dark ? "#FFFFFF" : mixHex("#0A1729", primary, 0.075),
     "--night": night,
     "--night-foreground": "#FFFDF8",
     "--navy": night,
-    "--navy-soft": mixHex(night, primary, 0.24),
-    "--gold": secondary,
+    "--navy-soft": mixHex(night, primary, 0.23),
+    "--gold": visibleSecondary,
     "--gold-soft": secondarySoft,
-    "--silver": mixHex("#B8C2CF", primary, 0.08),
-    "--ivory": mixHex("#FFFDF7", secondary, 0.025),
+    "--silver": dark ? "#D7DEE8" : mixHex("#B8C2CF", primary, 0.07),
+    "--ivory": dark ? "#FFFDF8" : mixHex("#FFFDF7", secondary, 0.025),
     "--sidebar": dark ? mixHex(background, primary, 0.08) : mixHex("#F7F8FA", primary, 0.045),
     "--sidebar-foreground": foreground,
-    "--sidebar-primary": primary,
-    "--sidebar-primary-foreground": readableText(primary),
+    "--sidebar-primary": visiblePrimary,
+    "--sidebar-primary-foreground": readableText(visiblePrimary),
     "--sidebar-accent": accent,
     "--sidebar-accent-foreground": dark ? "#F8FAFC" : "#101827",
     "--sidebar-border": border,
@@ -96,7 +98,7 @@ function buildVariables(primary: string, secondary: string, dark: boolean): Vari
     "--palette-from": primary,
     "--palette-to": secondary,
     "--palette-gradient": `linear-gradient(135deg, ${primary} 0%, ${mixHex(primary, secondary, 0.5)} 48%, ${secondary} 100%)`,
-    "--palette-shine": `radial-gradient(circle at 24% 14%, rgba(255,255,255,0.48), transparent 24%), linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)`,
+    "--palette-shine": `radial-gradient(circle at 24% 14%, rgba(255,255,255,0.5), transparent 24%), linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)`,
   };
 }
 
@@ -113,7 +115,10 @@ function applyPalette(primary: string, secondary: string, resolvedTheme: "light"
   });
 
   const themeColor = document.querySelector('meta[name="theme-color"]');
-  themeColor?.setAttribute("content", resolvedTheme === "dark" ? mixHex("#02050B", primary, 0.2) : mixHex("#FCFBF8", primary, 0.045));
+  themeColor?.setAttribute(
+    "content",
+    resolvedTheme === "dark" ? mixHex("#02050B", primary, 0.2) : mixHex("#FCFBF8", primary, 0.045),
+  );
 }
 
 export function ColorStudio({ compact = false }: { compact?: boolean }) {
@@ -166,7 +171,7 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
           role="dialog"
           aria-modal="false"
           aria-label="TLC Color Studio"
-          className="fixed inset-x-3 top-[5.4rem] z-[90] max-h-[78vh] overflow-y-auto rounded-3xl border border-border bg-card/98 p-5 text-card-foreground shadow-lift backdrop-blur-2xl md:left-auto md:right-5 md:top-28 md:w-[36rem]"
+          className="fixed inset-x-3 top-[5.4rem] z-[90] max-h-[78vh] overflow-y-auto rounded-3xl border border-border bg-card p-5 text-card-foreground shadow-lift backdrop-blur-2xl md:left-auto md:right-5 md:top-28 md:w-[36rem]"
         >
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -176,7 +181,7 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
               </div>
               <h2 className="mt-2 text-2xl">32 complete frontend palettes</h2>
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
-                Every choice recolors the full interface while preserving contrast in Light, Dark, and System mode. Each palette includes a two-color gradient and highlight shine.
+                Every choice recolors the full interface and recalculates readable text colors in Light, Dark, and System mode. Each palette includes a unique gradient and reflective highlight.
               </p>
             </div>
             <button
@@ -190,13 +195,13 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
           </div>
 
           <div
-            className="mt-5 overflow-hidden rounded-2xl border border-border p-5 text-white shadow-lift"
-            style={{ background: `radial-gradient(circle at 20% 10%, rgba(255,255,255,0.36), transparent 25%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})` }}
+            className="mt-5 overflow-hidden rounded-2xl border border-white/25 p-5 text-white shadow-lift"
+            style={{ background: `radial-gradient(circle at 20% 10%, rgba(255,255,255,0.42), transparent 25%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})` }}
           >
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/80">Current palette</p>
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/85">Current palette</p>
             <div className="mt-2 flex items-end justify-between gap-4">
               <p className="font-display text-3xl text-white drop-shadow">{selected.name}</p>
-              <Sparkles className="size-6 text-white/85" aria-hidden="true" />
+              <Sparkles className="size-6 text-white/90" aria-hidden="true" />
             </div>
           </div>
 
@@ -214,7 +219,7 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
                   className={`group relative aspect-square overflow-hidden rounded-2xl border transition hover:-translate-y-0.5 ${active ? "border-ink ring-2 ring-ring ring-offset-2 ring-offset-background" : "border-border"}`}
                   style={{ background: `radial-gradient(circle at 25% 15%, rgba(255,255,255,0.72), transparent 22%), linear-gradient(135deg, ${palette.primary}, ${palette.secondary})` }}
                 >
-                  <span className="absolute inset-x-1 bottom-1 rounded-lg bg-black/35 px-1 py-1 text-[0.52rem] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+                  <span className="absolute inset-x-1 bottom-1 rounded-lg bg-black/42 px-1 py-1 text-[0.52rem] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
                     {palette.name}
                   </span>
                   {active && (
