@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Professional residential, deep, move-in, move-out, and commercial cleaning across Dallas-Fort Worth with clear pricing and custom quote options.",
       },
       { name: "author", content: business.legalName },
-      { name: "theme-color", content: "#f8f5ef" },
+      { name: "theme-color", content: "#0b2733" },
       { property: "og:title", content: business.legalName },
       { property: "og:description", content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth." },
       { property: "og:type", content: "website" },
@@ -98,7 +98,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/tranquility-official-logo.webp", type: "image/webp" },
+      { rel: "apple-touch-icon", href: "/tranquility-official-logo.webp" },
       { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [
