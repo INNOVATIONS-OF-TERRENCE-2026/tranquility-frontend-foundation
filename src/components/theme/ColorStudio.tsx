@@ -2,10 +2,11 @@ import { Check, Palette, RotateCcw, Sparkles, X } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 
+import { useLanguage } from "@/components/language/LanguageProvider";
 import { colorPalettes, defaultColorPaletteId, getColorPalette } from "@/config/colorPalettes";
 import { useTheme } from "./ThemeProvider";
 
-const STORAGE_KEY = "tlc-color-palette";
+const STORAGE_KEY = "tlc-color-palette-v2";
 
 type VariableSet = Record<string, string>;
 
@@ -37,23 +38,26 @@ function readableText(background: string) {
     return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
   });
   const luminance = 0.2126 * srgb[0]! + 0.7152 * srgb[1]! + 0.0722 * srgb[2]!;
-  return luminance > 0.48 ? "#07111F" : "#FFFDF8";
+  return luminance > 0.48 ? "#07151B" : "#FFFFFF";
 }
 
 function buildVariables(primary: string, secondary: string, dark: boolean): VariableSet {
-  const lightBase = "#FCFBF8";
-  const darkBase = "#050810";
-  const visiblePrimary = dark ? mixHex(primary, "#FFFFFF", 0.34) : primary;
-  const visibleSecondary = dark ? mixHex(secondary, "#FFFFFF", 0.12) : secondary;
-  const background = dark ? mixHex(darkBase, primary, 0.16) : mixHex(lightBase, primary, 0.04);
-  const card = dark ? mixHex("#0A1020", primary, 0.12) : mixHex("#FFFFFF", secondary, 0.025);
-  const foreground = dark ? "#F8FAFC" : "#152136";
-  const mutedForeground = dark ? "#C9D1DC" : "#5D6879";
-  const border = dark ? mixHex("#526174", primary, 0.18) : mixHex("#D2D7DE", primary, 0.1);
-  const accent = dark ? mixHex("#111827", primary, 0.25) : mixHex("#F7F8FA", secondary, 0.15);
-  const night = mixHex("#02050B", primary, 0.19);
-  const primarySoft = mixHex(visiblePrimary, "#FFFFFF", dark ? 0.14 : 0.38);
-  const secondarySoft = mixHex(visibleSecondary, "#FFFFFF", dark ? 0.12 : 0.34);
+  const oceanNight = "#071B27";
+  const oceanDeep = "#0B2733";
+  const mistLight = "#F4FAF9";
+  const mistCard = "#FBFEFD";
+  const champagne = "#D0AE69";
+  const champagneSoft = "#EAD9B4";
+  const visiblePrimary = dark ? mixHex(primary, "#FFFFFF", 0.22) : mixHex(primary, "#0B2733", 0.08);
+  const visibleSecondary = dark ? mixHex(secondary, "#FFFFFF", 0.08) : secondary;
+  const background = dark ? mixHex(oceanNight, primary, 0.035) : mixHex(mistLight, primary, 0.018);
+  const card = dark ? mixHex("#0C2634", primary, 0.045) : mixHex(mistCard, secondary, 0.014);
+  const foreground = dark ? "#F1F8F7" : "#17303D";
+  const mutedForeground = dark ? "#B9CDCF" : "#647983";
+  const border = dark ? mixHex("#35505A", primary, 0.08) : mixHex("#D1DFDF", primary, 0.045);
+  const accent = dark ? mixHex("#102F3D", primary, 0.18) : mixHex("#E5F2F1", primary, 0.09);
+  const primarySoft = mixHex(visiblePrimary, "#FFFFFF", dark ? 0.12 : 0.48);
+  const secondarySoft = mixHex(visibleSecondary, "#FFFFFF", dark ? 0.16 : 0.4);
 
   return {
     "--background": background,
@@ -66,39 +70,41 @@ function buildVariables(primary: string, secondary: string, dark: boolean): Vari
     "--primary-foreground": readableText(visiblePrimary),
     "--secondary": visibleSecondary,
     "--secondary-foreground": readableText(visibleSecondary),
-    "--muted": dark ? mixHex(background, "#FFFFFF", 0.07) : mixHex(background, "#000000", 0.035),
+    "--muted": dark ? "#102B38" : "#EAF3F2",
     "--muted-foreground": mutedForeground,
     "--accent": accent,
-    "--accent-foreground": dark ? "#F8FAFC" : "#101827",
+    "--accent-foreground": dark ? "#F7FBFA" : "#16323D",
     "--border": border,
-    "--input": mixHex(border, dark ? "#FFFFFF" : "#000000", dark ? 0.12 : 0.05),
+    "--input": dark ? "#47636D" : "#BCCFD0",
     "--ring": primarySoft,
-    "--sand": dark ? mixHex(background, visibleSecondary, 0.07) : mixHex("#FAF7F0", secondary, 0.065),
-    "--stone-soft": dark ? mixHex(background, "#FFFFFF", 0.09) : mixHex("#EEF0F3", primary, 0.055),
+    "--sand": dark ? "#0C2430" : "#EEF6F4",
+    "--stone-soft": dark ? "#15313C" : "#E2ECEB",
     "--moss": visiblePrimary,
     "--moss-soft": primarySoft,
-    "--oak": visibleSecondary,
-    "--ink": dark ? "#FFFFFF" : mixHex("#0A1729", primary, 0.075),
-    "--night": night,
-    "--night-foreground": "#FFFDF8",
-    "--navy": night,
-    "--navy-soft": mixHex(night, primary, 0.23),
-    "--gold": visibleSecondary,
-    "--gold-soft": secondarySoft,
-    "--silver": dark ? "#D7DEE8" : mixHex("#B8C2CF", primary, 0.07),
-    "--ivory": dark ? "#FFFDF8" : mixHex("#FFFDF7", secondary, 0.025),
-    "--sidebar": dark ? mixHex(background, primary, 0.08) : mixHex("#F7F8FA", primary, 0.045),
+    "--oak": champagne,
+    "--ink": dark ? "#F7FBFA" : "#102933",
+    "--night": oceanNight,
+    "--night-foreground": "#F7FBFA",
+    "--navy": oceanDeep,
+    "--navy-soft": "#123A47",
+    "--gold": champagne,
+    "--gold-soft": champagneSoft,
+    "--silver": dark ? "#D2DFE1" : "#9FAFB4",
+    "--ivory": "#FBF8F1",
+    "--sidebar": dark ? "#0A222E" : "#F0F7F6",
     "--sidebar-foreground": foreground,
     "--sidebar-primary": visiblePrimary,
     "--sidebar-primary-foreground": readableText(visiblePrimary),
     "--sidebar-accent": accent,
-    "--sidebar-accent-foreground": dark ? "#F8FAFC" : "#101827",
+    "--sidebar-accent-foreground": dark ? "#F7FBFA" : "#16323D",
     "--sidebar-border": border,
     "--sidebar-ring": primarySoft,
     "--palette-from": primary,
     "--palette-to": secondary,
-    "--palette-gradient": `linear-gradient(135deg, ${primary} 0%, ${mixHex(primary, secondary, 0.5)} 48%, ${secondary} 100%)`,
-    "--palette-shine": `radial-gradient(circle at 24% 14%, rgba(255,255,255,0.5), transparent 24%), linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)`,
+    "--palette-gradient": `linear-gradient(135deg, ${primary} 0%, ${mixHex(primary, secondary, 0.48)} 50%, ${secondary} 100%)`,
+    "--palette-shine": `radial-gradient(circle at 24% 14%, rgba(255,255,255,0.58), transparent 24%), linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)`,
+    "--shadow-gold-token": `0 12px 38px -24px ${mixHex(champagne, primary, 0.2)}`,
+    "--palette-secondary-soft": secondarySoft,
   };
 }
 
@@ -115,14 +121,12 @@ function applyPalette(primary: string, secondary: string, resolvedTheme: "light"
   });
 
   const themeColor = document.querySelector('meta[name="theme-color"]');
-  themeColor?.setAttribute(
-    "content",
-    resolvedTheme === "dark" ? mixHex("#02050B", primary, 0.2) : mixHex("#FCFBF8", primary, 0.045),
-  );
+  themeColor?.setAttribute("content", resolvedTheme === "dark" ? "#071B27" : "#F4FAF9");
 }
 
 export function ColorStudio({ compact = false }: { compact?: boolean }) {
   const { resolvedTheme } = useTheme();
+  const { text } = useLanguage();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(defaultColorPaletteId);
@@ -155,39 +159,42 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-haspopup="dialog"
-        className={`group inline-flex items-center justify-center gap-2 rounded-full border border-gold/30 bg-card/90 font-semibold text-ink shadow-soft transition hover:-translate-y-0.5 hover:border-gold/55 ${compact ? "size-10" : "min-h-11 px-3"}`}
+        className={`group inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card font-semibold text-ink shadow-soft transition hover:-translate-y-0.5 hover:border-ring ${compact ? "size-9" : "min-h-11 px-3"}`}
       >
         <span
           aria-hidden="true"
-          className="size-5 rounded-full border border-white/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_0_16px_rgba(255,255,255,0.18)]"
+          className="size-5 rounded-full border border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_0_14px_rgba(255,255,255,0.12)]"
           style={{ background: `radial-gradient(circle at 30% 20%, rgba(255,255,255,0.9), transparent 22%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})` }}
         />
-        {!compact && <span className="text-xs">Colors</span>}
-        <span className="sr-only">Open TLC Color Studio</span>
+        {!compact && <span className="text-xs">{text({ en: "Colors", es: "Colores" })}</span>}
+        <span className="sr-only">{text({ en: "Open color settings", es: "Abrir ajustes de color" })}</span>
       </button>
 
       {open && (
         <div
           role="dialog"
           aria-modal="false"
-          aria-label="TLC Color Studio"
-          className="fixed inset-x-3 top-[5.4rem] z-[90] max-h-[78vh] overflow-y-auto rounded-3xl border border-border bg-card p-5 text-card-foreground shadow-lift backdrop-blur-2xl md:left-auto md:right-5 md:top-28 md:w-[36rem]"
+          aria-label={text({ en: "Color settings", es: "Ajustes de color" })}
+          className="fixed inset-x-3 top-[5.25rem] z-[90] max-h-[78vh] overflow-y-auto rounded-3xl border border-border bg-card p-5 text-card-foreground shadow-lift md:left-auto md:right-5 md:top-24 md:w-[36rem]"
         >
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 text-moss">
                 <Palette className="size-4" aria-hidden="true" />
-                <p className="text-xs font-bold uppercase tracking-[0.16em]">TLC Color Studio</p>
+                <p className="text-xs font-bold uppercase tracking-[0.16em]">{text({ en: "Color palettes", es: "Paletas de color" })}</p>
               </div>
-              <h2 className="mt-2 text-2xl">32 complete frontend palettes</h2>
+              <h2 className="mt-2 text-2xl">{text({ en: "32 polished color choices", es: "32 opciones de color refinadas" })}</h2>
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
-                Every choice recolors the full interface and recalculates readable text colors in Light, Dark, and System mode. Each palette includes a unique gradient and reflective highlight.
+                {text({
+                  en: "Each palette changes the accent system, gradients, buttons, highlights, and interactive states while the core ocean-mist surfaces keep text readable in Light, Dark, and System mode.",
+                  es: "Cada paleta cambia los acentos, degradados, botones, reflejos y estados interactivos, mientras que las superficies base inspiradas en brisa marina mantienen el texto legible en los modos Claro, Oscuro y Sistema.",
+                })}
               </p>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Close TLC Color Studio"
+              aria-label={text({ en: "Close color settings", es: "Cerrar ajustes de color" })}
               className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-ink"
             >
               <X className="size-4" aria-hidden="true" />
@@ -198,7 +205,7 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
             className="mt-5 overflow-hidden rounded-2xl border border-white/25 p-5 text-white shadow-lift"
             style={{ background: `radial-gradient(circle at 20% 10%, rgba(255,255,255,0.42), transparent 25%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})` }}
           >
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/85">Current palette</p>
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/85">{text({ en: "Current palette", es: "Paleta actual" })}</p>
             <div className="mt-2 flex items-end justify-between gap-4">
               <p className="font-display text-3xl text-white drop-shadow">{selected.name}</p>
               <Sparkles className="size-6 text-white/90" aria-hidden="true" />
@@ -214,12 +221,12 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
                   type="button"
                   onClick={() => choose(palette.id)}
                   title={palette.name}
-                  aria-label={`Use ${palette.name} palette`}
+                  aria-label={text({ en: `Use ${palette.name} palette`, es: `Usar la paleta ${palette.name}` })}
                   aria-pressed={active}
                   className={`group relative aspect-square overflow-hidden rounded-2xl border transition hover:-translate-y-0.5 ${active ? "border-ink ring-2 ring-ring ring-offset-2 ring-offset-background" : "border-border"}`}
                   style={{ background: `radial-gradient(circle at 25% 15%, rgba(255,255,255,0.72), transparent 22%), linear-gradient(135deg, ${palette.primary}, ${palette.secondary})` }}
                 >
-                  <span className="absolute inset-x-1 bottom-1 rounded-lg bg-black/42 px-1 py-1 text-[0.52rem] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+                  <span className="absolute inset-x-1 bottom-1 rounded-lg bg-black/45 px-1 py-1 text-[0.5rem] font-bold uppercase tracking-wide text-white">
                     {palette.name}
                   </span>
                   {active && (
@@ -233,13 +240,13 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
           </div>
 
           <div className="mt-5 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-muted-foreground">Saved locally on this device. No account required.</p>
+            <p className="text-xs text-muted-foreground">{text({ en: "Saved on this device only.", es: "Se guarda solo en este dispositivo." })}</p>
             <button
               type="button"
               onClick={reset}
               className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-border px-4 text-xs font-semibold text-ink hover:bg-accent"
             >
-              <RotateCcw className="size-3.5" aria-hidden="true" /> Reset palette
+              <RotateCcw className="size-3.5" aria-hidden="true" /> {text({ en: "Reset to Ocean Mist", es: "Restablecer a Brisa Marina" })}
             </button>
           </div>
         </div>
