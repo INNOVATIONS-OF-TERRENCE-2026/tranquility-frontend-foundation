@@ -14,8 +14,8 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
 
   return (
     <label
-      className={`inline-flex items-center gap-2 rounded-md border border-border bg-card text-sm text-foreground shadow-sm ${
-        compact ? "h-10 px-2.5" : "min-h-11 px-3"
+      className={`inline-flex items-center gap-2 rounded-full border border-gold/25 bg-card/85 text-sm text-foreground shadow-soft backdrop-blur-sm ${
+        compact ? "h-10 px-2.5" : "min-h-11 px-3.5"
       }`}
     >
       <Icon className="size-4 text-moss" aria-hidden="true" />
@@ -24,7 +24,7 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
         value={preference}
         onChange={(event) => setPreference(event.target.value as ThemePreference)}
         aria-label={`Theme preference. Current appearance: ${resolvedTheme}`}
-        className="min-h-9 cursor-pointer bg-transparent pr-1 text-sm font-medium text-ink outline-none"
+        className="min-h-9 cursor-pointer bg-transparent pr-1 text-sm font-semibold text-ink outline-none"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
