@@ -42,6 +42,6 @@ export const colorPalettes: ColorPalettePreset[] = [
 
 export const defaultColorPaletteId = "royal-navy";
 
-export function getColorPalette(id: string | null | undefined) {
-  return colorPalettes.find((palette) => palette.id === id) ?? colorPalettes[0];
+export function getColorPalette(id: string | null | undefined): ColorPalettePreset {
+  return colorPalettes.find((palette) => palette.id === id) ?? colorPalettes[0]!;
 }
