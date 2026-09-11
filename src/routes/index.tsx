@@ -12,16 +12,15 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { seo } from "@/lib/seo";
-import { business, cities } from "@/config/business";
-import { frequencies, money, services, servicePrice } from "@/config/pricing";
+import { uploadedBrandHero, uploadedBrandLight, uploadedStudioConcept } from "@/assets/uploadedImages";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/site/PageHero";
-import { PricingGrid } from "@/components/site/PricingGrid";
 import { CTABand } from "@/components/site/CTABand";
+import { PricingGrid } from "@/components/site/PricingGrid";
+import { SectionHeading } from "@/components/site/PageHero";
+import { business, cities } from "@/config/business";
 import { faqs } from "@/config/faqs";
-import heroImage from "@/assets/hero-interior.jpg";
-import linens from "@/assets/detail-linens.jpg";
+import { frequencies, money, services, servicePrice } from "@/config/pricing";
+import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -59,60 +58,50 @@ const experiencePoints = [
   },
 ];
 
-const studioCards = [
-  "Room planning",
-  "Cleaning priorities",
-  "Style and palette profile",
-  "Surface awareness",
-  "Protected areas",
-  "Home Care Blueprint",
-];
-
 function Home() {
   return (
     <>
       <section className="brand-dark relative overflow-hidden border-b border-gold/20 bg-background">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(226,194,122,0.18),transparent_25%),radial-gradient(circle_at_0%_90%,rgba(255,255,255,0.05),transparent_28%)]" aria-hidden="true" />
-        <div className="container-page relative grid min-h-[42rem] gap-10 py-12 md:py-16 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-0 lg:py-0">
-          <div className="relative z-10 py-5 lg:pr-12">
-            <p className="eyebrow">Professional cleaning across Dallas - Fort Worth</p>
-            <h1 className="mt-5 max-w-3xl text-[3.25rem] leading-[0.94] text-ink sm:text-6xl md:text-7xl lg:text-[5.7rem]">
-              A cleaner space.
-              <span className="gold-text block">A brighter you.</span>
-            </h1>
-            <p className="mt-7 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Thoughtful home cleaning with visible pricing, flexible customization, and a service experience designed around how your space is actually lived in.
+        <div
+          className="absolute inset-0 opacity-70"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 82% 12%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 26%), radial-gradient(circle at 8% 86%, color-mix(in srgb, var(--moss) 18%, transparent), transparent 30%)",
+          }}
+          aria-hidden="true"
+        />
+        <div className="container-page relative py-7 md:py-10 lg:py-12">
+          <div className="mb-5 flex flex-col gap-3 border-b border-gold/20 pb-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="eyebrow">Premium cleaning services across Dallas - Fort Worth</p>
+              <h1 className="mt-2 max-w-4xl text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl">
+                The Tranquility experience, exactly where home should feel its best.
+              </h1>
+            </div>
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+              Clear pricing, serious customization, and a visual service experience built around the way the home is actually used.
             </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button asChild size="lg">
-                <Link to="/booking">Request Service <ArrowRight className="size-4" aria-hidden="true" /></Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-gold/35 text-foreground hover:bg-gold/10 hover:text-gold-soft">
-                <Link to="/studio">Customize Your Clean</Link>
-              </Button>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
-              <span><strong className="font-semibold text-gold-soft">From {money(services[0].basePrice)}</strong> for a standard average 1 bed / 1 bath home</span>
-              <span>Recurring savings up to 20%</span>
-            </div>
           </div>
 
-          <div className="relative min-h-[24rem] lg:min-h-[42rem]">
-            <div className="absolute inset-0 overflow-hidden rounded-3xl border border-gold/20 lg:inset-y-0 lg:left-0 lg:right-[calc((100vw-82rem)/-2)] lg:rounded-none lg:rounded-l-[2.2rem]">
-              <img
-                src={heroImage}
-                alt="Refined sunlit living room with warm neutral furnishings"
-                width={1600}
-                height={1200}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,23,44,0.78)_0%,rgba(6,23,44,0.2)_42%,rgba(6,23,44,0.04)_100%),linear-gradient(180deg,transparent_55%,rgba(6,23,44,0.5)_100%)]" aria-hidden="true" />
-              <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-gold/25 bg-night/75 p-4 backdrop-blur-md sm:left-auto sm:max-w-xs">
-                <p className="text-[0.64rem] font-bold uppercase tracking-[0.2em] text-gold-soft">Come home to tranquility</p>
-                <p className="mt-2 text-sm leading-relaxed text-night-foreground/72">Clear service choices, thoughtful details, and custom review when the home needs it.</p>
-              </div>
+          <div className="relative overflow-hidden rounded-[2rem] border border-gold/30 bg-night shadow-lift">
+            <img
+              src={uploadedBrandHero}
+              alt="Tranquility Level Cleaning navy and gold Dallas brand concept with a luxury living room and cleaning service navigation"
+              className="aspect-[5/2] w-full object-cover object-center"
+              fetchPriority="high"
+            />
+            <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-white/10" aria-hidden="true" />
+          </div>
+
+          <div className="relative z-10 mx-auto -mt-3 grid max-w-6xl gap-3 rounded-3xl border border-gold/25 bg-card/95 p-4 shadow-lift backdrop-blur-xl md:-mt-8 md:grid-cols-[1fr_auto] md:items-center md:p-5">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+              <span><strong className="font-semibold text-ink">Standard from {money(services[0].basePrice)}</strong> for an average 1 bed / 1 bath home</span>
+              <span>Recurring savings up to 20%</span>
+              <span>Custom scope reviewed directly</span>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button asChild size="lg"><Link to="/booking">Request Service <ArrowRight className="size-4" aria-hidden="true" /></Link></Button>
+              <Button asChild size="lg" variant="outline"><Link to="/studio">Open TLC Studio</Link></Button>
             </div>
           </div>
         </div>
@@ -122,7 +111,7 @@ function Home() {
         <div className="container-page grid divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
           {serviceRail.map(({ icon: Icon, label, note, to }) => (
             <Link key={label} to={to} className="group flex min-h-32 items-center gap-4 px-3 py-6 sm:px-5 lg:min-h-36">
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/5 text-moss transition-colors group-hover:bg-gold/10">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/5 text-moss transition group-hover:-translate-y-0.5 group-hover:bg-gold/10">
                 <Icon className="size-5" aria-hidden="true" />
               </span>
               <span>
@@ -135,16 +124,40 @@ function Home() {
       </section>
 
       <section className="section">
+        <div className="container-page grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-lift">
+            <img
+              src={uploadedBrandLight}
+              alt="Tranquility Level Cleaning light brand concept with a warm neutral interior and service categories"
+              className="aspect-video w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <p className="eyebrow">More than clean</p>
+            <h2 className="mt-3 text-4xl leading-tight md:text-5xl">A visual standard that feels like the brand, not a stock cleaning template.</h2>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              The landing experience now uses the Tranquility artwork itself as the visual language. The live interface around it carries the same premium hierarchy while keeping pricing, service details, and customer actions fully functional.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg"><Link to="/services">Explore Services</Link></Button>
+              <Button asChild size="lg" variant="outline"><Link to="/quote">Get a Custom Quote</Link></Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section bg-sand">
         <div className="container-page">
           <SectionHeading
             eyebrow="Service experience"
-            title="More control without making the process complicated."
-            intro="The new Tranquility experience keeps the important decisions visible, from base pricing to room scope to the details that need direct review."
+            title="Powerful enough to customize. Simple enough to use."
+            intro="Every major decision stays understandable, from base pricing and room scope to special conditions that deserve direct review."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {experiencePoints.map(({ icon: Icon, title, body }) => (
-              <article key={title} className="group rounded-2xl border border-border bg-card p-6 shadow-soft transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-gold/45 hover:shadow-lift">
-                <span className="flex size-11 items-center justify-center rounded-full border border-gold/25 bg-accent/45 text-moss"><Icon className="size-5" aria-hidden="true" /></span>
+              <article key={title} className="group rounded-3xl border border-border bg-card p-7 shadow-soft transition duration-200 hover:-translate-y-1 hover:border-gold/45 hover:shadow-lift">
+                <span className="flex size-12 items-center justify-center rounded-full border border-gold/25 bg-accent/45 text-moss"><Icon className="size-5" aria-hidden="true" /></span>
                 <h3 className="mt-5 text-2xl">{title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
               </article>
@@ -153,7 +166,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="section bg-sand">
+      <section className="section">
         <div className="container-page">
           <SectionHeading
             eyebrow="Approved pricing"
@@ -165,64 +178,63 @@ function Home() {
       </section>
 
       <section className="brand-dark section relative overflow-hidden bg-background">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_25%,rgba(226,194,122,0.14),transparent_24%),radial-gradient(circle_at_10%_90%,rgba(255,255,255,0.05),transparent_24%)]" aria-hidden="true" />
-        <div className="container-page relative grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
+        <div
+          className="absolute inset-0 opacity-70"
+          style={{ backgroundImage: "radial-gradient(circle at 90% 20%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 30%)" }}
+          aria-hidden="true"
+        />
+        <div className="container-page relative grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 text-xs font-semibold text-gold-soft">
-              <Sparkles className="size-3.5" aria-hidden="true" /> Tranquility Studio
+              <Sparkles className="size-3.5" aria-hidden="true" /> TLC Studio
             </div>
-            <h2 className="mt-5 text-4xl text-ink md:text-6xl">Customize your clean around the way you actually live.</h2>
+            <h2 className="mt-5 text-4xl leading-tight text-ink md:text-6xl">Your home. Your priorities. One intelligent workspace.</h2>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Build room scope, organize priorities, identify materials, document product preferences, mark protected areas, and create a Home Care Blueprint before continuing into a service request.
+              Start with a quick setup or go room by room. TLC Studio organizes cleaning type, frequency, spaces, priorities, surfaces, household needs, protected areas, approved add-ons, and your Home Care Blueprint.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg"><Link to="/studio">Open Tranquility Studio</Link></Button>
-              <Button asChild size="lg" variant="outline" className="border-gold/35 text-foreground hover:bg-gold/10 hover:text-gold-soft"><Link to="/quote">Request Custom Quote</Link></Button>
+              <Button asChild size="lg"><Link to="/studio">Launch TLC Studio</Link></Button>
+              <Button asChild size="lg" variant="outline" className="border-gold/35"><Link to="/booking">Request Service</Link></Button>
             </div>
           </div>
 
-          <div className="luxury-panel studio-grid rounded-3xl p-5 md:p-7">
-            <div className="mb-5 flex items-center justify-between gap-4 border-b border-border pb-4">
-              <div>
-                <p className="text-[0.64rem] font-bold uppercase tracking-[0.18em] text-moss">Your space. Your standards.</p>
-                <p className="mt-1 font-display text-2xl text-ink">Build a Home Care Blueprint</p>
-              </div>
-              <SlidersHorizontal className="size-5 text-moss" aria-hidden="true" />
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {studioCards.map((item, index) => (
-                <div key={item} className="rounded-xl border border-border bg-card/70 p-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-sm font-semibold text-ink">{item}</span>
-                    <span className="text-xs font-bold text-moss">0{index + 1}</span>
-                  </div>
-                  <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${38 + index * 9}%` }} /></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container-page grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <img src={linens} alt="Folded linen towels on a stone counter with a sprig of eucalyptus" width={1200} height={1200} loading="lazy" className="aspect-square w-full rounded-3xl object-cover shadow-lift" />
-          <div>
-            <SectionHeading eyebrow="Recurring service" title="A cleaner rhythm, with savings built in." intro="Recurring savings apply to the service price only. Add-ons remain at their approved listed rate." />
-            <dl className="mt-8 divide-y divide-border rounded-2xl border border-border bg-card shadow-soft">
-              {frequencies.map((frequency) => (
-                <div key={frequency.id} className="flex items-center justify-between gap-4 px-5 py-4">
-                  <dt><span className="text-sm font-semibold text-ink">{frequency.name}</span><span className="ml-2 text-xs font-semibold text-moss">{frequency.note}</span></dt>
-                  <dd className="text-sm text-muted-foreground">Standard <span className="font-semibold tabular-nums text-ink">{money(servicePrice("standard", frequency.id))}</span></dd>
-                </div>
-              ))}
-            </dl>
+          <div className="overflow-hidden rounded-3xl border border-gold/25 bg-night shadow-lift">
+            <img
+              src={uploadedStudioConcept}
+              alt="TLC Studio concept showing a premium room and service customization workspace"
+              className="aspect-[3/2] w-full object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>
 
       <section className="section bg-sand">
-        <div className="container-page grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="container-page grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+          <div>
+            <SectionHeading
+              eyebrow="Recurring service"
+              title="A cleaner rhythm, with savings built in."
+              intro="Recurring savings apply to the service price only. Add-ons remain at their approved listed rate."
+            />
+            <Button asChild variant="outline" className="mt-6"><Link to="/booking">Build a recurring request</Link></Button>
+          </div>
+          <dl className="overflow-hidden rounded-3xl border border-border bg-card shadow-lift">
+            {frequencies.map((frequency) => (
+              <div key={frequency.id} className="flex items-center justify-between gap-4 border-b border-border px-5 py-5 last:border-b-0 sm:px-6">
+                <dt>
+                  <span className="text-sm font-semibold text-ink">{frequency.name}</span>
+                  <span className="ml-2 text-xs font-semibold text-moss">{frequency.note}</span>
+                </dt>
+                <dd className="text-sm text-muted-foreground">Standard <span className="font-semibold tabular-nums text-ink">{money(servicePrice("standard", frequency.id))}</span></dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container-page grid gap-8 rounded-[2rem] border border-border bg-card p-7 shadow-lift md:p-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
             <p className="eyebrow">Virtual consultation</p>
             <h2 className="mt-3 text-4xl md:text-5xl">Large, unusual, or partial-home scope?</h2>
@@ -237,36 +249,37 @@ function Home() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr]">
+      <section className="section bg-sand">
+        <div className="container-page grid gap-10 lg:grid-cols-[0.72fr_1.28fr]">
           <div>
-            <SectionHeading eyebrow="Service area" title="Across Dallas - Fort Worth" intro="We serve the DFW metroplex and consider surrounding communities on request." />
-            <Link to="/service-area" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">See the full service area <ArrowRight className="size-4" aria-hidden="true" /></Link>
+            <SectionHeading eyebrow="Service area" title="Across Dallas - Fort Worth" intro="Euless is now included in the listed core service communities. Use the interactive map to search cities and explore nearby listed locations by mileage radius." />
+            <Button asChild className="mt-6"><Link to="/service-area">Explore the Interactive Map</Link></Button>
           </div>
           <ul className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {cities.map((city) => (
-              <li key={city} className="flex min-h-14 items-center gap-3 rounded-xl border border-border bg-card px-4 text-sm text-foreground shadow-soft"><MapPin className="size-4 text-moss" aria-hidden="true" />{city}</li>
+            {cities.slice(0, 12).map((city) => (
+              <li key={city} className="flex min-h-14 items-center gap-3 rounded-2xl border border-border bg-card px-4 text-sm font-semibold text-foreground shadow-soft"><MapPin className="size-4 text-moss" aria-hidden="true" />{city}</li>
             ))}
+            <li className="flex min-h-14 items-center gap-3 rounded-2xl border border-gold/35 bg-accent/35 px-4 text-sm font-semibold text-ink shadow-soft"><MapPin className="size-4 text-moss" aria-hidden="true" />Euless</li>
           </ul>
         </div>
       </section>
 
-      <section className="section bg-sand">
+      <section className="section">
         <div className="container-page">
           <SectionHeading eyebrow="Questions" title="Good things to know before service." />
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {faqs.slice(0, 4).map((faq) => (
-              <article key={faq.question} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
-                <h3 className="flex items-start gap-3 text-xl"><CalendarCheck className="mt-1 size-4 shrink-0 text-moss" aria-hidden="true" />{faq.question}</h3>
+              <article key={faq.question} className="rounded-3xl border border-border bg-card p-6 shadow-soft">
+                <h3 className="flex items-start gap-2 text-lg"><CalendarCheck className="mt-1 size-4 shrink-0 text-moss" aria-hidden="true" />{faq.question}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
               </article>
             ))}
           </div>
-          <Link to="/faq" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">Read all FAQs <ArrowRight className="size-4" aria-hidden="true" /></Link>
+          <Link to="/faq" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">Read all FAQs <ArrowRight className="size-4" aria-hidden="true" /></Link>
         </div>
       </section>
 
-      <CTABand title="A cleaner space starts with a clearer plan." intro="Choose a standard service, build a customized Tranquility Studio plan, or request a direct consultation for a more complex home." />
+      <CTABand title="Ready to build your Tranquility plan?" intro="Request service directly or use TLC Studio to organize your space first." />
     </>
   );
 }
