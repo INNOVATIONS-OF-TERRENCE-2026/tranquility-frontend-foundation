@@ -28,12 +28,15 @@ function BookingPage() {
     <>
       <PageHero
         eyebrow="Request service"
-        title="Build a cleaning request that fits your home"
-        intro="Choose the service, frequency, rooms, approved add-ons, and preferred timing. You will see the estimate before opening an email request, and no payment details are collected."
+        title="Build a cleaning request that fits your home."
+        intro="Choose the service, frequency, room scope, approved add-ons, and preferred timing. Your estimate stays visible before you open the final email request, and no payment details are collected."
       />
-      <section className="section">
-        <div className="container-page">
-          <BookingFlow {...(search.service ? { initialService: search.service } : {})} />
+      <section className="brand-dark relative overflow-hidden bg-background py-12 text-foreground md:py-16 lg:py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_15%,rgba(226,194,122,0.12),transparent_23%),radial-gradient(circle_at_8%_80%,rgba(255,255,255,0.04),transparent_24%)]" aria-hidden="true" />
+        <div className="container-page relative">
+          <div className="luxury-panel rounded-3xl p-4 md:p-6 lg:p-8">
+            <BookingFlow {...(search.service ? { initialService: search.service } : {})} />
+          </div>
         </div>
       </section>
     </>
