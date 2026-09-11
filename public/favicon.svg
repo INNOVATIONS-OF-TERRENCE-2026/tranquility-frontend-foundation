@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Tranquility Level Cleaning brand mark">
+  <defs>
+    <linearGradient id="gold" x1="18" y1="12" x2="108" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2dda5"/>
+      <stop offset="0.45" stop-color="#d7b66f"/>
+      <stop offset="1" stop-color="#b7832f"/>
+    </linearGradient>
+    <linearGradient id="navy" x1="16" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0e2a4d"/>
+      <stop offset="1" stop-color="#041326"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#navy)"/>
+  <rect x="7.5" y="7.5" width="113" height="113" rx="25" fill="none" stroke="url(#gold)" stroke-width="3"/>
+  <path d="M26 34 64 12l38 22" fill="none" stroke="url(#gold)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M62 30v70M39 31h51" fill="none" stroke="#fbf7ee" stroke-width="9" stroke-linecap="round"/>
+  <path d="M34 90c15-24 31-34 55-36-6 25-19 42-43 52 10-14 17-27 23-42-11 9-21 18-35 26Z" fill="url(#gold)"/>
+  <g fill="#fbf7ee">
+    <rect x="84" y="39" width="8" height="8" rx="1"/>
+    <rect x="94" y="39" width="8" height="8" rx="1"/>
+    <rect x="84" y="49" width="8" height="8" rx="1"/>
+    <rect x="94" y="49" width="8" height="8" rx="1"/>
+  </g>
+</svg>
