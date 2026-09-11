@@ -19,23 +19,15 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <section
-      className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24"
-      aria-labelledby="not-found-title"
-    >
-      <div className="max-w-lg rounded-2xl border border-border bg-card p-8 text-center shadow-soft md:p-12">
+    <section className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24" aria-labelledby="not-found-title">
+      <div className="max-w-lg rounded-3xl border border-border bg-card p-8 text-center shadow-lift md:p-12">
         <p className="eyebrow">404</p>
-        <h1 id="not-found-title" className="mt-4 text-4xl md:text-5xl">
-          This page is not here.
-        </h1>
+        <h1 id="not-found-title" className="mt-4 text-4xl md:text-5xl">This page is not here.</h1>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
           The page may have moved, or the address may be incorrect. Return home or use the main navigation to continue.
         </p>
         <div className="mt-8">
-          <Link
-            to="/"
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
+          <Link to="/" className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/40 bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-gold">
             Return home
           </Link>
         </div>
@@ -53,33 +45,18 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <section
-      className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24"
-      aria-labelledby="error-title"
-    >
-      <div className="max-w-lg rounded-2xl border border-border bg-card p-8 text-center shadow-soft md:p-12">
+    <section className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24" aria-labelledby="error-title">
+      <div className="max-w-lg rounded-3xl border border-border bg-card p-8 text-center shadow-lift md:p-12">
         <p className="eyebrow">Something went wrong</p>
-        <h1 id="error-title" className="mt-4 text-4xl">
-          This page did not load.
-        </h1>
+        <h1 id="error-title" className="mt-4 text-4xl">This page did not load.</h1>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
           Try the page again. If the issue continues, you can return home and contact Tranquility directly.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
+          <button type="button" onClick={() => { router.invalidate(); reset(); }} className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/40 bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-gold">
             Try again
           </button>
-          <a
-            href="/"
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-input bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
-          >
+          <a href="/" className="inline-flex min-h-11 items-center justify-center rounded-full border border-input bg-background px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent">
             Return home
           </a>
         </div>
@@ -100,12 +77,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Professional residential, deep, move-in, move-out, and commercial cleaning across Dallas-Fort Worth with clear pricing and custom quote options.",
       },
       { name: "author", content: business.legalName },
-      { name: "theme-color", content: "#f6f1e8" },
+      { name: "theme-color", content: "#f8f5ef" },
       { property: "og:title", content: business.legalName },
-      {
-        property: "og:description",
-        content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth.",
-      },
+      { property: "og:description", content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: business.legalName },
       { name: "twitter:card", content: "summary_large_image" },
@@ -145,10 +119,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <a
-          href="#main-content"
-          className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-md bg-ink px-4 py-2 text-sm font-semibold text-background transition-transform focus:translate-y-0"
-        >
+        <a href="#main-content" className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform focus:translate-y-0">
           Skip to content
         </a>
         {children}
