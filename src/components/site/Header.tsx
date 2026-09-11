@@ -8,13 +8,18 @@ import { ColorStudio } from "@/components/theme/ColorStudio";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { business } from "@/config/business";
 
-const nav = [
+const navBeforePricing = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/studio", label: "TLC Studio" },
+] as const;
+
+const navAfterPricing = [
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ] as const;
+
+const nav = [...navBeforePricing, ...navAfterPricing] as const;
 
 const FOCUSABLE_SELECTOR = [
   "a[href]",
@@ -24,6 +29,27 @@ const FOCUSABLE_SELECTOR = [
   "textarea:not([disabled])",
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
+
+function NavLink({ item }: { item: (typeof nav)[number] }) {
+  return (
+    <Link
+      to={item.to}
+      className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/80 transition-colors hover:text-gold-soft"
+      activeProps={{
+        className: "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold",
+      }}
+    >
+      {item.to === "/studio" ? (
+        <span className="inline-flex items-center gap-1.5">
+          <Sparkles className="size-3.5" aria-hidden="true" />
+          {item.label}
+        </span>
+      ) : (
+        item.label
+      )}
+    </Link>
+  );
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -109,32 +135,14 @@ export function Header() {
           <Logo hero={isHome} />
 
           <nav aria-label="Primary" className="hidden items-center gap-6 xl:flex 2xl:gap-8">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-gold-soft"
-                activeProps={{
-                  className:
-                    "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold",
-                }}
-              >
-                {item.to === "/studio" ? (
-                  <span className="inline-flex items-center gap-1.5">
-                    <Sparkles className="size-3.5" aria-hidden="true" />
-                    {item.label}
-                  </span>
-                ) : (
-                  item.label
-                )}
-              </Link>
-            ))}
+            {navBeforePricing.map((item) => <NavLink key={item.to} item={item} />)}
             <a
               href={isHome ? "#pricing" : "/#pricing"}
-              className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-gold-soft"
+              className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/80 transition-colors hover:text-gold-soft"
             >
               Pricing
             </a>
+            {navAfterPricing.map((item) => <NavLink key={item.to} item={item} />)}
           </nav>
 
           <div className="hidden items-center gap-2 xl:flex">
@@ -171,20 +179,18 @@ export function Header() {
         >
           <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-5">
             <div className="rounded-2xl border border-gold/20 bg-card/70 p-2 shadow-lift">
-              {nav.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className="flex min-h-14 items-center justify-between border-b border-border/70 px-3 py-3 text-lg text-ink last:border-b-0"
-                  activeProps={{ className: "text-moss font-semibold" }}
-                >
+              {navBeforePricing.map((item) => (
+                <Link key={item.to} to={item.to} className="flex min-h-14 items-center justify-between border-b border-border/70 px-3 py-3 text-lg text-ink" activeProps={{ className: "text-moss font-semibold" }}>
                   <span>{item.label}</span>
                   {item.to === "/studio" && <Sparkles className="size-4 text-moss" aria-hidden="true" />}
                 </Link>
               ))}
-              <a href="/#pricing" className="flex min-h-14 items-center border-t border-border/70 px-3 py-3 text-lg text-ink">
-                Pricing
-              </a>
+              <a href="/#pricing" className="flex min-h-14 items-center border-b border-border/70 px-3 py-3 text-lg text-ink">Pricing</a>
+              {navAfterPricing.map((item) => (
+                <Link key={item.to} to={item.to} className="flex min-h-14 items-center justify-between border-b border-border/70 px-3 py-3 text-lg text-ink last:border-b-0" activeProps={{ className: "text-moss font-semibold" }}>
+                  <span>{item.label}</span>
+                </Link>
+              ))}
             </div>
 
             <div className="mt-5 rounded-2xl border border-gold/20 bg-sand p-4">
