@@ -29,7 +29,7 @@ function applyResolvedTheme(theme: ResolvedTheme) {
   root.dataset.theme = theme;
   root.style.colorScheme = theme;
   const themeColor = document.querySelector('meta[name="theme-color"]');
-  themeColor?.setAttribute("content", theme === "dark" ? "#1e211f" : "#f6f1e8");
+  themeColor?.setAttribute("content", theme === "dark" ? "#06172c" : "#f8f5ef");
 }
 
 export const themeBootstrapScript = `(() => {
