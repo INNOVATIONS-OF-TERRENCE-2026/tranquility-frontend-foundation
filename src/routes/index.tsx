@@ -1,5 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CalendarCheck, Layers3, Leaf, MessagesSquare, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  CalendarCheck,
+  Home as HomeIcon,
+  Layers3,
+  MapPin,
+  PackageOpen,
+  ShieldCheck,
+  SlidersHorizontal,
+  Sparkles,
+} from "lucide-react";
 
 import { seo } from "@/lib/seo";
 import { business, cities } from "@/config/business";
@@ -23,142 +34,169 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const whyPoints = [
-  {
-    icon: Leaf,
-    title: "A calmer home, not just a cleaner one",
-    body: "We clean with the feel of the room in mind: order, light, and surfaces that invite you to relax when you walk in.",
-  },
+const serviceRail = [
+  { icon: HomeIcon, label: "Residential", note: "Routine home care", to: "/residential-cleaning" as const },
+  { icon: Sparkles, label: "Deep Clean", note: "Detailed reset", to: "/deep-cleaning" as const },
+  { icon: PackageOpen, label: "Move-In / Move-Out", note: "Fresh transitions", to: "/move-in-move-out-cleaning" as const },
+  { icon: Building2, label: "Commercial", note: "Custom consultation", to: "/commercial-cleaning" as const },
+];
+
+const experiencePoints = [
   {
     icon: ShieldCheck,
-    title: "Clear expectations, every visit",
-    body: "You know what's included, what an add-on costs, and what we'll confirm with you before we start. No surprises at the door.",
+    title: "Clear before we clean",
+    body: "Service type, recurring savings, add-ons, and custom-review conditions stay visible before you send a request.",
   },
   {
-    icon: Sparkles,
-    title: "Detail where it actually shows",
-    body: "Edges, trim, fixtures, and the corners routine cleaning tends to pass over. These are the parts you notice long after we've gone.",
+    icon: SlidersHorizontal,
+    title: "Built around your actual space",
+    body: "Room quantities, pets, surface notes, protected areas, and specialty details can be organized without hiding the scope.",
   },
   {
-    icon: MessagesSquare,
-    title: "Built around your space",
-    body: "Pets, layout, delicate surfaces, product preferences, and unusual scope are discussed up front instead of improvised.",
+    icon: Layers3,
+    title: "Custom when it should be",
+    body: "Large, partial-home, specialty, and commercial requests can move into consultation instead of being forced through standard pricing.",
   },
 ];
 
-const steps = [
-  {
-    step: "01",
-    title: "Tell us about your home",
-    body: "Choose your cleaning type and frequency, then share your scope, add-ons, and anything we should know.",
-  },
-  {
-    step: "02",
-    title: "We confirm the details",
-    body: "We review your request and confirm scope, timing, and any adjustments before service is scheduled.",
-  },
-  {
-    step: "03",
-    title: "Come home to tranquility",
-    body: "We clean thoughtfully and leave the home lighter, calmer, and easier to live in.",
-  },
+const studioCards = [
+  "Room planning",
+  "Cleaning priorities",
+  "Style and palette profile",
+  "Surface awareness",
+  "Protected areas",
+  "Home Care Blueprint",
 ];
 
 function Home() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border bg-sand">
-        <div className="absolute inset-y-0 right-0 hidden w-[44%] bg-stone-soft/40 lg:block" aria-hidden="true" />
-        <div className="container-page relative grid gap-10 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:py-28">
-          <div>
-            <p className="eyebrow">Dallas-Fort Worth cleaning service</p>
-            <h1 className="mt-4 max-w-2xl text-[2.8rem] leading-[1.02] md:text-6xl lg:text-7xl">Come home to tranquility.</h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Professional home cleaning with clear pricing, thoughtful customization, and a service experience built around how your home is actually lived in.
+      <section className="brand-dark relative overflow-hidden border-b border-gold/20 bg-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(226,194,122,0.18),transparent_25%),radial-gradient(circle_at_0%_90%,rgba(255,255,255,0.05),transparent_28%)]" aria-hidden="true" />
+        <div className="container-page relative grid min-h-[42rem] gap-10 py-12 md:py-16 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-0 lg:py-0">
+          <div className="relative z-10 py-5 lg:pr-12">
+            <p className="eyebrow">Professional cleaning across Dallas - Fort Worth</p>
+            <h1 className="mt-5 max-w-3xl text-[3.25rem] leading-[0.94] text-ink sm:text-6xl md:text-7xl lg:text-[5.7rem]">
+              A cleaner space.
+              <span className="gold-text block">A brighter you.</span>
+            </h1>
+            <p className="mt-7 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              Thoughtful home cleaning with visible pricing, flexible customization, and a service experience designed around how your space is actually lived in.
             </p>
+
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button asChild size="lg"><Link to="/booking">Request Service</Link></Button>
-              <Button asChild size="lg" variant="secondary"><Link to="/studio">Open Tranquility Studio</Link></Button>
-              <Button asChild size="lg" variant="outline"><Link to="/quote">Get a Custom Quote</Link></Button>
+              <Button asChild size="lg">
+                <Link to="/booking">Request Service <ArrowRight className="size-4" aria-hidden="true" /></Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-gold/35 text-foreground hover:bg-gold/10 hover:text-gold-soft">
+                <Link to="/studio">Customize Your Clean</Link>
+              </Button>
             </div>
-            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
-              <span><strong className="font-semibold text-ink">From {money(services[0].basePrice)}</strong> for a standard average 1 bed / 1 bath</span>
+
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+              <span><strong className="font-semibold text-gold-soft">From {money(services[0].basePrice)}</strong> for a standard average 1 bed / 1 bath home</span>
               <span>Recurring savings up to 20%</span>
             </div>
           </div>
 
-          <div className="relative lg:pl-4">
-            <img
-              src={heroImage}
-              alt="Sunlit living room corner with a linen chair, warm plaster wall and oak floor"
-              width={1600}
-              height={1200}
-              className="aspect-4/3 w-full rounded-2xl object-cover shadow-lift"
-            />
-            <div className="mt-4 rounded-xl border border-border bg-card px-5 py-4 text-sm text-muted-foreground shadow-soft sm:absolute sm:-bottom-8 sm:left-0 sm:mt-0 sm:max-w-xs">
-              <span className="font-semibold text-ink">Serving DFW:</span> Dallas, Fort Worth, Arlington, Plano, and surrounding communities.
+          <div className="relative min-h-[24rem] lg:min-h-[42rem]">
+            <div className="absolute inset-0 overflow-hidden rounded-3xl border border-gold/20 lg:inset-y-0 lg:left-0 lg:right-[calc((100vw-82rem)/-2)] lg:rounded-none lg:rounded-l-[2.2rem]">
+              <img
+                src={heroImage}
+                alt="Refined sunlit living room with warm neutral furnishings"
+                width={1600}
+                height={1200}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,23,44,0.78)_0%,rgba(6,23,44,0.2)_42%,rgba(6,23,44,0.04)_100%),linear-gradient(180deg,transparent_55%,rgba(6,23,44,0.5)_100%)]" aria-hidden="true" />
+              <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-gold/25 bg-night/75 p-4 backdrop-blur-md sm:left-auto sm:max-w-xs">
+                <p className="text-[0.64rem] font-bold uppercase tracking-[0.2em] text-gold-soft">Come home to tranquility</p>
+                <p className="mt-2 text-sm leading-relaxed text-night-foreground/72">Clear service choices, thoughtful details, and custom review when the home needs it.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-border bg-background">
-        <div className="container-page grid gap-6 py-8 sm:grid-cols-3">
-          <div><p className="text-sm font-semibold text-ink">Clear starting prices</p><p className="mt-1 text-xs leading-relaxed text-muted-foreground">See approved service and add-on pricing before you request service.</p></div>
-          <div><p className="text-sm font-semibold text-ink">Built for your actual scope</p><p className="mt-1 text-xs leading-relaxed text-muted-foreground">Room quantities, pets, surfaces, and custom conditions stay visible and understandable.</p></div>
-          <div><p className="text-sm font-semibold text-ink">Custom when it should be</p><p className="mt-1 text-xs leading-relaxed text-muted-foreground">Large, unusual, partial-home, and commercial work can move into consultation instead of forced checkout logic.</p></div>
+      <section className="brand-dark border-b border-gold/20 bg-night">
+        <div className="container-page grid divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+          {serviceRail.map(({ icon: Icon, label, note, to }) => (
+            <Link key={label} to={to} className="group flex min-h-32 items-center gap-4 px-3 py-6 sm:px-5 lg:min-h-36">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/5 text-moss transition-colors group-hover:bg-gold/10">
+                <Icon className="size-5" aria-hidden="true" />
+              </span>
+              <span>
+                <span className="block text-xs font-bold uppercase tracking-[0.15em] text-ink">{label}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">{note}</span>
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
       <section className="section">
         <div className="container-page">
-          <SectionHeading eyebrow="Services" title="Cleaning shaped to the moment you're in" intro="Whether it's regular upkeep, a full reset, or a home in transition, each service has a defined scope and an approved starting price." />
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {services.map((service) => (
-              <Link key={service.id} to={service.route} className="group flex flex-col border-t border-border py-7 transition-colors hover:border-moss md:px-2">
-                <div className="flex items-start justify-between gap-4">
-                  <h3 className="text-2xl">{service.name}</h3>
-                  <span className="font-display text-2xl text-ink">{money(service.basePrice)}</span>
-                </div>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss">Learn more <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" /></span>
-              </Link>
+          <SectionHeading
+            eyebrow="Service experience"
+            title="More control without making the process complicated."
+            intro="The new Tranquility experience keeps the important decisions visible, from base pricing to room scope to the details that need direct review."
+          />
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {experiencePoints.map(({ icon: Icon, title, body }) => (
+              <article key={title} className="group rounded-2xl border border-border bg-card p-6 shadow-soft transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-gold/45 hover:shadow-lift">
+                <span className="flex size-11 items-center justify-center rounded-full border border-gold/25 bg-accent/45 text-moss"><Icon className="size-5" aria-hidden="true" /></span>
+                <h3 className="mt-5 text-2xl">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
+              </article>
             ))}
-            <Link to="/commercial-cleaning" className="group flex flex-col border-t border-border py-7 transition-colors hover:border-moss md:px-2">
-              <div className="flex items-start justify-between gap-4"><h3 className="text-2xl">Commercial / Office Cleaning</h3><span className="text-sm font-semibold text-ink">Custom quote</span></div>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">Offices, suites, and light commercial spaces. Commercial work is quoted after a consultation and is never priced like residential checkout.</p>
-              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss">Request a consultation <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" /></span>
-            </Link>
           </div>
         </div>
       </section>
 
       <section className="section bg-sand">
         <div className="container-page">
-          <SectionHeading eyebrow="Pricing" title="Straightforward pricing, visible up front" intro="Base pricing reflects a standard average 1-bedroom, 1-full-bath home. Add only what your home actually needs." />
+          <SectionHeading
+            eyebrow="Approved pricing"
+            title="See the starting point before you request service."
+            intro="Base pricing reflects a standard average 1-bedroom, 1-full-bath home. Approved room charges and add-ons remain separate and visible."
+          />
           <div className="mt-10"><PricingGrid /></div>
         </div>
       </section>
 
-      <section className="section overflow-hidden bg-ink text-background">
-        <div className="container-page grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+      <section className="brand-dark section relative overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_25%,rgba(226,194,122,0.14),transparent_24%),radial-gradient(circle_at_10%_90%,rgba(255,255,255,0.05),transparent_24%)]" aria-hidden="true" />
+        <div className="container-page relative grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-background/20 px-3 py-1.5 text-xs font-semibold text-background/80"><Sparkles className="size-3.5" aria-hidden="true" /> Flagship planning experience</div>
-            <h2 className="mt-5 text-4xl text-background md:text-5xl">Meet Tranquility Studio.</h2>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-background/75">Design your cleaning experience around the way you actually live. Build rooms, set priorities, organize surface and product preferences, define areas that should not be touched, and create a polished Home Care Blueprint.</p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" variant="secondary"><Link to="/studio">Build Your Tranquility Plan</Link></Button>
-              <Button asChild size="lg" variant="outline" className="border-background/35 bg-transparent text-background hover:bg-background/10 hover:text-background"><Link to="/booking">Request Service</Link></Button>
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 text-xs font-semibold text-gold-soft">
+              <Sparkles className="size-3.5" aria-hidden="true" /> Tranquility Studio
             </div>
-            <p className="mt-5 text-xs leading-relaxed text-background/55">Studio is frontend-only in this release. Photos remain local, customer information is not stored, and visual preferences do not create unapproved charges.</p>
+            <h2 className="mt-5 text-4xl text-ink md:text-6xl">Customize your clean around the way you actually live.</h2>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+              Build room scope, organize priorities, identify materials, document product preferences, mark protected areas, and create a Home Care Blueprint before continuing into a service request.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg"><Link to="/studio">Open Tranquility Studio</Link></Button>
+              <Button asChild size="lg" variant="outline" className="border-gold/35 text-foreground hover:bg-gold/10 hover:text-gold-soft"><Link to="/quote">Request Custom Quote</Link></Button>
+            </div>
           </div>
-          <div className="studio-grid rounded-2xl border border-background/15 bg-background/[0.04] p-5 md:p-7">
-            <div className="grid gap-4 sm:grid-cols-2">
-              {["Room planning", "Cleaning priorities", "Style and palette profile", "Surface awareness", "Protected areas", "Home Care Blueprint"].map((item, index) => (
-                <div key={item} className="rounded-xl border border-background/15 bg-background/[0.05] p-5">
-                  {index % 2 === 0 ? <Layers3 className="size-5 text-moss-soft" aria-hidden="true" /> : <Sparkles className="size-5 text-oak" aria-hidden="true" />}
-                  <p className="mt-4 text-sm font-semibold text-background">{item}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-background/55">Organized into one coherent plan that stays separate from unsupported services or pricing.</p>
+
+          <div className="luxury-panel studio-grid rounded-3xl p-5 md:p-7">
+            <div className="mb-5 flex items-center justify-between gap-4 border-b border-border pb-4">
+              <div>
+                <p className="text-[0.64rem] font-bold uppercase tracking-[0.18em] text-moss">Your space. Your standards.</p>
+                <p className="mt-1 font-display text-2xl text-ink">Build a Home Care Blueprint</p>
+              </div>
+              <SlidersHorizontal className="size-5 text-moss" aria-hidden="true" />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {studioCards.map((item, index) => (
+                <div key={item} className="rounded-xl border border-border bg-card/70 p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-sm font-semibold text-ink">{item}</span>
+                    <span className="text-xs font-bold text-moss">0{index + 1}</span>
+                  </div>
+                  <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${38 + index * 9}%` }} /></div>
                 </div>
               ))}
             </div>
@@ -166,54 +204,69 @@ function Home() {
         </div>
       </section>
 
-      <section className="section bg-sand">
-        <div className="container-page">
-          <SectionHeading eyebrow="Why Tranquility" title="Considered work, start to finish" intro="Cleaning is a service you let into your home. We treat that access with care." />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            {whyPoints.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="rounded-xl border border-border bg-card p-6 shadow-soft"><Icon className="size-5 text-moss" aria-hidden="true" /><h3 className="mt-4 text-lg">{title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p></div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="section">
-        <div className="container-page">
-          <SectionHeading eyebrow="How it works" title="Three simple steps" />
-          <ol className="mt-10 grid gap-8 md:grid-cols-3">
-            {steps.map((item) => <li key={item.step} className="border-t border-border pt-5"><p className="font-display text-4xl text-moss-soft">{item.step}</p><h3 className="mt-3 text-xl">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p></li>)}
-          </ol>
-        </div>
-      </section>
-
-      <section className="section bg-sand">
-        <div className="container-page grid gap-12 lg:grid-cols-2 lg:items-center">
+        <div className="container-page grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <img src={linens} alt="Folded linen towels on a stone counter with a sprig of eucalyptus" width={1200} height={1200} loading="lazy" className="aspect-square w-full rounded-3xl object-cover shadow-lift" />
           <div>
-            <SectionHeading eyebrow="Recurring service" title="Keep it going, and pay less each visit" intro="Recurring savings apply to the service price only. Add-ons are always charged at their listed rate." />
-            <dl className="mt-8 divide-y divide-border rounded-xl border border-border bg-card shadow-soft">
-              {frequencies.map((frequency) => <div key={frequency.id} className="flex items-center justify-between gap-4 px-5 py-4"><dt><span className="text-sm font-semibold text-ink">{frequency.name}</span><span className="ml-2 text-xs text-moss">{frequency.note}</span></dt><dd className="text-sm text-muted-foreground">Standard <span className="font-semibold text-ink">{money(servicePrice("standard", frequency.id))}</span></dd></div>)}
+            <SectionHeading eyebrow="Recurring service" title="A cleaner rhythm, with savings built in." intro="Recurring savings apply to the service price only. Add-ons remain at their approved listed rate." />
+            <dl className="mt-8 divide-y divide-border rounded-2xl border border-border bg-card shadow-soft">
+              {frequencies.map((frequency) => (
+                <div key={frequency.id} className="flex items-center justify-between gap-4 px-5 py-4">
+                  <dt><span className="text-sm font-semibold text-ink">{frequency.name}</span><span className="ml-2 text-xs font-semibold text-moss">{frequency.note}</span></dt>
+                  <dd className="text-sm text-muted-foreground">Standard <span className="font-semibold tabular-nums text-ink">{money(servicePrice("standard", frequency.id))}</span></dd>
+                </div>
+              ))}
             </dl>
           </div>
-          <img src={linens} alt="Folded linen towels on a stone counter with a sprig of eucalyptus" width={1200} height={1200} loading="lazy" className="aspect-square w-full rounded-2xl object-cover shadow-soft" />
         </div>
       </section>
 
-      <section className="section bg-accent/40">
-        <div className="container-page grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-          <div><p className="eyebrow">Virtual consultation</p><h2 className="mt-3 text-3xl md:text-4xl">Larger, unusual, or partial-home scope?</h2><p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">Some homes should not be priced by a calculator. Homes around 3,000 sq ft and larger, partial-home requests, specialty surfaces, and commercial spaces are reviewed directly so the quote reflects the actual work involved.</p></div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:justify-end"><Button asChild size="lg"><Link to="/quote">Request a consultation</Link></Button><Button asChild size="lg" variant="outline"><a href={business.phoneHref}>Call {business.phoneDisplay}</a></Button></div>
+      <section className="section bg-sand">
+        <div className="container-page grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div>
+            <p className="eyebrow">Virtual consultation</p>
+            <h2 className="mt-3 text-4xl md:text-5xl">Large, unusual, or partial-home scope?</h2>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+              Homes around 3,000 sq ft and larger, partial-home requests, specialty surfaces, and commercial spaces are reviewed directly so the quote reflects the actual work involved.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+            <Button asChild size="lg"><Link to="/quote">Request a consultation</Link></Button>
+            <Button asChild size="lg" variant="outline"><a href={business.phoneHref}>Call {business.phoneDisplay}</a></Button>
+          </div>
         </div>
       </section>
 
       <section className="section">
-        <div className="container-page"><SectionHeading eyebrow="Service area" title="Across Dallas-Fort Worth" intro="We serve the DFW metroplex and consider surrounding communities on request." /><ul className="mt-8 flex flex-wrap gap-2">{cities.map((city) => <li key={city} className="rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground/80">{city}</li>)}</ul><Link to="/service-area" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">See the full service area <ArrowRight className="size-4" aria-hidden="true" /></Link></div>
+        <div className="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr]">
+          <div>
+            <SectionHeading eyebrow="Service area" title="Across Dallas - Fort Worth" intro="We serve the DFW metroplex and consider surrounding communities on request." />
+            <Link to="/service-area" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">See the full service area <ArrowRight className="size-4" aria-hidden="true" /></Link>
+          </div>
+          <ul className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+            {cities.map((city) => (
+              <li key={city} className="flex min-h-14 items-center gap-3 rounded-xl border border-border bg-card px-4 text-sm text-foreground shadow-soft"><MapPin className="size-4 text-moss" aria-hidden="true" />{city}</li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <section className="section bg-sand">
-        <div className="container-page"><SectionHeading eyebrow="Questions" title="Good things to know" /><div className="mt-10 grid gap-6 md:grid-cols-2">{faqs.slice(0, 4).map((faq) => <div key={faq.question}><h3 className="flex items-start gap-2 text-lg"><CalendarCheck className="mt-1 size-4 shrink-0 text-moss" aria-hidden="true" />{faq.question}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{faq.answer}</p></div>)}</div><Link to="/faq" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">Read all FAQs <ArrowRight className="size-4" aria-hidden="true" /></Link></div>
+        <div className="container-page">
+          <SectionHeading eyebrow="Questions" title="Good things to know before service." />
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {faqs.slice(0, 4).map((faq) => (
+              <article key={faq.question} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+                <h3 className="flex items-start gap-3 text-xl"><CalendarCheck className="mt-1 size-4 shrink-0 text-moss" aria-hidden="true" />{faq.question}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
+              </article>
+            ))}
+          </div>
+          <Link to="/faq" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-moss hover:underline">Read all FAQs <ArrowRight className="size-4" aria-hidden="true" /></Link>
+        </div>
       </section>
 
-      <CTABand />
+      <CTABand title="A cleaner space starts with a clearer plan." intro="Choose a standard service, build a customized Tranquility Studio plan, or request a direct consultation for a more complex home." />
     </>
   );
 }
