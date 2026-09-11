@@ -9,7 +9,7 @@ import { business } from "@/config/business";
 
 const nav = [
   { to: "/services", label: "Services" },
-  { to: "/studio", label: "Tranquility Studio" },
+  { to: "/studio", label: "Customize" },
   { to: "/service-area", label: "Service Area" },
   { to: "/about", label: "About" },
   { to: "/faq", label: "FAQ" },
@@ -84,21 +84,19 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50">
-      <div className="hidden bg-night/95 text-[0.72rem] tracking-wide text-night-foreground md:block">
-        <div className="container-page flex h-9 items-center justify-between">
-          <span>Serving {business.serviceAreaLabel}</span>
-          <a
-            href={business.phoneHref}
-            className="transition-opacity hover:opacity-80 hover:underline"
-          >
+    <header className="brand-dark sticky top-0 z-50 border-b border-gold/25 bg-background text-foreground shadow-[0_12px_38px_-30px_rgba(0,0,0,0.9)]">
+      <div className="hidden border-b border-gold/15 bg-night/80 md:block">
+        <div className="container-page flex h-8 items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <span>Dallas - Fort Worth</span>
+          <span className="hidden lg:inline">Come home to tranquility.</span>
+          <a href={business.phoneHref} className="text-gold-soft transition-colors hover:text-primary">
             {business.phoneDisplay}
           </a>
         </div>
       </div>
 
-      <div className="border-b border-border/70 bg-background/92 shadow-[0_1px_0_color-mix(in_oklab,var(--color-border)_70%,transparent)] backdrop-blur-xl">
-        <div className="container-page flex h-16 items-center justify-between gap-3 md:h-20">
+      <div className="navy-glass">
+        <div className="container-page flex h-[4.5rem] items-center justify-between gap-4 md:h-20">
           <Logo />
 
           <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex 2xl:gap-7">
@@ -106,8 +104,11 @@ export function Header() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="whitespace-nowrap text-sm text-foreground/80 transition-colors hover:text-moss"
-                activeProps={{ className: "text-moss font-semibold" }}
+                className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.79rem] font-semibold uppercase tracking-[0.09em] text-foreground/72 transition-colors hover:text-gold-soft"
+                activeProps={{
+                  className:
+                    "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold",
+                }}
               >
                 {item.to === "/studio" ? (
                   <span className="inline-flex items-center gap-1.5">
@@ -123,7 +124,7 @@ export function Header() {
 
           <div className="hidden items-center gap-2 xl:flex">
             <ThemeToggle compact />
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="border-gold/35 text-foreground hover:bg-gold/10 hover:text-gold-soft">
               <Link to="/quote">Get a Quote</Link>
             </Button>
             <Button asChild>
@@ -140,13 +141,9 @@ export function Header() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Close menu" : "Open menu"}
-              className="inline-flex size-11 items-center justify-center rounded-md border border-border bg-card text-ink shadow-sm"
+              className="inline-flex size-11 items-center justify-center rounded-full border border-gold/30 bg-card text-ink shadow-soft"
             >
-              {open ? (
-                <X className="size-5" aria-hidden="true" />
-              ) : (
-                <Menu className="size-5" aria-hidden="true" />
-              )}
+              {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -156,51 +153,45 @@ export function Header() {
         <div
           ref={menuRef}
           id="mobile-menu"
-          className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-border bg-background md:top-[7.25rem] xl:hidden"
+          className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 overflow-y-auto bg-background md:top-[6.5rem] xl:hidden"
         >
-          <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-4">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="flex min-h-14 items-center border-b border-border/70 py-3 text-lg text-ink"
-                activeProps={{ className: "text-moss font-semibold" }}
-              >
-                {item.to === "/studio" ? (
-                  <span className="inline-flex items-center gap-2">
-                    <Sparkles className="size-4" aria-hidden="true" />
-                    {item.label}
-                  </span>
-                ) : (
-                  item.label
-                )}
-              </Link>
-            ))}
+          <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-5">
+            <div className="rounded-2xl border border-gold/20 bg-card/70 p-2 shadow-lift">
+              {nav.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="flex min-h-14 items-center justify-between border-b border-border/70 px-3 py-3 text-lg text-ink last:border-b-0"
+                  activeProps={{ className: "text-moss font-semibold" }}
+                >
+                  <span>{item.label}</span>
+                  {item.to === "/studio" && <Sparkles className="size-4 text-moss" aria-hidden="true" />}
+                </Link>
+              ))}
+            </div>
 
-            <div className="mt-6 rounded-xl border border-border bg-sand p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-moss">
-                Appearance
-              </p>
+            <div className="mt-5 rounded-2xl border border-gold/20 bg-sand p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-moss">Appearance</p>
               <div className="mt-3">
                 <ThemeToggle />
               </div>
             </div>
 
-            <div className="mt-6 flex flex-col gap-3 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+            <div className="mt-5 flex flex-col gap-3 pb-[calc(1rem+env(safe-area-inset-bottom))]">
               <Button asChild size="lg">
                 <Link to="/booking">Request Service</Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button asChild size="lg" variant="outline" className="border-gold/35">
                 <Link to="/quote">Get a Custom Quote</Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
-                <Link to="/studio">Open Tranquility Studio</Link>
+                <Link to="/studio">Customize Your Clean</Link>
               </Button>
               <a
                 href={business.phoneHref}
                 className="mt-2 inline-flex min-h-11 items-center justify-center gap-2 py-3 text-sm text-muted-foreground"
               >
-                <Phone className="size-4" aria-hidden="true" /> {business.phoneDisplay}
+                <Phone className="size-4 text-moss" aria-hidden="true" /> {business.phoneDisplay}
               </a>
             </div>
           </nav>
