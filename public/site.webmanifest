@@ -4,8 +4,8 @@
   "description": "Professional cleaning across Dallas-Fort Worth.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f6f1e8",
-  "theme_color": "#f6f1e8",
+  "background_color": "#06172c",
+  "theme_color": "#06172c",
   "icons": [
     {
       "src": "/favicon.ico",
