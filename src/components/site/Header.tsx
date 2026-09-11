@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from "react";
 
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
+import { ColorStudio } from "@/components/theme/ColorStudio";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { business } from "@/config/business";
 
 const nav = [
   { to: "/services", label: "Services" },
-  { to: "/studio", label: "Customize" },
+  { to: "/studio", label: "TLC Studio" },
   { to: "/service-area", label: "Service Area" },
   { to: "/about", label: "About" },
   { to: "/faq", label: "FAQ" },
@@ -123,6 +124,7 @@ export function Header() {
           </nav>
 
           <div className="hidden items-center gap-2 xl:flex">
+            <ColorStudio compact />
             <ThemeToggle compact />
             <Button asChild variant="outline" className="border-gold/35 text-foreground hover:bg-gold/10 hover:text-gold-soft">
               <Link to="/quote">Get a Quote</Link>
@@ -133,6 +135,7 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-2 xl:hidden">
+            <ColorStudio compact />
             <ThemeToggle compact />
             <button
               ref={triggerRef}
@@ -172,8 +175,9 @@ export function Header() {
 
             <div className="mt-5 rounded-2xl border border-gold/20 bg-sand p-4">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-moss">Appearance</p>
-              <div className="mt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-3">
                 <ThemeToggle />
+                <ColorStudio />
               </div>
             </div>
 
@@ -185,7 +189,7 @@ export function Header() {
                 <Link to="/quote">Get a Custom Quote</Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
-                <Link to="/studio">Customize Your Clean</Link>
+                <Link to="/studio">Open TLC Studio</Link>
               </Button>
               <a
                 href={business.phoneHref}
