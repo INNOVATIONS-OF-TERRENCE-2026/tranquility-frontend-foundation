@@ -1,15 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { seo } from "@/lib/seo";
-import { PageHero } from "@/components/site/PageHero";
+import { useLanguage } from "@/components/language/LanguageProvider";
 import { CTABand } from "@/components/site/CTABand";
+import { PageHero } from "@/components/site/PageHero";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { faqs } from "@/config/faqs";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -38,12 +34,16 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FaqPage() {
+  const { language, text } = useLanguage();
   return (
     <>
       <PageHero
-        eyebrow="FAQ"
-        title="Questions, answered plainly"
-        intro="If something is not covered here, call or email us. We would rather answer directly than leave you guessing."
+        eyebrow={text({ en: "FAQ", es: "Preguntas frecuentes" })}
+        title={text({ en: "Questions, answered plainly", es: "Respuestas claras a tus preguntas" })}
+        intro={text({
+          en: "If something is not covered here, call or email us. We would rather answer directly than leave you guessing.",
+          es: "Si algo no aparece aquí, llámanos o envíanos un correo. Preferimos responderte directamente antes que dejarte con dudas.",
+        })}
       />
 
       <section className="section">
@@ -51,9 +51,9 @@ function FaqPage() {
           <Accordion type="single" collapsible className="w-full rounded-2xl border border-border bg-card px-5 shadow-soft md:px-7">
             {faqs.map((faq, index) => (
               <AccordionItem key={faq.question} value={`item-${index}`}>
-                <AccordionTrigger className="text-left text-base">{faq.question}</AccordionTrigger>
+                <AccordionTrigger className="text-left text-base">{language === "es" ? faq.questionEs : faq.question}</AccordionTrigger>
                 <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                  {faq.answer}
+                  {language === "es" ? faq.answerEs : faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
