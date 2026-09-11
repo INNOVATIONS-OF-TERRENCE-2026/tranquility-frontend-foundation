@@ -88,35 +88,35 @@ export function Header() {
     <header
       className={`brand-dark inset-x-0 top-0 z-50 text-foreground ${
         isHome
-          ? "absolute border-b border-white/10 bg-[linear-gradient(180deg,color-mix(in_srgb,var(--night)_78%,transparent),transparent)]"
-          : "sticky border-b border-gold/25 bg-background shadow-[0_12px_38px_-30px_rgba(0,0,0,0.9)]"
+          ? "absolute border-b border-white/10 bg-[linear-gradient(180deg,rgba(5,24,34,0.84),rgba(5,24,34,0.46))]"
+          : "sticky border-b border-border bg-background/96 shadow-[0_12px_36px_-30px_rgba(0,0,0,0.65)]"
       }`}
     >
       {!isHome && (
-        <div className="hidden border-b border-gold/15 bg-night/80 md:block">
-          <div className="container-page flex h-8 items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <div className="hidden border-b border-white/8 bg-night/85 md:block">
+          <div className="container-page flex h-8 items-center justify-between text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             <span>Dallas - Fort Worth</span>
             <span className="hidden lg:inline">{text({ en: "Come home to tranquility.", es: "Vuelve a casa con tranquilidad." })}</span>
-            <a href={business.phoneHref} className="text-gold-soft transition-colors hover:text-primary">{business.phoneDisplay}</a>
+            <a href={business.phoneHref} className="text-gold-soft transition-colors hover:text-white">{business.phoneDisplay}</a>
           </div>
         </div>
       )}
 
-      <div className={isHome ? "bg-transparent" : "navy-glass"}>
-        <div className={`container-page flex items-center justify-between gap-4 ${isHome ? "h-24 md:h-28" : "h-[4.5rem] md:h-20"}`}>
-          <Logo hero={isHome} />
+      <div className={isHome ? "bg-transparent" : "bg-night/90"}>
+        <div className="container-page flex h-20 items-center justify-between gap-3">
+          <Logo />
 
           <nav aria-label={text({ en: "Primary navigation", es: "Navegación principal" })} className="hidden items-center gap-5 xl:flex 2xl:gap-7">
             {nav.slice(0, 2).map((item) => (
-              <Link key={item.to} to={item.to} className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-gold-soft" activeProps={{ className: "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold" }}>
+              <Link key={item.to} to={item.to} className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-white" activeProps={{ className: "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold" }}>
                 {item.label}
               </Link>
             ))}
-            <a href={isHome ? "#pricing" : "/#pricing"} className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-gold-soft">
+            <a href={isHome ? "#pricing" : "/#pricing"} className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-white">
               {text({ en: "Pricing", es: "Precios" })}
             </a>
             {nav.slice(2).map((item) => (
-              <Link key={item.to} to={item.to} className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-gold-soft" activeProps={{ className: "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold" }}>
+              <Link key={item.to} to={item.to} className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-white" activeProps={{ className: "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold" }}>
                 {item.label}
               </Link>
             ))}
@@ -126,15 +126,13 @@ export function Header() {
             <LanguageToggle compact />
             <ColorStudio compact />
             <ThemeToggle compact />
-            <Button asChild className="min-w-40 justify-between">
-              <Link to="/booking">{text({ en: "Book Now", es: "Reservar" })} <span aria-hidden="true">→</span></Link>
+            <Button asChild className="min-w-36 justify-between">
+              <Link to="/booking">{text({ en: "Book Now", es: "Reservar" })}<span aria-hidden="true">→</span></Link>
             </Button>
           </div>
 
           <div className="flex items-center gap-2 xl:hidden">
             <LanguageToggle compact />
-            <ColorStudio compact />
-            <ThemeToggle compact />
             <button
               ref={triggerRef}
               type="button"
@@ -142,7 +140,7 @@ export function Header() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? text({ en: "Close menu", es: "Cerrar menú" }) : text({ en: "Open menu", es: "Abrir menú" })}
-              className="inline-flex size-11 items-center justify-center rounded-full border border-gold/30 bg-card/90 text-ink shadow-soft backdrop-blur-sm"
+              className="inline-flex size-11 items-center justify-center rounded-full border border-white/14 bg-white/6 text-white shadow-soft transition hover:bg-white/10"
             >
               {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
             </button>
@@ -151,32 +149,34 @@ export function Header() {
       </div>
 
       {open && (
-        <div ref={menuRef} id="mobile-menu" className={`fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-background ${isHome ? "top-24 md:top-28" : "top-[4.5rem] md:top-[6.5rem]"}`}>
+        <div ref={menuRef} id="mobile-menu" className="fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto bg-background">
           <nav aria-label={text({ en: "Mobile navigation", es: "Navegación móvil" })} className="container-page flex min-h-full flex-col py-5">
-            <div className="rounded-2xl border border-gold/20 bg-card/70 p-2 shadow-lift">
+            <div className="rounded-3xl border border-border bg-card p-2 shadow-lift">
               {nav.map((item, index) => (
                 <div key={item.to}>
-                  {index === 2 && <a href="/#pricing" className="flex min-h-14 items-center border-b border-border/70 px-3 py-3 text-lg text-ink">{text({ en: "Pricing", es: "Precios" })}</a>}
-                  <Link to={item.to} className="flex min-h-14 items-center justify-between border-b border-border/70 px-3 py-3 text-lg text-ink last:border-b-0" activeProps={{ className: "text-moss font-semibold" }}>
+                  {index === 2 && <a href="/#pricing" className="flex min-h-14 items-center border-b border-border/70 px-4 py-3 text-lg text-ink">{text({ en: "Pricing", es: "Precios" })}</a>}
+                  <Link to={item.to} className="flex min-h-14 items-center justify-between border-b border-border/70 px-4 py-3 text-lg text-ink last:border-b-0" activeProps={{ className: "text-moss font-semibold" }}>
                     <span>{item.label}</span>
                   </Link>
                 </div>
               ))}
             </div>
 
-            <div className="mt-5 rounded-2xl border border-gold/20 bg-sand p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-moss">{text({ en: "Preferences", es: "Preferencias" })}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <LanguageToggle />
+            <div className="mt-5 rounded-3xl border border-border bg-sand p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-moss">{text({ en: "Display preferences", es: "Preferencias de pantalla" })}</p>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                {text({ en: "Language, appearance, and color live here so the main navigation stays calm and uncluttered.", es: "El idioma, la apariencia y el color están aquí para mantener la navegación principal tranquila y despejada." })}
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
                 <ThemeToggle />
                 <ColorStudio />
               </div>
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+            <div className="mt-5 flex flex-col gap-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
               <Button asChild size="lg"><Link to="/booking">{text({ en: "Book Your Clean", es: "Reserva tu limpieza" })}</Link></Button>
-              <Button asChild size="lg" variant="outline" className="border-gold/35"><Link to="/quote">{text({ en: "Get a Custom Quote", es: "Solicitar cotización personalizada" })}</Link></Button>
-              <a href={business.phoneHref} className="mt-2 inline-flex min-h-11 items-center justify-center gap-2 py-3 text-sm text-muted-foreground">
+              <Button asChild size="lg" variant="outline"><Link to="/quote">{text({ en: "Get a Custom Quote", es: "Solicitar cotización personalizada" })}</Link></Button>
+              <a href={business.phoneHref} className="mt-1 inline-flex min-h-11 items-center justify-center gap-2 py-3 text-sm text-muted-foreground">
                 <Phone className="size-4 text-moss" aria-hidden="true" /> {business.phoneDisplay}
               </a>
             </div>
