@@ -13,7 +13,7 @@ export const Route = createFileRoute("/services")({
     seo({
       title: "Cleaning Services in DFW | Tranquility Level Cleaning",
       description:
-        "Standard, deep, move-in/move-out, and commercial cleaning across Dallas-Fort Worth with approved base pricing, recurring savings, and home customization through Tranquility Studio.",
+        "Standard, deep, move-in/move-out, and commercial cleaning across Dallas-Fort Worth with approved base pricing, recurring savings, and home customization through TLC Studio.",
       path: "/services",
     }),
   component: ServicesPage,
@@ -31,8 +31,8 @@ function ServicesPage() {
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button asChild size="lg"><Link to="/booking">Request Service</Link></Button>
-          <Button asChild size="lg" variant="secondary"><Link to="/studio">Customize Your Clean</Link></Button>
-          <Button asChild size="lg" variant="outline" className="border-gold/35 text-foreground hover:bg-gold/10"><Link to="/quote">Get a Custom Quote</Link></Button>
+          <Button asChild size="lg" variant="secondary"><Link to="/studio">Open TLC Studio</Link></Button>
+          <Button asChild size="lg" variant="outline"><Link to="/quote">Get a Custom Quote</Link></Button>
         </div>
       </PageHero>
 
@@ -43,9 +43,9 @@ function ServicesPage() {
             {services.map((service, index) => {
               const Icon = serviceIcons[index] ?? Home;
               return (
-                <article key={service.id} className="group flex min-h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-soft transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-gold/45 hover:shadow-lift">
+                <article key={service.id} className="group flex min-h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-soft transition duration-200 hover:-translate-y-1 hover:border-moss/45 hover:shadow-lift">
                   <div className="flex items-start justify-between gap-4">
-                    <span className="flex size-12 items-center justify-center rounded-full border border-gold/25 bg-accent/45 text-moss"><Icon className="size-5" aria-hidden="true" /></span>
+                    <span className="flex size-12 items-center justify-center rounded-full border border-moss/25 bg-accent/45 text-moss"><Icon className="size-5" aria-hidden="true" /></span>
                     <span className="font-display text-3xl text-ink">{money(service.basePrice)}</span>
                   </div>
                   <h2 className="mt-5 text-3xl">{service.name}</h2>
@@ -76,16 +76,16 @@ function ServicesPage() {
       </section>
 
       <section className="brand-dark section relative overflow-hidden bg-background text-foreground">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(226,194,122,0.15),transparent_25%)]" aria-hidden="true" />
+        <div className="absolute inset-0 opacity-70" style={{ backgroundImage: "radial-gradient(circle at 85% 20%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 25%)" }} aria-hidden="true" />
         <div className="container-page relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-2 text-sm font-semibold text-gold-soft"><Sparkles className="size-4" aria-hidden="true" /> Tranquility Studio</div>
+            <div className="flex items-center gap-2 text-sm font-semibold text-gold-soft"><Sparkles className="size-4" aria-hidden="true" /> TLC Studio</div>
             <h2 className="mt-3 text-4xl text-ink md:text-5xl">Know the service. Now personalize the home.</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Build a room plan, define focus areas, document materials and product preferences, protect do-not-touch areas, and create a Home Care Blueprint before requesting service.
             </p>
           </div>
-          <Button asChild size="lg"><Link to="/studio">Build Your Tranquility Plan</Link></Button>
+          <Button asChild size="lg"><Link to="/studio">Launch TLC Studio</Link></Button>
         </div>
       </section>
 
