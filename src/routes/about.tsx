@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Droplets, ShieldCheck, Sparkles, Wind } from "lucide-react";
 
-import linens from "@/assets/detail-linens.jpg";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { CTABand } from "@/components/site/CTABand";
 import { PageHero, SectionHeading } from "@/components/site/PageHero";
@@ -65,14 +65,22 @@ function AboutPage() {
               })}</p>
             </div>
           </div>
-          <img
-            src={linens}
-            alt={text({ en: "Neatly folded linen towels with a sprig of eucalyptus on a stone surface", es: "Toallas de lino dobladas cuidadosamente con una ramita de eucalipto sobre una superficie de piedra" })}
-            width={1200}
-            height={1200}
-            loading="lazy"
-            className="aspect-square w-full rounded-xl object-cover shadow-soft"
-          />
+
+          <div className="brand-dark relative overflow-hidden rounded-[2rem] border border-white/10 bg-night p-6 text-white shadow-lift md:p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_10%,rgba(143,215,209,0.18),transparent_28%)]" aria-hidden="true" />
+            <div className="relative">
+              <div className="mx-auto size-52 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-[0_22px_64px_-34px_rgba(0,0,0,0.9)]">
+                <img src="/tranquility-official-logo.webp" alt="Tranquility Level Cleaning official logo" className="h-full w-full object-cover" width={256} height={256} loading="lazy" decoding="async" />
+              </div>
+              <p className="mt-6 text-center font-display text-3xl text-white">Tranquility Level Cleaning</p>
+              <p className="mt-2 text-center text-[0.62rem] font-bold uppercase tracking-[0.2em] text-gold-soft">{text({ en: "Clean spaces. Calmer days.", es: "Espacios limpios. Días más tranquilos." })}</p>
+              <div className="mt-7 grid grid-cols-3 gap-3 border-t border-white/10 pt-5 text-center">
+                <div><Wind className="mx-auto size-4 text-moss-soft" aria-hidden="true" /><p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-white/60">{text({ en: "Calm", es: "Calma" })}</p></div>
+                <div><Droplets className="mx-auto size-4 text-moss-soft" aria-hidden="true" /><p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-white/60">{text({ en: "Fresh", es: "Fresco" })}</p></div>
+                <div><ShieldCheck className="mx-auto size-4 text-gold-soft" aria-hidden="true" /><p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-white/60">{text({ en: "Careful", es: "Cuidadoso" })}</p></div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -80,9 +88,11 @@ function AboutPage() {
         <div className="container-page">
           <SectionHeading eyebrow={text({ en: "What we hold to", es: "Nuestros principios" })} title={text({ en: "How we work", es: "Cómo trabajamos" })} />
           <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            {values[language].map((value) => (
-              <div key={value.title} className="rounded-xl border border-border bg-card p-6 shadow-soft">
-                <h3 className="text-lg">{value.title}</h3>
+            {values[language].map((value, index) => (
+              <div key={value.title} className="rounded-3xl border border-border bg-card p-6 shadow-soft">
+                <span className="flex size-10 items-center justify-center rounded-2xl bg-accent text-moss"><Sparkles className="size-4" aria-hidden="true" /></span>
+                <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-moss">0{index + 1}</p>
+                <h3 className="mt-2 text-xl">{value.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{value.body}</p>
               </div>
             ))}
