@@ -21,7 +21,7 @@ export function Footer() {
               Request Service
             </Link>
             <Link to="/studio" className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/30 px-6 text-sm font-semibold text-gold-soft transition-colors hover:bg-gold/10">
-              Customize Your Clean
+              Open TLC Studio
             </Link>
           </div>
         </div>
@@ -40,7 +40,7 @@ export function Footer() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">Explore</p>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
-              <li><Link to="/studio" className="transition-colors hover:text-gold-soft">Tranquility Studio</Link></li>
+              <li><Link to="/studio" className="transition-colors hover:text-gold-soft">TLC Studio</Link></li>
               <li><Link to="/service-area" className="transition-colors hover:text-gold-soft">Service Area</Link></li>
               <li><Link to="/faq" className="transition-colors hover:text-gold-soft">FAQ</Link></li>
               <li><Link to="/about" className="transition-colors hover:text-gold-soft">About</Link></li>
@@ -63,7 +63,7 @@ export function Footer() {
               <MapPin className="mt-0.5 size-4 shrink-0 text-moss" aria-hidden="true" />
               <span>{business.serviceAreaLabel}</span>
             </div>
-            <p className="mt-4 text-xs leading-relaxed text-muted-foreground/80">{cities.slice(0, 8).join(" · ")} and surrounding communities.</p>
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground/80">{cities.slice(0, 9).join(" · ")} and surrounding communities.</p>
           </div>
         </div>
 
