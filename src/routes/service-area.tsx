@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { seo } from "@/lib/seo";
 import { PageHero, SectionHeading } from "@/components/site/PageHero";
 import { CTABand } from "@/components/site/CTABand";
+import { ServiceAreaExplorer } from "@/components/site/ServiceAreaExplorer";
 import { business, cities } from "@/config/business";
 
 export const Route = createFileRoute("/service-area")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/service-area")({
     seo({
       title: "Service Area | Dallas-Fort Worth Cleaning | Tranquility Level Cleaning",
       description:
-        "We clean homes and offices across Dallas, Fort Worth, Arlington, Plano, Frisco, McKinney, and surrounding DFW communities.",
+        "Explore Tranquility Level Cleaning service cities across Dallas-Fort Worth, including Euless, with an interactive map, searchable city selector, and radius planning tool.",
       path: "/service-area",
     }),
   component: ServiceAreaPage,
@@ -21,35 +22,39 @@ function ServiceAreaPage() {
     <>
       <PageHero
         eyebrow="Service area"
-        title="Serving Dallas-Fort Worth"
-        intro={`Tranquility Level Cleaning works across ${business.serviceAreaLabel}.`}
+        title="DFW coverage you can actually explore"
+        intro={`Tranquility Level Cleaning works across ${business.serviceAreaLabel}. Search the current city list, inspect the map, and use the radius tool to understand nearby listed communities.`}
       />
 
       <section className="section">
         <div className="container-page">
+          <ServiceAreaExplorer />
+        </div>
+      </section>
+
+      <section className="section bg-sand">
+        <div className="container-page">
           <SectionHeading
-            title="Cities we serve"
-            intro="These are core communities within our current service area. Surrounding locations may also be considered."
+            eyebrow="Core communities"
+            title={`${cities.length} listed DFW cities`}
+            intro="The list now includes Euless. Surrounding communities may also be considered after address review."
           />
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {cities.map((city) => (
               <li
                 key={city}
-                className="rounded-lg border border-border bg-card px-5 py-4 text-base text-ink shadow-soft"
+                className="rounded-2xl border border-border bg-card px-5 py-4 text-base font-semibold text-ink shadow-soft"
               >
                 {city}
               </li>
             ))}
           </ul>
-          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Don't see your community listed? Surrounding communities may still be considered. Get in touch and we'll let you know whether we can serve your address.
-          </p>
         </div>
       </section>
 
       <CTABand
         title="Nearby but not listed?"
-        intro="Reach out with your address and we'll tell you whether we can cover it."
+        intro="Send your address and Tranquility can confirm whether the location falls within the current service reach."
       />
     </>
   );
