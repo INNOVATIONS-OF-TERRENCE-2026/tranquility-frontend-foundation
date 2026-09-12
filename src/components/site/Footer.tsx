@@ -3,6 +3,7 @@ import { MapPin, Phone } from "lucide-react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { business, cities } from "@/config/business";
+import { attribution, businessLeader, technologyLeader } from "@/config/leadership";
 import { services, type ServiceId } from "@/config/pricing";
 import { Logo } from "./Logo";
 
@@ -75,7 +76,22 @@ export function Footer() {
               <span>{text({ en: business.serviceAreaLabel, es: "Dallas-Fort Worth y comunidades cercanas" })}</span>
             </div>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground/80">
-              {cities.slice(0, 9).join(" · ")} {text({ en: "and surrounding communities.", es: "y comunidades cercanas." })}
+              {cities.slice(0, 10).join(" · ")} {text({ en: "and surrounding communities.", es: "y comunidades cercanas." })}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-5 border-t border-border py-7 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <p className="text-xs font-semibold text-foreground">{text(attribution.ownership)}</p>
+            <p className="mt-1 text-[0.7rem] leading-relaxed text-muted-foreground">
+              {businessLeader.name} · {text(businessLeader.role)} · {text(businessLeader.credential)}
+            </p>
+          </div>
+          <div className="md:text-right">
+            <p className="text-xs font-medium text-gold-soft">{text(attribution.engineering)}</p>
+            <p className="mt-1 text-[0.7rem] leading-relaxed text-muted-foreground">
+              {technologyLeader.name} · {text(technologyLeader.role)} · {text(technologyLeader.designation)}
             </p>
           </div>
         </div>
