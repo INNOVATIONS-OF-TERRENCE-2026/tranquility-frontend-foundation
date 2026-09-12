@@ -144,9 +144,23 @@ function Home() {
           <div className="relative mx-auto w-full max-w-[30rem] lg:max-w-[33rem]">
             <div className="absolute -inset-5 rounded-[2.5rem] border border-white/8 bg-white/[0.025]" aria-hidden="true" />
             <div className="relative overflow-hidden rounded-[2.25rem] border border-white/12 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(255,255,255,0.025))] p-6 shadow-[0_30px_90px_-46px_rgba(0,0,0,0.9)] md:p-8">
-              <div className="mx-auto size-48 overflow-hidden rounded-[2rem] border border-white/12 bg-black shadow-[0_22px_60px_-34px_rgba(0,0,0,0.9)] sm:size-56">
-                <img src="/tranquility-official-logo.webp" alt="Tranquility Level Cleaning official logo" className="h-full w-full object-cover" width={256} height={256} decoding="async" />
-              </div>
+              <Link
+                to="/service-area"
+                aria-label={text({ en: "Open the Tranquility Level Cleaning service area map", es: "Abrir el mapa del área de servicio de Tranquility Level Cleaning" })}
+                className="group mx-auto flex size-48 items-center justify-center rounded-[2rem] border border-white/12 bg-white/[0.03] p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/45 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:size-56"
+              >
+                <img
+                  src="/tranquility-official-logo.png"
+                  alt="Tranquility Level Cleaning official logo"
+                  className="h-full w-full object-contain drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none"
+                  width={1024}
+                  height={1024}
+                  decoding="async"
+                />
+              </Link>
+              <p className="mt-4 text-center text-[0.6rem] font-bold uppercase tracking-[0.22em] text-gold-soft">
+                {text({ en: "View Service Area Map", es: "Ver mapa del área de servicio" })}
+              </p>
               <div className="mt-6 text-center">
                 <p className="font-display text-3xl text-white">Tranquility Level Cleaning</p>
                 <p className="mt-2 text-[0.65rem] font-bold uppercase tracking-[0.24em] text-gold-soft">{text({ en: "Clean spaces. Calmer days.", es: "Espacios limpios. Días más tranquilos." })}</p>

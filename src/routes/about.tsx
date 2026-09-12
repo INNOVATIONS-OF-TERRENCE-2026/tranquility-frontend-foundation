@@ -69,8 +69,8 @@ function AboutPage() {
           <div className="brand-dark relative overflow-hidden rounded-[2rem] border border-white/10 bg-night p-6 text-white shadow-lift md:p-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_10%,rgba(143,215,209,0.18),transparent_28%)]" aria-hidden="true" />
             <div className="relative">
-              <div className="mx-auto size-52 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-[0_22px_64px_-34px_rgba(0,0,0,0.9)]">
-                <img src="/tranquility-official-logo.webp" alt="Tranquility Level Cleaning official logo" className="h-full w-full object-cover" width={256} height={256} loading="lazy" decoding="async" />
+              <div className="mx-auto flex size-52 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.03] p-3">
+                <img src="/tranquility-official-logo.png" alt="Tranquility Level Cleaning official logo" className="h-full w-full object-contain drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]" width={1024} height={1024} loading="lazy" decoding="async" />
               </div>
               <p className="mt-6 text-center font-display text-3xl text-white">Tranquility Level Cleaning</p>
               <p className="mt-2 text-center text-[0.62rem] font-bold uppercase tracking-[0.2em] text-gold-soft">{text({ en: "Clean spaces. Calmer days.", es: "Espacios limpios. Días más tranquilos." })}</p>

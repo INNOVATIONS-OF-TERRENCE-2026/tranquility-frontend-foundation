@@ -84,7 +84,7 @@ function QuotePage() {
     contactPreference: "phone",
     notes: "",
   });
-  const [errors, setErrors] = useState<Partial<Record<ErrorKey, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<ErrorKey, string | undefined>>>({});
   const [photos, setPhotos] = useState<LocalPhoto[]>([]);
   const [ready, setReady] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -389,7 +389,7 @@ function QuotePage() {
   );
 }
 
-function TextField({ id, label, value, onChange, error, type = "text", autoComplete, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; error?: string; type?: string; autoComplete?: string; placeholder?: string }) {
+function TextField({ id, label, value, onChange, error, type = "text", autoComplete, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; error?: string | undefined; type?: string | undefined; autoComplete?: string | undefined; placeholder?: string | undefined }) {
   return (
     <div>
       <Label htmlFor={id}>{label}</Label>
