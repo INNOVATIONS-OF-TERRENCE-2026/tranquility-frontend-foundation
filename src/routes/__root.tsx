@@ -15,6 +15,7 @@ import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ThemeProvider, themeBootstrapScript } from "@/components/theme/ThemeProvider";
 import { business, cities } from "@/config/business";
+import { businessLeader, technologyLeader } from "@/config/leadership";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -77,6 +78,63 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const siteUrl = "https://tranquility.cleaning";
+const officialLogoUrl = `${siteUrl}/tranquility-official-logo.png`;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CleaningService",
+      "@id": `${siteUrl}/#business`,
+      name: business.legalName,
+      url: siteUrl,
+      logo: officialLogoUrl,
+      image: officialLogoUrl,
+      telephone: business.phoneDisplay,
+      email: business.email,
+      areaServed: cities.map((name) => ({ "@type": "City", name })),
+      slogan: business.tagline,
+      founder: { "@id": `${siteUrl}/#treva-williams` },
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteUrl}/#treva-williams`,
+      name: businessLeader.name,
+      jobTitle: businessLeader.role.en,
+      worksFor: { "@id": `${siteUrl}/#business` },
+      hasCredential: {
+        "@type": "EducationalOccupationalCredential",
+        name: businessLeader.credential.en,
+        credentialCategory: businessLeader.credential.en,
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: business.legalName,
+      publisher: { "@id": `${siteUrl}/#business` },
+      creator: { "@id": `${siteUrl}/#express-development` },
+      inLanguage: ["en-US", "es-US"],
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#express-development`,
+      name: technologyLeader.company,
+      founder: { "@id": `${siteUrl}/#terrence-milliner` },
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteUrl}/#terrence-milliner`,
+      name: technologyLeader.name,
+      jobTitle: `${technologyLeader.role.en}; ${technologyLeader.designation.en}`,
+      worksFor: { "@id": `${siteUrl}/#express-development` },
+      knowsAbout: technologyLeader.disciplines.map((discipline) => discipline.en),
+    },
+  ],
+};
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -94,27 +152,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: business.legalName },
+      { property: "og:image", content: officialLogoUrl },
+      { property: "og:image:alt", content: "Tranquility Level Cleaning official logo" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: officialLogoUrl },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/tranquility-official-logo.webp", type: "image/webp" },
-      { rel: "apple-touch-icon", href: "/tranquility-official-logo.webp" },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: "/favicon-64.png", type: "image/png", sizes: "64x64" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
       { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "CleaningService",
-          name: business.legalName,
-          url: "https://tranquility.cleaning",
-          telephone: business.phoneDisplay,
-          email: business.email,
-          areaServed: cities.map((name) => ({ "@type": "City", name })),
-          slogan: business.tagline,
-        }),
+        children: JSON.stringify(structuredData),
       },
     ],
   }),
