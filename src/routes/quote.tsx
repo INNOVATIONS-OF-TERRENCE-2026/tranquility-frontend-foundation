@@ -84,7 +84,7 @@ function QuotePage() {
     contactPreference: "phone",
     notes: "",
   });
-  const [errors, setErrors] = useState<Partial<Record<ErrorKey, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<ErrorKey, string | undefined>>>({});
   const [photos, setPhotos] = useState<LocalPhoto[]>([]);
   const [ready, setReady] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
