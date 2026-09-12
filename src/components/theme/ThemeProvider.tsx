@@ -26,7 +26,7 @@ function readPreference(): ThemePreference {
 function applyResolvedTheme(theme: ResolvedTheme) {
   const root = document.documentElement;
   root.classList.toggle("dark", theme === "dark");
-  root.dataset.theme = theme;
+  root.dataset['theme'] = theme;
   root.style.colorScheme = theme;
   const themeColor = document.querySelector('meta[name="theme-color"]');
   themeColor?.setAttribute("content", theme === "dark" ? "#06172c" : "#f8f5ef");
@@ -39,7 +39,7 @@ export const themeBootstrapScript = `(() => {
     const dark = preference === "dark" || (preference === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
     const root = document.documentElement;
     root.classList.toggle("dark", dark);
-    root.dataset.theme = dark ? "dark" : "light";
+    root.dataset['theme'] = dark ? "dark" : "light";
     root.style.colorScheme = dark ? "dark" : "light";
   } catch {}
 })();`;

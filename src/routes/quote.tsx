@@ -389,7 +389,7 @@ function QuotePage() {
   );
 }
 
-function TextField({ id, label, value, onChange, error, type = "text", autoComplete, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; error?: string; type?: string; autoComplete?: string; placeholder?: string }) {
+function TextField({ id, label, value, onChange, error, type = "text", autoComplete, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; error?: string | undefined; type?: string | undefined; autoComplete?: string | undefined; placeholder?: string | undefined }) {
   return (
     <div>
       <Label htmlFor={id}>{label}</Label>

@@ -140,7 +140,7 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
 
   useEffect(() => {
     applyPalette(selected.primary, selected.secondary, resolvedTheme);
-    document.documentElement.dataset.colorPalette = selected.id;
+    document.documentElement.dataset['colorPalette'] = selected.id;
     window.localStorage.setItem(STORAGE_KEY, selected.id);
   }, [pathname, resolvedTheme, selected]);
 
