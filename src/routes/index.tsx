@@ -68,7 +68,7 @@ function Home() {
     {
       icon: FileText,
       label: text({ en: "Custom Care", es: "Servicio personalizado" }),
-      note: text({ en: "CONSULTATION FOR A SPECIFIC SCOPE.", es: "Consulta para alcances especiales." }),
+      note: text({ en: "Consultation for unusual scope.", es: "Consulta para alcances especiales." }),
       to: "/quote" as const,
     },
   ];

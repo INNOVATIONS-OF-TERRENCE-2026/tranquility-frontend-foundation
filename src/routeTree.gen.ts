@@ -26,86 +26,22 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TermsRouteImport } from './routes/terms'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BookingRoute = BookingRouteImport.update({
-  id: '/booking',
-  path: '/booking',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CareersRoute = CareersRouteImport.update({
-  id: '/careers',
-  path: '/careers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommercialCleaningRoute = CommercialCleaningRouteImport.update({
-  id: '/commercial-cleaning',
-  path: '/commercial-cleaning',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DeepCleaningRoute = DeepCleaningRouteImport.update({
-  id: '/deep-cleaning',
-  path: '/deep-cleaning',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MoveInMoveOutCleaningRoute = MoveInMoveOutCleaningRouteImport.update({
-  id: '/move-in-move-out-cleaning',
-  path: '/move-in-move-out-cleaning',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuoteRoute = QuoteRouteImport.update({
-  id: '/quote',
-  path: '/quote',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResidentialCleaningRoute = ResidentialCleaningRouteImport.update({
-  id: '/residential-cleaning',
-  path: '/residential-cleaning',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServiceAreaRoute = ServiceAreaRouteImport.update({
-  id: '/service-area',
-  path: '/service-area',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudioRoute = StudioRouteImport.update({
-  id: '/studio',
-  path: '/studio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const IndexRoute = IndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => rootRouteImport } as any)
+const AboutRoute = AboutRouteImport.update({ id: '/about', path: '/about', getParentRoute: () => rootRouteImport } as any)
+const BookingRoute = BookingRouteImport.update({ id: '/booking', path: '/booking', getParentRoute: () => rootRouteImport } as any)
+const CareersRoute = CareersRouteImport.update({ id: '/careers', path: '/careers', getParentRoute: () => rootRouteImport } as any)
+const CommercialCleaningRoute = CommercialCleaningRouteImport.update({ id: '/commercial-cleaning', path: '/commercial-cleaning', getParentRoute: () => rootRouteImport } as any)
+const ContactRoute = ContactRouteImport.update({ id: '/contact', path: '/contact', getParentRoute: () => rootRouteImport } as any)
+const DeepCleaningRoute = DeepCleaningRouteImport.update({ id: '/deep-cleaning', path: '/deep-cleaning', getParentRoute: () => rootRouteImport } as any)
+const FaqRoute = FaqRouteImport.update({ id: '/faq', path: '/faq', getParentRoute: () => rootRouteImport } as any)
+const MoveInMoveOutCleaningRoute = MoveInMoveOutCleaningRouteImport.update({ id: '/move-in-move-out-cleaning', path: '/move-in-move-out-cleaning', getParentRoute: () => rootRouteImport } as any)
+const PrivacyRoute = PrivacyRouteImport.update({ id: '/privacy', path: '/privacy', getParentRoute: () => rootRouteImport } as any)
+const QuoteRoute = QuoteRouteImport.update({ id: '/quote', path: '/quote', getParentRoute: () => rootRouteImport } as any)
+const ResidentialCleaningRoute = ResidentialCleaningRouteImport.update({ id: '/residential-cleaning', path: '/residential-cleaning', getParentRoute: () => rootRouteImport } as any)
+const ServiceAreaRoute = ServiceAreaRouteImport.update({ id: '/service-area', path: '/service-area', getParentRoute: () => rootRouteImport } as any)
+const ServicesRoute = ServicesRouteImport.update({ id: '/services', path: '/services', getParentRoute: () => rootRouteImport } as any)
+const StudioRoute = StudioRouteImport.update({ id: '/studio', path: '/studio', getParentRoute: () => rootRouteImport } as any)
+const TermsRoute = TermsRouteImport.update({ id: '/terms', path: '/terms', getParentRoute: () => rootRouteImport } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -125,24 +61,7 @@ export interface FileRoutesByFullPath {
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
 }
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/booking': typeof BookingRoute
-  '/careers': typeof CareersRoute
-  '/commercial-cleaning': typeof CommercialCleaningRoute
-  '/contact': typeof ContactRoute
-  '/deep-cleaning': typeof DeepCleaningRoute
-  '/faq': typeof FaqRoute
-  '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
-  '/privacy': typeof PrivacyRoute
-  '/quote': typeof QuoteRoute
-  '/residential-cleaning': typeof ResidentialCleaningRoute
-  '/service-area': typeof ServiceAreaRoute
-  '/services': typeof ServicesRoute
-  '/studio': typeof StudioRoute
-  '/terms': typeof TermsRoute
-}
+export interface FileRoutesByTo extends FileRoutesByFullPath {}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
@@ -164,59 +83,10 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/about'
-    | '/booking'
-    | '/careers'
-    | '/commercial-cleaning'
-    | '/contact'
-    | '/deep-cleaning'
-    | '/faq'
-    | '/move-in-move-out-cleaning'
-    | '/privacy'
-    | '/quote'
-    | '/residential-cleaning'
-    | '/service-area'
-    | '/services'
-    | '/studio'
-    | '/terms'
+  fullPaths: keyof FileRoutesByFullPath
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/about'
-    | '/booking'
-    | '/careers'
-    | '/commercial-cleaning'
-    | '/contact'
-    | '/deep-cleaning'
-    | '/faq'
-    | '/move-in-move-out-cleaning'
-    | '/privacy'
-    | '/quote'
-    | '/residential-cleaning'
-    | '/service-area'
-    | '/services'
-    | '/studio'
-    | '/terms'
-  id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/booking'
-    | '/careers'
-    | '/commercial-cleaning'
-    | '/contact'
-    | '/deep-cleaning'
-    | '/faq'
-    | '/move-in-move-out-cleaning'
-    | '/privacy'
-    | '/quote'
-    | '/residential-cleaning'
-    | '/service-area'
-    | '/services'
-    | '/studio'
-    | '/terms'
+  to: keyof FileRoutesByTo
+  id: keyof FileRoutesById
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -240,139 +110,44 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/booking': {
-      id: '/booking'
-      path: '/booking'
-      fullPath: '/booking'
-      preLoaderRoute: typeof BookingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/careers': {
-      id: '/careers'
-      path: '/careers'
-      fullPath: '/careers'
-      preLoaderRoute: typeof CareersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/commercial-cleaning': {
-      id: '/commercial-cleaning'
-      path: '/commercial-cleaning'
-      fullPath: '/commercial-cleaning'
-      preLoaderRoute: typeof CommercialCleaningRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/deep-cleaning': {
-      id: '/deep-cleaning'
-      path: '/deep-cleaning'
-      fullPath: '/deep-cleaning'
-      preLoaderRoute: typeof DeepCleaningRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/move-in-move-out-cleaning': {
-      id: '/move-in-move-out-cleaning'
-      path: '/move-in-move-out-cleaning'
-      fullPath: '/move-in-move-out-cleaning'
-      preLoaderRoute: typeof MoveInMoveOutCleaningRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quote': {
-      id: '/quote'
-      path: '/quote'
-      fullPath: '/quote'
-      preLoaderRoute: typeof QuoteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/residential-cleaning': {
-      id: '/residential-cleaning'
-      path: '/residential-cleaning'
-      fullPath: '/residential-cleaning'
-      preLoaderRoute: typeof ResidentialCleaningRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/service-area': {
-      id: '/service-area'
-      path: '/service-area'
-      fullPath: '/service-area'
-      preLoaderRoute: typeof ServiceAreaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/studio': {
-      id: '/studio'
-      path: '/studio'
-      fullPath: '/studio'
-      preLoaderRoute: typeof StudioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    '/': { id: '/'; path: '/'; fullPath: '/'; preLoaderRoute: typeof IndexRouteImport; parentRoute: typeof rootRouteImport }
+    '/about': { id: '/about'; path: '/about'; fullPath: '/about'; preLoaderRoute: typeof AboutRouteImport; parentRoute: typeof rootRouteImport }
+    '/booking': { id: '/booking'; path: '/booking'; fullPath: '/booking'; preLoaderRoute: typeof BookingRouteImport; parentRoute: typeof rootRouteImport }
+    '/careers': { id: '/careers'; path: '/careers'; fullPath: '/careers'; preLoaderRoute: typeof CareersRouteImport; parentRoute: typeof rootRouteImport }
+    '/commercial-cleaning': { id: '/commercial-cleaning'; path: '/commercial-cleaning'; fullPath: '/commercial-cleaning'; preLoaderRoute: typeof CommercialCleaningRouteImport; parentRoute: typeof rootRouteImport }
+    '/contact': { id: '/contact'; path: '/contact'; fullPath: '/contact'; preLoaderRoute: typeof ContactRouteImport; parentRoute: typeof rootRouteImport }
+    '/deep-cleaning': { id: '/deep-cleaning'; path: '/deep-cleaning'; fullPath: '/deep-cleaning'; preLoaderRoute: typeof DeepCleaningRouteImport; parentRoute: typeof rootRouteImport }
+    '/faq': { id: '/faq'; path: '/faq'; fullPath: '/faq'; preLoaderRoute: typeof FaqRouteImport; parentRoute: typeof rootRouteImport }
+    '/move-in-move-out-cleaning': { id: '/move-in-move-out-cleaning'; path: '/move-in-move-out-cleaning'; fullPath: '/move-in-move-out-cleaning'; preLoaderRoute: typeof MoveInMoveOutCleaningRouteImport; parentRoute: typeof rootRouteImport }
+    '/privacy': { id: '/privacy'; path: '/privacy'; fullPath: '/privacy'; preLoaderRoute: typeof PrivacyRouteImport; parentRoute: typeof rootRouteImport }
+    '/quote': { id: '/quote'; path: '/quote'; fullPath: '/quote'; preLoaderRoute: typeof QuoteRouteImport; parentRoute: typeof rootRouteImport }
+    '/residential-cleaning': { id: '/residential-cleaning'; path: '/residential-cleaning'; fullPath: '/residential-cleaning'; preLoaderRoute: typeof ResidentialCleaningRouteImport; parentRoute: typeof rootRouteImport }
+    '/service-area': { id: '/service-area'; path: '/service-area'; fullPath: '/service-area'; preLoaderRoute: typeof ServiceAreaRouteImport; parentRoute: typeof rootRouteImport }
+    '/services': { id: '/services'; path: '/services'; fullPath: '/services'; preLoaderRoute: typeof ServicesRouteImport; parentRoute: typeof rootRouteImport }
+    '/studio': { id: '/studio'; path: '/studio'; fullPath: '/studio'; preLoaderRoute: typeof StudioRouteImport; parentRoute: typeof rootRouteImport }
+    '/terms': { id: '/terms'; path: '/terms'; fullPath: '/terms'; preLoaderRoute: typeof TermsRouteImport; parentRoute: typeof rootRouteImport }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  BookingRoute: BookingRoute,
-  CareersRoute: CareersRoute,
-  CommercialCleaningRoute: CommercialCleaningRoute,
-  ContactRoute: ContactRoute,
-  DeepCleaningRoute: DeepCleaningRoute,
-  FaqRoute: FaqRoute,
-  MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
-  PrivacyRoute: PrivacyRoute,
-  QuoteRoute: QuoteRoute,
-  ResidentialCleaningRoute: ResidentialCleaningRoute,
-  ServiceAreaRoute: ServiceAreaRoute,
-  ServicesRoute: ServicesRoute,
-  StudioRoute: StudioRoute,
-  TermsRoute: TermsRoute,
+  IndexRoute,
+  AboutRoute,
+  BookingRoute,
+  CareersRoute,
+  CommercialCleaningRoute,
+  ContactRoute,
+  DeepCleaningRoute,
+  FaqRoute,
+  MoveInMoveOutCleaningRoute,
+  PrivacyRoute,
+  QuoteRoute,
+  ResidentialCleaningRoute,
+  ServiceAreaRoute,
+  ServicesRoute,
+  StudioRoute,
+  TermsRoute,
 }
+
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
