@@ -15,6 +15,7 @@ export interface ServiceDef {
   description: string;
   includes: string[];
   route: string;
+  recurringEligible: boolean;
 }
 
 export const services: ServiceDef[] = [
@@ -24,6 +25,7 @@ export const services: ServiceDef[] = [
     short: "Standard",
     basePrice: 145,
     route: "/residential-cleaning",
+    recurringEligible: true,
     description:
       "Consistent upkeep for a home that already feels cared for. Surfaces, floors, kitchen, and bath are refreshed on a rhythm that suits you.",
     includes: [
@@ -40,6 +42,7 @@ export const services: ServiceDef[] = [
     short: "Deep",
     basePrice: 215,
     route: "/deep-cleaning",
+    recurringEligible: false,
     description:
       "A detailed reset for homes that need more attention, including build-up, edges, and the places routine cleaning tends to pass over.",
     includes: [
@@ -56,6 +59,7 @@ export const services: ServiceDef[] = [
     short: "Move-In / Move-Out",
     basePrice: 235,
     route: "/move-in-move-out-cleaning",
+    recurringEligible: false,
     description:
       "An empty-home clean for transitions, whether you are handing keys over or walking into a space that should feel genuinely new.",
     includes: [
@@ -94,10 +98,24 @@ export function getFrequency(id: FrequencyId): FrequencyDef {
   return frequency;
 }
 
-/** Discounts apply only to the service subtotal, never to add-ons. */
+export function isFrequencyAllowed(serviceId: ServiceId, frequencyId: FrequencyId) {
+  if (frequencyId === "onetime") return true;
+  return getService(serviceId).recurringEligible;
+}
+
+export function availableFrequencies(serviceId: ServiceId) {
+  return frequencies.filter((frequency) => isFrequencyAllowed(serviceId, frequency.id));
+}
+
+export function normalizeFrequency(serviceId: ServiceId, frequencyId: FrequencyId): FrequencyId {
+  return isFrequencyAllowed(serviceId, frequencyId) ? frequencyId : "onetime";
+}
+
+/** Discounts apply only to the Standard Clean service subtotal, never to add-ons. */
 export function servicePrice(service: ServiceId, frequency: FrequencyId): number {
   const base = getService(service).basePrice;
-  return Math.round(base * (1 - getFrequency(frequency).discount));
+  const effectiveFrequency = getFrequency(normalizeFrequency(service, frequency));
+  return Math.round(base * (1 - effectiveFrequency.discount));
 }
 
 export type AddOnGroup = "scope" | "laundry" | "detail";
@@ -115,109 +133,24 @@ export interface AddOnDef {
 }
 
 export const addOns: AddOnDef[] = [
-  {
-    id: "extra-bedroom",
-    name: "Additional bedroom",
-    group: "scope",
-    price: { standard: 15, deep: 27, move: 37 },
-    quantity: true,
-    derived: true,
-    unit: "bedroom",
-    note: "Base price includes 1 bedroom.",
-  },
-  {
-    id: "extra-full-bath",
-    name: "Additional full bathroom",
-    group: "scope",
-    price: { standard: 17, deep: 29, move: 39 },
-    quantity: true,
-    derived: true,
-    startingAt: true,
-    unit: "bathroom",
-    note: "Base price includes 1 full bathroom.",
-  },
-  {
-    id: "half-bath",
-    name: "Half bathroom",
-    group: "scope",
-    price: { standard: 13, deep: 25, move: 37 },
-    quantity: true,
-    derived: true,
-    unit: "half bath",
-  },
-  {
-    id: "living-room",
-    name: "Additional living room",
-    group: "scope",
-    price: 15,
-    quantity: true,
-    derived: true,
-    unit: "room",
-  },
-  {
-    id: "dining-room",
-    name: "Dining room",
-    group: "scope",
-    price: 15,
-    quantity: true,
-    derived: true,
-    unit: "room",
-  },
-  {
-    id: "office",
-    name: "Office",
-    group: "scope",
-    price: 12,
-    quantity: true,
-    derived: true,
-    unit: "room",
-  },
-  {
-    id: "laundry-room",
-    name: "Laundry / utility room",
-    group: "scope",
-    price: { standard: 10, deep: 17, move: 22 },
-    quantity: true,
-    derived: true,
-    unit: "room",
-  },
-  {
-    id: "laundry-wdf",
-    name: "Laundry: wash, dry & fold",
-    group: "laundry",
-    price: 20,
-    quantity: true,
-    unit: "load",
-  },
-  {
-    id: "laundry-fold",
-    name: "Laundry: fold only",
-    group: "laundry",
-    price: 13,
-    quantity: true,
-    unit: "load",
-  },
+  { id: "extra-bedroom", name: "Additional bedroom", group: "scope", price: { standard: 15, deep: 27, move: 37 }, quantity: true, derived: true, unit: "bedroom", note: "Base price includes 1 bedroom." },
+  { id: "extra-full-bath", name: "Additional full bathroom", group: "scope", price: { standard: 17, deep: 29, move: 39 }, quantity: true, derived: true, startingAt: true, unit: "bathroom", note: "Base price includes 1 full bathroom." },
+  { id: "half-bath", name: "Half bathroom", group: "scope", price: { standard: 13, deep: 25, move: 37 }, quantity: true, derived: true, unit: "half bath" },
+  { id: "living-room", name: "Additional living room", group: "scope", price: 15, quantity: true, derived: true, unit: "room" },
+  { id: "dining-room", name: "Dining room", group: "scope", price: 15, quantity: true, derived: true, unit: "room" },
+  { id: "office", name: "Office", group: "scope", price: 12, quantity: true, derived: true, unit: "room" },
+  { id: "laundry-room", name: "Laundry / utility room", group: "scope", price: { standard: 10, deep: 17, move: 22 }, quantity: true, derived: true, unit: "room" },
+  { id: "laundry-wdf", name: "Laundry: wash, dry & fold", group: "laundry", price: 20, quantity: true, unit: "load" },
+  { id: "laundry-fold", name: "Laundry: fold only", group: "laundry", price: 13, quantity: true, unit: "load" },
   { id: "dishes", name: "Excess dishes", group: "detail", price: 25 },
   { id: "oven", name: "Oven interior", group: "detail", price: 40 },
   { id: "fridge", name: "Refrigerator interior", group: "detail", price: 25 },
-  {
-    id: "hood",
-    name: "Above-stove hood & vents",
-    group: "detail",
-    price: 45,
-    startingAt: true,
-  },
+  { id: "hood", name: "Above-stove hood & vents", group: "detail", price: 45, startingAt: true },
   { id: "cabinets", name: "Cabinet interiors", group: "detail", price: 35 },
   { id: "pet-hair", name: "Excess pet hair vacuuming", group: "detail", price: 15 },
   { id: "baseboards", name: "Baseboards", group: "detail", price: 25, startingAt: true },
   { id: "garage-patio", name: "Garage / patio", group: "detail", price: 35 },
-  {
-    id: "carpet-spot",
-    name: "Carpet spot cleaning",
-    group: "detail",
-    price: 35,
-    startingAt: true,
-  },
+  { id: "carpet-spot", name: "Carpet spot cleaning", group: "detail", price: 35, startingAt: true },
 ];
 
 export function addOnPrice(addOn: AddOnDef, service: ServiceId): number {
@@ -287,30 +220,19 @@ export interface Estimate {
   reviewFlags: string[];
 }
 
-function line(
-  addOnId: string,
-  qty: number,
-  service: ServiceId,
-  labelOverride?: string,
-): EstimateLine | null {
+function line(addOnId: string, qty: number, service: ServiceId, labelOverride?: string): EstimateLine | null {
   if (qty <= 0) return null;
   const def = getAddOn(addOnId);
   const unitPrice = addOnPrice(def, service);
-  return {
-    id: def.id,
-    label: labelOverride ?? def.name,
-    qty,
-    unitPrice,
-    total: unitPrice * qty,
-    startingAt: Boolean(def.startingAt),
-  };
+  return { id: def.id, label: labelOverride ?? def.name, qty, unitPrice, total: unitPrice * qty, startingAt: Boolean(def.startingAt) };
 }
 
 export function buildEstimate(input: EstimateInput): Estimate {
   const service = getService(input.service);
-  const frequency = getFrequency(input.frequency);
+  const normalizedFrequency = normalizeFrequency(input.service, input.frequency);
+  const frequency = getFrequency(normalizedFrequency);
   const basePrice = service.basePrice;
-  const serviceSubtotal = servicePrice(input.service, input.frequency);
+  const serviceSubtotal = servicePrice(input.service, normalizedFrequency);
   const discountAmount = basePrice - serviceSubtotal;
 
   const scope = input.scope;
@@ -324,29 +246,14 @@ export function buildEstimate(input: EstimateInput): Estimate {
     line("laundry-room", scope.laundryRooms, input.service),
   ];
 
-  const chosen = Object.entries(input.extras).map(([id, qty]) =>
-    line(id, qty, input.service),
-  );
-
+  const chosen = Object.entries(input.extras).map(([id, qty]) => line(id, qty, input.service));
   const addOnLines = [...derived, ...chosen].filter((item): item is EstimateLine => item !== null);
   const addOnTotal = addOnLines.reduce((sum, item) => sum + item.total, 0);
 
   const reviewFlags: string[] = [];
-  if (input.sqft && input.sqft >= CUSTOM_REVIEW_SQFT) {
-    reviewFlags.push(
-      `Homes around ${CUSTOM_REVIEW_SQFT.toLocaleString()} sq ft and larger are reviewed as custom scope.`,
-    );
-  }
-  if (input.partialHome) {
-    reviewFlags.push(
-      "Cleaning only part of the home is custom scope and is quoted after a short consultation.",
-    );
-  }
-  if (addOnLines.some((item) => item.startingAt)) {
-    reviewFlags.push(
-      "Some selected items are priced starting at a minimum and may be adjusted after review.",
-    );
-  }
+  if (input.sqft && input.sqft >= CUSTOM_REVIEW_SQFT) reviewFlags.push(`Homes around ${CUSTOM_REVIEW_SQFT.toLocaleString()} sq ft and larger are reviewed as custom scope.`);
+  if (input.partialHome) reviewFlags.push("Cleaning only part of the home is custom scope and is quoted after a short consultation.");
+  if (addOnLines.some((item) => item.startingAt)) reviewFlags.push("Some selected items are priced starting at a minimum and may be adjusted after review.");
 
   return {
     service,
@@ -367,4 +274,4 @@ export function money(value: number) {
 }
 
 export const PRICING_DISCLOSURE =
-  "Pricing shown is based on a standard average 1-bedroom, 1-full-bath home. Your final price can change based on square footage, layout, condition, customizations, unusual scope, or specialty work. Final service details are confirmed with you before any cleaning takes place.";
+  "Pricing shown is based on a standard average 1-bedroom, 1-full-bath home. Deep Clean and Move-In / Move-Out prices are starting prices. Recurring savings are available for Standard Clean only. Your final price can change based on square footage, layout, condition, customizations, unusual scope, or specialty work. Final service details are confirmed with you before any cleaning takes place.";
