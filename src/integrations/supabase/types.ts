@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      availability_blocks: {
+        Row: {
+          arrival_window: string | null
+          created_at: string
+          created_by: string
+          end_date: string
+          id: string
+          reason: string | null
+          service_type: string | null
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          arrival_window?: string | null
+          created_at?: string
+          created_by: string
+          end_date: string
+          id?: string
+          reason?: string | null
+          service_type?: string | null
+          start_date: string
+          updated_at?: string
+        }
+        Update: {
+          arrival_window?: string | null
+          created_at?: string
+          created_by?: string
+          end_date?: string
+          id?: string
+          reason?: string | null
+          service_type?: string | null
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       booking_holds: {
         Row: {
           arrival_window: string
@@ -28,11 +64,13 @@ export type Database = {
           expires_at: string
           frequency: string
           id: string
+          private_notes: string | null
           request_payload: Json
           service_address: string
           service_date: string
           service_type: string
           status: string
+          updated_at: string
           zip: string
         }
         Insert: {
@@ -48,11 +86,13 @@ export type Database = {
           expires_at?: string
           frequency: string
           id?: string
+          private_notes?: string | null
           request_payload: Json
           service_address: string
           service_date: string
           service_type: string
           status?: string
+          updated_at?: string
           zip: string
         }
         Update: {
@@ -68,11 +108,13 @@ export type Database = {
           expires_at?: string
           frequency?: string
           id?: string
+          private_notes?: string | null
           request_payload?: Json
           service_address?: string
           service_date?: string
           service_type?: string
           status?: string
+          updated_at?: string
           zip?: string
         }
         Relationships: []
@@ -163,7 +205,10 @@ export type Database = {
           id: string
           language: string
           phone: string
+          private_notes: string | null
           reliable_transportation: boolean
+          status: string
+          updated_at: string
         }
         Insert: {
           additional_information?: string | null
@@ -176,7 +221,10 @@ export type Database = {
           id?: string
           language?: string
           phone: string
+          private_notes?: string | null
           reliable_transportation: boolean
+          status?: string
+          updated_at?: string
         }
         Update: {
           additional_information?: string | null
@@ -189,7 +237,10 @@ export type Database = {
           id?: string
           language?: string
           phone?: string
+          private_notes?: string | null
           reliable_transportation?: boolean
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -203,7 +254,10 @@ export type Database = {
           notes: string
           phone: string
           preferred_date: string | null
+          private_notes: string | null
           service_type: string
+          status: string
+          updated_at: string
         }
         Insert: {
           created_at?: string
@@ -214,7 +268,10 @@ export type Database = {
           notes: string
           phone: string
           preferred_date?: string | null
+          private_notes?: string | null
           service_type: string
+          status?: string
+          updated_at?: string
         }
         Update: {
           created_at?: string
@@ -225,7 +282,10 @@ export type Database = {
           notes?: string
           phone?: string
           preferred_date?: string | null
+          private_notes?: string | null
           service_type?: string
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -242,8 +302,11 @@ export type Database = {
           name: string
           notes: string | null
           phone: string
+          private_notes: string | null
           property_type: string
           scope: string
+          status: string
+          updated_at: string
         }
         Insert: {
           approximate_size?: string | null
@@ -257,8 +320,11 @@ export type Database = {
           name: string
           notes?: string | null
           phone: string
+          private_notes?: string | null
           property_type: string
           scope: string
+          status?: string
+          updated_at?: string
         }
         Update: {
           approximate_size?: string | null
@@ -272,8 +338,32 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string
+          private_notes?: string | null
           property_type?: string
           scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -282,6 +372,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_booking_request: {
+        Args: {
+          p_arrival_window: string
+          p_booking_reference: string
+          p_city: string
+          p_customer_email: string
+          p_customer_name: string
+          p_customer_phone: string
+          p_estimate_cents: number
+          p_frequency: string
+          p_request_payload: Json
+          p_service_address: string
+          p_service_date: string
+          p_service_type: string
+          p_zip: string
+        }
+        Returns: string
+      }
       reserve_booking_hold: {
         Args: {
           p_arrival_window: string
@@ -302,7 +410,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -429,6 +537,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin"],
+    },
   },
 } as const

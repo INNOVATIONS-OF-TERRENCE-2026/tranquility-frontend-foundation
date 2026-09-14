@@ -192,7 +192,7 @@ function ServicesPage() {
             })}
           </div>
 
-          <article className="brand-dark mt-5 grid gap-6 rounded-2xl border border-gold/20 bg-background p-6 shadow-lift md:grid-cols-[auto_1fr_auto] md:items-center md:p-7">
+          <article className="mt-5 grid gap-6 rounded-2xl border border-border bg-stone-soft p-6 shadow-soft md:grid-cols-[auto_1fr_auto] md:items-center md:p-7">
             <span className="flex size-12 items-center justify-center rounded-full border border-gold/30 bg-gold/5 text-moss">
               <Building2 className="size-5" aria-hidden="true" />
             </span>

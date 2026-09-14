@@ -5,19 +5,21 @@ interface PageHeroProps {
   title: string;
   intro?: string;
   children?: ReactNode;
+  variant?: "light" | "soft" | "dark";
 }
 
-export function PageHero({ eyebrow, title, intro, children }: PageHeroProps) {
+export function PageHero({ eyebrow, title, intro, children, variant = "soft" }: PageHeroProps) {
+  const surface =
+    variant === "dark"
+      ? "brand-dark bg-night text-night-foreground"
+      : variant === "light"
+        ? "bg-background"
+        : "bg-[radial-gradient(circle_at_82%_12%,color-mix(in_srgb,var(--brand-seaglass)_24%,transparent),transparent_32%),linear-gradient(145deg,var(--surface-canvas),var(--surface-mist))]";
   return (
-    <section className="brand-dark relative overflow-hidden border-b border-gold/20 bg-background">
-      <div
-        className="absolute inset-0 bg-[radial-gradient(circle_at_76%_10%,rgba(226,194,122,0.16),transparent_28%),radial-gradient(circle_at_15%_90%,rgba(255,255,255,0.06),transparent_30%)]"
-        aria-hidden="true"
-      />
-      <div className="absolute inset-x-0 bottom-0 h-px gold-rule opacity-80" aria-hidden="true" />
-      <div className="container-page relative py-16 md:py-24 lg:py-28">
+    <section className={`relative overflow-hidden border-b border-border ${surface}`}>
+      <div className="container-page relative py-14 md:py-20 lg:py-24">
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h1 className="mt-4 max-w-4xl text-4xl leading-[1.03] text-ink md:text-6xl lg:text-[4.4rem]">
+        <h1 className="mt-4 max-w-4xl text-4xl leading-[1.04] text-ink md:text-6xl lg:text-[4.25rem]">
           {title}
         </h1>
         {intro && (

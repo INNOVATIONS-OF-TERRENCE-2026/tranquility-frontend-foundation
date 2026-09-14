@@ -110,7 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Professional residential, deep, move-in, move-out, and commercial cleaning across Dallas-Fort Worth with clear pricing and custom quote options.",
       },
       { name: "author", content: business.legalName },
-      { name: "theme-color", content: "#0b2733" },
+      { name: "theme-color", content: "#fbfaf7" },
       { property: "og:title", content: business.legalName },
       {
         property: "og:description",
@@ -122,6 +122,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap",
+      },
       { rel: "icon", href: brandAssets.faviconIco, sizes: "any" },
       { rel: "icon", href: brandAssets.favicon32, type: "image/png", sizes: "32x32" },
       { rel: "icon", href: brandAssets.favicon16, type: "image/png", sizes: "16x16" },

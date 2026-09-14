@@ -95,45 +95,24 @@ function Home() {
 
   return (
     <>
-      <section className="brand-dark relative isolate overflow-hidden bg-night text-night-foreground">
-        <div
-          className="absolute inset-0 -z-30"
-          aria-hidden="true"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 78% 12%, rgba(131, 218, 211, 0.24), transparent 26%), radial-gradient(circle at 18% 8%, rgba(255,255,255,0.10), transparent 20%), linear-gradient(135deg, #061923 0%, #0A2C37 46%, #0C4550 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 -z-20 opacity-35"
-          aria-hidden="true"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(112deg, transparent 0 18px, rgba(255,255,255,0.055) 18px 19px, transparent 19px 42px)",
-          }}
-        />
-        <div
-          className="absolute inset-x-0 bottom-0 -z-10 h-[46%] bg-[linear-gradient(180deg,transparent,rgba(225,247,245,0.06)_35%,rgba(199,233,231,0.12)_100%)]"
-          aria-hidden="true"
-        />
-
-        <div className="container-page grid min-h-[43rem] gap-10 pb-14 pt-28 md:min-h-[46rem] md:pt-32 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-16 lg:pb-16 lg:pt-28">
+      <section className="relative isolate overflow-hidden border-b border-border bg-[radial-gradient(circle_at_82%_22%,color-mix(in_srgb,var(--brand-seaglass)_34%,transparent),transparent_28%),linear-gradient(145deg,var(--surface-canvas),var(--surface-mist))]">
+        <div className="container-page grid min-h-[42rem] gap-8 pb-12 pt-28 md:min-h-[44rem] md:pt-32 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-16">
           <div className="max-w-3xl">
-            <p className="max-w-xl text-[0.66rem] font-bold uppercase leading-5 tracking-[0.24em] text-gold-soft sm:text-[0.7rem]">
+            <p className="eyebrow max-w-xl">
               {text({
                 en: "Premium cleaning across Dallas - Fort Worth",
                 es: "Limpieza premium en Dallas - Fort Worth",
               })}
             </p>
 
-            <h1 className="mt-5 max-w-[12ch] font-display text-[clamp(3.15rem,8vw,6rem)] font-medium leading-[0.93] tracking-[-0.045em] text-white">
+            <h1 className="mt-5 max-w-[12ch] font-display text-5xl font-medium leading-[1.02] text-ink sm:text-6xl lg:text-7xl">
               {text({
                 en: "Come home to a cleaner, calmer space.",
                 es: "Vuelve a un hogar más limpio y tranquilo.",
               })}
             </h1>
 
-            <p className="mt-6 max-w-2xl text-base leading-7 text-white/76 md:text-lg md:leading-8">
+            <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
               {text({
                 en: "Clear pricing, careful service, and flexible options designed around the way your home is actually used.",
                 es: "Precios claros, servicio cuidadoso y opciones flexibles diseñadas alrededor de la forma en que realmente usas tu hogar.",
@@ -151,82 +130,78 @@ function Home() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="min-w-56 justify-between border-white/25 bg-white/6 px-7 text-white hover:border-white/45 hover:bg-white/10 hover:text-white"
+                className="min-w-56 justify-between bg-card px-7"
               >
                 <Link to="/quote">
                   {text({ en: "Get a Custom Quote", es: "Cotización personalizada" })}
-                  <FileText className="size-4 text-gold-soft" aria-hidden="true" />
+                  <FileText className="size-4 text-moss" aria-hidden="true" />
                 </Link>
               </Button>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs text-white/68">
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-2">
-                <Check className="size-3.5 text-gold-soft" aria-hidden="true" />
+                <Check className="size-3.5 text-moss" aria-hidden="true" />
                 {text({ en: "Standard from $145", es: "Estándar desde $145" })}
               </span>
               <span className="inline-flex items-center gap-2">
-                <Check className="size-3.5 text-gold-soft" aria-hidden="true" />
+                <Check className="size-3.5 text-moss" aria-hidden="true" />
                 {text({ en: "Weekly saves 20%", es: "Semanal ahorra 20%" })}
               </span>
               <span className="inline-flex items-center gap-2">
-                <Check className="size-3.5 text-gold-soft" aria-hidden="true" />
+                <Check className="size-3.5 text-moss" aria-hidden="true" />
                 {text({ en: "DFW service area", es: "Área de servicio DFW" })}
               </span>
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[30rem] lg:max-w-[33rem]">
-            <div
-              className="absolute -inset-5 rounded-[2.5rem] border border-white/8 bg-white/[0.025]"
-              aria-hidden="true"
-            />
-            <div className="relative overflow-hidden rounded-[2.25rem] border border-white/12 bg-[linear-gradient(160deg,rgba(255,255,255,0.08),rgba(255,255,255,0.025))] p-6 shadow-[0_30px_90px_-46px_rgba(0,0,0,0.9)] md:p-8">
+          <div className="relative mx-auto w-full max-w-[27rem] lg:max-w-[30rem]">
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-card/85 p-6 shadow-lift backdrop-blur md:p-8">
               <Link
                 to="/service-area"
                 aria-label={text({
                   en: "Open the Tranquility Level Cleaning service area map",
                   es: "Abrir el mapa del área de servicio de Tranquility Level Cleaning",
                 })}
-                className="group mx-auto flex size-48 items-center justify-center rounded-[2rem] border border-white/12 bg-white/[0.03] p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/45 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:size-56"
+                className="group mx-auto flex size-48 items-center justify-center p-3 transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-56"
               >
                 <img
                   src={brandAssets.logo}
                   alt="Tranquility Level Cleaning"
-                  className="h-full w-full object-contain drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none"
+                  className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none"
                   width={1448}
                   height={1086}
                   decoding="async"
                 />
               </Link>
-              <p className="mt-4 text-center text-[0.6rem] font-bold uppercase tracking-[0.22em] text-gold-soft">
+              <p className="mt-4 text-center text-[0.6rem] font-bold uppercase tracking-[0.18em] text-moss">
                 {text({ en: "View Service Area Map", es: "Ver mapa del área de servicio" })}
               </p>
               <div className="mt-6 text-center">
-                <p className="font-display text-3xl text-white">Tranquility Level Cleaning</p>
-                <p className="mt-2 text-[0.65rem] font-bold uppercase tracking-[0.24em] text-gold-soft">
+                <p className="font-display text-3xl text-ink">Tranquility Level Cleaning</p>
+                <p className="mt-2 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-moss">
                   {text({
                     en: "Clean spaces. Calmer days.",
                     es: "Espacios limpios. Días más tranquilos.",
                   })}
                 </p>
               </div>
-              <div className="mt-7 grid grid-cols-3 gap-2 border-t border-white/10 pt-5 text-center">
+              <div className="mt-7 grid grid-cols-3 gap-2 border-t border-border pt-5 text-center">
                 <div>
                   <Wind className="mx-auto size-4 text-moss-soft" aria-hidden="true" />
-                  <p className="mt-2 text-[0.6rem] uppercase tracking-[0.12em] text-white/58">
+                  <p className="mt-2 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground">
                     {text({ en: "Calm", es: "Calma" })}
                   </p>
                 </div>
                 <div>
                   <Droplets className="mx-auto size-4 text-moss-soft" aria-hidden="true" />
-                  <p className="mt-2 text-[0.6rem] uppercase tracking-[0.12em] text-white/58">
+                  <p className="mt-2 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground">
                     {text({ en: "Fresh", es: "Fresco" })}
                   </p>
                 </div>
                 <div>
-                  <ShieldCheck className="mx-auto size-4 text-gold-soft" aria-hidden="true" />
-                  <p className="mt-2 text-[0.6rem] uppercase tracking-[0.12em] text-white/58">
+                  <ShieldCheck className="mx-auto size-4 text-gold" aria-hidden="true" />
+                  <p className="mt-2 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground">
                     {text({ en: "Careful", es: "Cuidadoso" })}
                   </p>
                 </div>
@@ -235,22 +210,22 @@ function Home() {
           </div>
         </div>
 
-        <div className="border-y border-white/10 bg-black/14">
+        <div className="border-t border-border bg-card/55 backdrop-blur">
           <div className="container-page grid sm:grid-cols-2 lg:grid-cols-4">
             {heroServices.map(({ icon: Icon, label, note, to }) => (
               <Link
                 key={label}
                 to={to}
-                className="group flex min-h-28 items-center gap-4 border-b border-white/8 px-4 py-5 transition-colors hover:bg-white/[0.035] sm:border-r lg:border-b-0"
+                className="group flex min-h-28 items-center gap-4 border-b border-border px-4 py-5 transition-colors hover:bg-accent/60 sm:border-r lg:border-b-0"
               >
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-white/8 bg-white/5 text-gold-soft">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-card text-moss">
                   <Icon className="size-6 stroke-[1.5]" aria-hidden="true" />
                 </span>
                 <span>
-                  <span className="block text-[0.7rem] font-bold uppercase tracking-[0.1em] text-white">
+                  <span className="block text-[0.7rem] font-bold uppercase tracking-[0.1em] text-ink">
                     {label}
                   </span>
-                  <span className="mt-2 block max-w-44 text-[0.58rem] font-medium uppercase leading-4 tracking-[0.1em] text-white/52">
+                  <span className="mt-2 block max-w-44 text-[0.58rem] font-medium uppercase leading-4 tracking-[0.1em] text-muted-foreground">
                     {note}
                   </span>
                 </span>
@@ -302,7 +277,11 @@ function Home() {
                 </p>
                 <div className="mt-6 space-y-2 border-t border-border pt-5">
                   {frequencies
-                    .filter((frequency) => frequency.id !== "onetime")
+                    .filter((frequency) =>
+                      service.id === "standard"
+                        ? frequency.id !== "onetime"
+                        : frequency.id === "onetime",
+                    )
                     .map((frequency) => (
                       <div
                         key={frequency.id}
@@ -428,17 +407,13 @@ function Home() {
         </div>
       </section>
 
-      <section className="brand-dark relative overflow-hidden bg-night py-14 text-night-foreground">
-        <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(143,215,209,0.16),transparent_26%)]"
-          aria-hidden="true"
-        />
-        <div className="container-page relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+      <section className="border-y border-border bg-stone-soft py-14">
+        <div className="container-page flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.23em] text-gold-soft">
+            <p className="eyebrow">
               {text({ en: "Come home to tranquility", es: "Vuelve a casa con tranquilidad" })}
             </p>
-            <h2 className="mt-3 max-w-2xl text-3xl text-white md:text-4xl">
+            <h2 className="mt-3 max-w-2xl text-3xl text-ink md:text-4xl">
               {text({
                 en: "Ready for a cleaner space and a calmer day?",
                 es: "¿Listo para un espacio más limpio y un día más tranquilo?",
@@ -451,12 +426,7 @@ function Home() {
                 {text({ en: "Book Your Clean", es: "Reserva tu limpieza" })}
               </Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-white/20 text-white hover:bg-white/8 hover:text-white"
-            >
+            <Button asChild size="lg" variant="outline" className="bg-card">
               <a href={business.phoneHref}>
                 {text({ en: "Call", es: "Llamar" })} {business.phoneDisplay}
               </a>

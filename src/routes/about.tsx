@@ -102,48 +102,44 @@ function AboutPage() {
             </div>
           </div>
 
-          <div className="brand-dark relative overflow-hidden rounded-[2rem] border border-white/10 bg-night p-6 text-white shadow-lift md:p-8">
-            <div
-              className="absolute inset-0 bg-[radial-gradient(circle_at_85%_10%,rgba(143,215,209,0.18),transparent_28%)]"
-              aria-hidden="true"
-            />
+          <div className="relative overflow-hidden rounded-[2rem] border border-border bg-stone-soft p-6 shadow-soft md:p-8">
             <div className="relative">
-              <div className="mx-auto flex size-52 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.03] p-3">
+              <div className="mx-auto flex size-52 items-center justify-center p-3">
                 <img
                   src={brandAssets.logo}
                   alt="Tranquility Level Cleaning"
-                  className="h-full w-full object-contain drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]"
+                  className="h-full w-full object-contain"
                   width={1448}
                   height={1086}
                   loading="lazy"
                   decoding="async"
                 />
               </div>
-              <p className="mt-6 text-center font-display text-3xl text-white">
+              <p className="mt-6 text-center font-display text-3xl text-ink">
                 Tranquility Level Cleaning
               </p>
-              <p className="mt-2 text-center text-[0.62rem] font-bold uppercase tracking-[0.2em] text-gold-soft">
+              <p className="mt-2 text-center text-[0.62rem] font-bold uppercase tracking-[0.2em] text-moss">
                 {text({
                   en: "Clean spaces. Calmer days.",
                   es: "Espacios limpios. Días más tranquilos.",
                 })}
               </p>
-              <div className="mt-7 grid grid-cols-3 gap-3 border-t border-white/10 pt-5 text-center">
+              <div className="mt-7 grid grid-cols-3 gap-3 border-t border-border pt-5 text-center">
                 <div>
                   <Wind className="mx-auto size-4 text-moss-soft" aria-hidden="true" />
-                  <p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-white/60">
+                  <p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-muted-foreground">
                     {text({ en: "Calm", es: "Calma" })}
                   </p>
                 </div>
                 <div>
                   <Droplets className="mx-auto size-4 text-moss-soft" aria-hidden="true" />
-                  <p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-white/60">
+                  <p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-muted-foreground">
                     {text({ en: "Fresh", es: "Fresco" })}
                   </p>
                 </div>
                 <div>
-                  <ShieldCheck className="mx-auto size-4 text-gold-soft" aria-hidden="true" />
-                  <p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-white/60">
+                  <ShieldCheck className="mx-auto size-4 text-gold" aria-hidden="true" />
+                  <p className="mt-2 text-[0.58rem] uppercase tracking-[0.12em] text-muted-foreground">
                     {text({ en: "Careful", es: "Cuidadoso" })}
                   </p>
                 </div>
@@ -199,40 +195,38 @@ function AboutPage() {
               </div>
             </article>
 
-            <article className="brand-dark relative overflow-hidden rounded-[2rem] border border-white/10 bg-night p-7 text-white shadow-lift md:p-9">
-              <div
-                className="absolute inset-0 bg-[radial-gradient(circle_at_82%_6%,rgba(143,215,209,0.18),transparent_30%)]"
-                aria-hidden="true"
-              />
+            <article className="relative overflow-hidden rounded-[2rem] border border-border bg-stone-soft p-7 shadow-soft md:p-9">
               <div className="relative">
-                <div className="flex items-center gap-2 text-gold-soft">
+                <div className="flex items-center gap-2 text-moss">
                   <Code2 className="size-4" aria-hidden="true" />
                   <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em]">
                     {text(attribution.technologyHeading)}
                   </p>
                 </div>
-                <h2 className="mt-4 text-3xl text-white md:text-4xl">{technologyLeader.name}</h2>
-                <p className="mt-3 text-sm font-semibold text-white">
+                <h2 className="mt-4 text-3xl text-ink md:text-4xl">{technologyLeader.name}</h2>
+                <p className="mt-3 text-sm font-semibold text-foreground">
                   {text(technologyLeader.role)}
                 </p>
-                <p className="mt-1 text-sm text-white/70">{technologyLeader.company}</p>
-                <p className="mt-3 text-sm font-medium text-gold-soft">
+                <p className="mt-1 text-sm text-muted-foreground">{technologyLeader.company}</p>
+                <p className="mt-3 text-sm font-medium text-moss">
                   {text(technologyLeader.designation)}
                 </p>
-                <p className="mt-6 text-sm leading-7 text-white/72">{text(technologyLeader.bio)}</p>
+                <p className="mt-6 text-sm leading-7 text-muted-foreground">
+                  {text(technologyLeader.bio)}
+                </p>
 
                 <div className="mt-7 flex flex-wrap gap-2">
                   {technologyLeader.disciplines.slice(0, 6).map((discipline) => (
                     <span
                       key={discipline.en}
-                      className="rounded-full border border-white/12 bg-white/[0.04] px-3 py-1.5 text-[0.68rem] font-medium text-white/72"
+                      className="rounded-full border border-border bg-card px-3 py-1.5 text-[0.68rem] font-medium text-muted-foreground"
                     >
                       {text(discipline)}
                     </span>
                   ))}
                 </div>
 
-                <p className="mt-7 border-t border-white/10 pt-5 text-xs leading-6 text-white/58">
+                <p className="mt-7 border-t border-border pt-5 text-xs leading-6 text-muted-foreground">
                   {text({
                     en: "Express Development Inc. is credited for the digital experience and technology work only. It is not represented as an owner or operator of Tranquility Level Cleaning.",
                     es: "Express Development Inc. recibe crédito únicamente por la experiencia digital y el trabajo tecnológico. No se representa como propietario ni operador de Tranquility Level Cleaning.",

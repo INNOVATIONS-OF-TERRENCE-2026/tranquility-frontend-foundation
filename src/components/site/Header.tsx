@@ -86,14 +86,14 @@ export function Header() {
 
   return (
     <header
-      className={`brand-dark inset-x-0 top-0 z-50 text-foreground ${
+      className={`inset-x-0 top-0 z-50 text-foreground ${
         isHome
-          ? "absolute border-b border-white/10 bg-[linear-gradient(180deg,rgba(5,24,34,0.84),rgba(5,24,34,0.46))]"
-          : "sticky border-b border-border bg-background/96 shadow-[0_12px_36px_-30px_rgba(0,0,0,0.65)]"
+          ? "absolute border-b border-border/70 bg-background/90 backdrop-blur-xl"
+          : "sticky border-b border-border bg-background/95 shadow-soft backdrop-blur-xl"
       }`}
     >
       {!isHome && (
-        <div className="hidden border-b border-white/8 bg-night/85 md:block">
+        <div className="hidden border-b border-border bg-sand md:block">
           <div className="container-page flex h-8 items-center justify-between text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             <span>Dallas - Fort Worth</span>
             <span className="hidden lg:inline">
@@ -101,7 +101,7 @@ export function Header() {
             </span>
             <a
               href={business.phoneHref}
-              className="text-gold-soft transition-colors hover:text-white"
+              className="text-moss transition-colors hover:text-foreground"
             >
               {business.phoneDisplay}
             </a>
@@ -109,7 +109,7 @@ export function Header() {
         </div>
       )}
 
-      <div className={isHome ? "bg-transparent" : "bg-night/90"}>
+      <div className="bg-transparent">
         <div className="container-page flex h-20 items-center justify-between gap-3">
           <Logo />
 
@@ -121,10 +121,10 @@ export function Header() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-white"
+                className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-foreground/75 transition-colors hover:text-foreground"
                 activeProps={{
                   className:
-                    "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold",
+                    "text-moss after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-moss",
                 }}
               >
                 {item.label}
@@ -132,7 +132,7 @@ export function Header() {
             ))}
             <a
               href={isHome ? "#pricing" : "/#pricing"}
-              className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-white"
+              className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-foreground/75 transition-colors hover:text-foreground"
             >
               {text({ en: "Pricing", es: "Precios" })}
             </a>
@@ -140,10 +140,10 @@ export function Header() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/78 transition-colors hover:text-white"
+                className="relative flex min-h-11 items-center whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-foreground/75 transition-colors hover:text-foreground"
                 activeProps={{
                   className:
-                    "text-gold-soft after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-gold",
+                    "text-moss after:absolute after:inset-x-1 after:bottom-1 after:h-px after:bg-moss",
                 }}
               >
                 {item.label}
@@ -176,7 +176,7 @@ export function Header() {
                   ? text({ en: "Close menu", es: "Cerrar menú" })
                   : text({ en: "Open menu", es: "Abrir menú" })
               }
-              className="inline-flex size-11 items-center justify-center rounded-full border border-white/14 bg-white/6 text-white shadow-soft transition hover:bg-white/10"
+              className="inline-flex size-11 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-soft transition hover:bg-accent"
             >
               {open ? (
                 <X className="size-5" aria-hidden="true" />
