@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Car, CheckCircle2, Clock3, ShieldCheck } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 
@@ -10,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { business, mailtoLink } from "@/config/business";
 import { seo } from "@/lib/seo";
+import { submitCareerApplication } from "@/lib/submissions.functions";
 
 export const Route = createFileRoute("/careers")({
   head: () =>
@@ -33,6 +35,9 @@ function CareersPage() {
   const [availability, setAvailability] = useState("");
   const [additional, setAdditional] = useState("");
   const [error, setError] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [reference, setReference] = useState("");
+  const submitApplication = useServerFn(submitCareerApplication);
 
   const expectations = [
     {
@@ -121,7 +126,7 @@ function CareersPage() {
     transportation,
   ]);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     if (
@@ -151,12 +156,15 @@ function CareersPage() {
       return;
     }
 
-    window.location.href = mailtoLink(
-      language === "es"
-        ? `Interés de empleo: ${fullName.trim()}`
-        : `Career interest: ${fullName.trim()}`,
-      body,
-    );
+    setStatus("sending");
+    try {
+      const result = await submitApplication({ data: { fullName, email, phone, city, reliableTransportation: transportation === "yes", experience, availability, additionalInformation: additional || undefined, language, website: "" } });
+      setReference(result.reference);
+      setStatus("sent");
+    } catch {
+      setStatus("idle");
+      setError(text({ en: "We could not send your interest form. Please try again or email Treva directly.", es: "No pudimos enviar tu formulario. Inténtalo de nuevo o escribe directamente a Treva." }));
+    }
   }
 
   return (
@@ -175,6 +183,12 @@ function CareersPage() {
 
       <section className="section">
         <div className="container-page">
+          <div className="mb-12 rounded-xl border border-border bg-card p-6 shadow-soft md:p-8">
+            <p className="eyebrow">{text({ en: "Evergreen opportunity", es: "Oportunidad permanente" })}</p>
+            <h2 className="mt-3 text-2xl">{text({ en: "Cleaning Professional Interest", es: "Interés como profesional de limpieza" })}</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">{text({ en: "Share your interest for consideration as service needs develop. This is not a promise that a position is currently open.", es: "Comparte tu interés para consideración a medida que surjan necesidades de servicio. Esto no promete que haya un puesto disponible actualmente." })}</p>
+            <Button asChild className="mt-5" variant="outline"><a href={mailtoLink(text({ en: "Job interest for Treva", es: "Interés de trabajo para Treva" }), text({ en: "Hello Treva, I would like to ask about cleaning work with Tranquility Level Cleaning.", es: "Hola Treva, quisiera consultar sobre trabajo de limpieza con Tranquility Level Cleaning." }))}>{text({ en: "Email Treva about a job", es: "Escribir a Treva sobre trabajo" })}</a></Button>
+          </div>
           <SectionHeading
             eyebrow={text({ en: "Join the team", es: "Únete al equipo" })}
             title={text({ en: "What matters here", es: "Lo que valoramos" })}
@@ -206,8 +220,8 @@ function CareersPage() {
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {text({
-                en: `This frontend does not store applicant information in a database. When you continue, your email app opens with your answers prepared for ${business.email}.`,
-                es: `Este sitio no guarda la información de solicitantes en una base de datos. Al continuar, se abrirá tu aplicación de correo con tus respuestas preparadas para ${business.email}.`,
+                en: `Your interest form is submitted securely for Treva's review. You can also email ${business.email} directly.`,
+                es: `Tu formulario se envía de forma segura para que Treva lo revise. También puedes escribir directamente a ${business.email}.`,
               })}
             </p>
             <div className="mt-6 rounded-xl border border-border bg-card p-5 text-sm leading-relaxed text-muted-foreground shadow-soft">
@@ -356,15 +370,16 @@ function CareersPage() {
                 {error}
               </p>
             )}
+            {status === "sent" && <p className="mt-5 rounded-lg bg-accent/40 p-4 text-sm text-accent-foreground" role="status">{text({ en: `Your career interest was received. Reference ${reference}.`, es: `Recibimos tu interés de empleo. Referencia ${reference}.` })}</p>}
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button type="submit" size="lg">
-                {text({ en: "Open Application Email", es: "Abrir correo de solicitud" })}
+              <Button type="submit" size="lg" disabled={status !== "idle"}>
+                {status === "sending" ? text({ en: "Sending…", es: "Enviando…" }) : text({ en: "Submit Interest", es: "Enviar interés" })}
               </Button>
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {text({
-                  en: "Your answers are transferred into an email draft. No public applicant database is used in this version.",
-                  es: "Tus respuestas se transfieren a un borrador de correo electrónico. Esta versión no utiliza una base de datos pública de solicitantes.",
+                  en: "Your details are stored privately for review and are not publicly accessible.",
+                  es: "Tus datos se guardan de forma privada para revisión y no son accesibles públicamente.",
                 })}
               </p>
             </div>

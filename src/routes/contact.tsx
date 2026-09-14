@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { useMemo, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { PageHero, SectionHeading } from "@/components/site/PageHero";
@@ -8,8 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { business, cities, mailtoLink } from "@/config/business";
+import { business, cities } from "@/config/business";
 import { seo } from "@/lib/seo";
+import { submitContactInquiry } from "@/lib/submissions.functions";
 
 export const Route = createFileRoute("/contact")({
   head: () =>
@@ -27,43 +29,22 @@ function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [serviceType, setServiceType] = useState("standard");
+  const [preferredDate, setPreferredDate] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [reference, setReference] = useState("");
+  const submitInquiry = useServerFn(submitContactInquiry);
 
-  const emailBody = useMemo(
-    () =>
-      language === "es"
-        ? [
-            "Consulta general",
-            "",
-            `Nombre: ${name.trim()}`,
-            `Correo electrónico: ${email.trim()}`,
-            `Teléfono: ${phone.trim() || "No proporcionado"}`,
-            "",
-            "Mensaje:",
-            message.trim(),
-          ].join("\n")
-        : [
-            "General inquiry",
-            "",
-            `Name: ${name.trim()}`,
-            `Email: ${email.trim()}`,
-            `Phone: ${phone.trim() || "Not provided"}`,
-            "",
-            "Message:",
-            message.trim(),
-          ].join("\n"),
-    [email, language, message, name, phone],
-  );
-
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    if (!name.trim() || !email.trim() || !message.trim()) {
+    if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
       setError(
         text({
-          en: "Please complete your name, email, and message.",
-          es: "Completa tu nombre, correo electrónico y mensaje.",
+          en: "Please complete your name, phone, email, and notes.",
+          es: "Completa tu nombre, teléfono, correo electrónico y notas.",
         }),
       );
       return;
@@ -77,12 +58,19 @@ function ContactPage() {
       );
       return;
     }
-    window.location.href = mailtoLink(
-      language === "es"
-        ? `Consulta del sitio web de ${name.trim()}`
-        : `Website inquiry from ${name.trim()}`,
-      emailBody,
-    );
+    if (phone.replace(/\D/g, "").length < 10 || message.trim().length < 10) {
+      setError(text({ en: "Enter a valid phone number and at least 10 characters of detail.", es: "Ingresa un teléfono válido y al menos 10 caracteres de detalle." }));
+      return;
+    }
+    setStatus("sending");
+    try {
+      const result = await submitInquiry({ data: { name, phone, email, serviceType: serviceType as "standard" | "deep" | "move" | "commercial" | "quote" | "other", preferredDate: preferredDate || undefined, notes: message, language, website: "" } });
+      setReference(result.reference);
+      setStatus("sent");
+    } catch {
+      setStatus("idle");
+      setError(text({ en: "We could not send your inquiry. Please try again or contact us directly.", es: "No pudimos enviar tu consulta. Inténtalo de nuevo o contáctanos directamente." }));
+    }
   }
 
   return (
@@ -164,14 +152,14 @@ function ContactPage() {
               <p className="eyebrow">{text({ en: "General inquiry", es: "Consulta general" })}</p>
               <h2 className="mt-3 text-3xl">
                 {text({
-                  en: "Send the details by email",
-                  es: "Envía los detalles por correo electrónico",
+                  en: "Send an inquiry",
+                  es: "Enviar una consulta",
                 })}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {text({
-                  en: "This frontend does not store your message in a database. Submitting opens your email app with the details filled in for you.",
-                  es: "Este sitio no guarda tu mensaje en una base de datos. Al enviar, se abre tu aplicación de correo con los detalles ya preparados para que puedas revisarlos.",
+                  en: "Share the details Treva needs to review your request. You will receive a reference after it is securely submitted.",
+                  es: "Comparte los detalles que Treva necesita para revisar tu solicitud. Recibirás una referencia después de enviarla de forma segura.",
                 })}
               </p>
             </div>
@@ -212,7 +200,25 @@ function ContactPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   autoComplete="tel"
+                  required
                 />
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="contact-service">{text({ en: "Service type", es: "Tipo de servicio" })}</Label>
+                  <select id="contact-service" value={serviceType} onChange={(event) => setServiceType(event.target.value)} className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm">
+                    <option value="standard">{text({ en: "Standard Clean", es: "Limpieza estándar" })}</option>
+                    <option value="deep">{text({ en: "Deep Clean", es: "Limpieza profunda" })}</option>
+                    <option value="move">{text({ en: "Move-In / Move-Out", es: "Entrada / salida" })}</option>
+                    <option value="commercial">{text({ en: "Commercial", es: "Comercial" })}</option>
+                    <option value="quote">{text({ en: "Custom quote", es: "Cotización personalizada" })}</option>
+                    <option value="other">{text({ en: "Other", es: "Otro" })}</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-date">{text({ en: "Preferred date", es: "Fecha preferida" })}</Label>
+                  <Input id="contact-date" type="date" value={preferredDate} onChange={(event) => setPreferredDate(event.target.value)} />
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="contact-message">
@@ -231,8 +237,9 @@ function ContactPage() {
                   {error}
                 </p>
               )}
-              <Button type="submit" size="lg">
-                {text({ en: "Open Email Draft", es: "Abrir borrador de correo" })}
+              {status === "sent" && <p className="rounded-lg bg-accent/40 p-4 text-sm text-accent-foreground" role="status">{text({ en: `Your inquiry was received. Reference ${reference}.`, es: `Recibimos tu consulta. Referencia ${reference}.` })}</p>}
+              <Button type="submit" size="lg" disabled={status !== "idle"}>
+                {status === "sending" ? text({ en: "Sending…", es: "Enviando…" }) : text({ en: "Send Inquiry", es: "Enviar consulta" })}
               </Button>
             </form>
           </div>

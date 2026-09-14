@@ -13,6 +13,7 @@ import {
 } from "@/config/pricing";
 import { CTABand } from "./CTABand";
 import { PageHero, SectionHeading } from "./PageHero";
+import { ServiceAreaExplorer } from "./ServiceAreaExplorer";
 
 interface ServiceDetailProps {
   serviceId: ServiceId;
