@@ -15,8 +15,8 @@ import {
   CUSTOM_REVIEW_SQFT,
   addOnPrice,
   buildEstimate,
+  availableFrequencies,
   defaultScope,
-  frequencies,
   getAddOn,
   money,
   selectableAddOns,
@@ -104,10 +104,9 @@ const addOnCopy: Record<string, { en: string; es: string }> = {
 };
 
 const arrivalWindows = [
-  { id: "morning", en: "Morning", es: "Mañana" },
-  { id: "midday", en: "Midday", es: "Mediodía" },
-  { id: "afternoon", en: "Afternoon", es: "Tarde" },
-  { id: "flexible", en: "Flexible", es: "Flexible" },
+  { id: "morning", en: "8–11 AM", es: "8–11 AM" },
+  { id: "midday", en: "11 AM–2 PM", es: "11 AM–2 PM" },
+  { id: "afternoon", en: "2–5 PM", es: "2–5 PM" },
 ] as const;
 
 function todayISO() {
@@ -222,6 +221,8 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
     if (!contact.date) next.date = required;
     else if (contact.date < todayISO())
       next.date = text({ en: "Choose today or a future date", es: "Elige hoy o una fecha futura" });
+    else if ([0, 6].includes(new Date(`${contact.date}T12:00:00`).getDay()))
+      next.date = text({ en: "Choose a weekday", es: "Elige un día entre semana" });
     if (!contact.window) next.window = required;
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -451,7 +452,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
               })}
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {frequencies.map((item) => (
+              {availableFrequencies(service).map((item) => (
                 <button
                   key={item.id}
                   type="button"
