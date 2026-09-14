@@ -109,11 +109,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "CleaningService",
           name: business.legalName,
-          url: "https://tranquility.cleaning",
+          url: "https://heytlcleaning.lovable.app",
           telephone: business.phoneDisplay,
           email: business.email,
           areaServed: cities.map((name) => ({ "@type": "City", name })),
           slogan: business.tagline,
+          founder: {
+            "@type": "Person",
+            name: businessLeader.name,
+            jobTitle: "Founder & Owner",
+            worksFor: { "@type": "Organization", name: business.legalName },
+            hasCredential: {
+              "@type": "EducationalOccupationalCredential",
+              name: "OSHA Compliance Certified",
+            },
+          },
+          owner: {
+            "@type": "Person",
+            name: businessLeader.name,
+          },
+          publisher: {
+            "@type": "Organization",
+            name: technologyLeader.company,
+            description:
+              "Software engineering, digital architecture, frontend development, AI architecture, and website development for the Tranquility Level Cleaning digital experience.",
+            founder: {
+              "@type": "Person",
+              name: technologyLeader.name,
+              jobTitle: "Founder & CEO, Senior Software Developer & AI Architect Engineer",
+              worksFor: { "@type": "Organization", name: technologyLeader.company },
+            },
+          },
         }),
       },
     ],
