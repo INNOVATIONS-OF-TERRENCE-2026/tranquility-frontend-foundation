@@ -120,10 +120,6 @@ function applyPalette(primary: string, secondary: string, resolvedTheme: "light"
   const root = document.documentElement;
   applyVariables(root, buildVariables(primary, secondary, resolvedTheme === "dark"));
 
-  document.querySelectorAll<HTMLElement>(".brand-dark").forEach((element) => {
-    applyVariables(element, buildVariables(primary, secondary, true));
-  });
-
   const themeColor = document.querySelector('meta[name="theme-color"]');
   themeColor?.setAttribute("content", resolvedTheme === "dark" ? "#071B27" : "#F4FAF9");
 }
