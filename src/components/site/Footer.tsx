@@ -3,6 +3,7 @@ import { MapPin, Phone } from "lucide-react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { business, cities } from "@/config/business";
+import { attribution, technologyLeader } from "@/config/leadership";
 import { services, type ServiceId } from "@/config/pricing";
 import { Logo } from "./Logo";
 
