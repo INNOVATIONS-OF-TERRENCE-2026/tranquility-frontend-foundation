@@ -21,7 +21,9 @@ function hexToRgb(hex: string) {
 }
 
 function toHex(value: number) {
-  return Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, "0");
+  return Math.max(0, Math.min(255, Math.round(value)))
+    .toString(16)
+    .padStart(2, "0");
 }
 
 function mixHex(a: string, b: string, weight: number) {
@@ -109,7 +111,9 @@ function buildVariables(primary: string, secondary: string, dark: boolean): Vari
 }
 
 function applyVariables(target: HTMLElement, variables: VariableSet) {
-  Object.entries(variables).forEach(([property, value]) => target.style.setProperty(property, value));
+  Object.entries(variables).forEach(([property, value]) =>
+    target.style.setProperty(property, value),
+  );
 }
 
 function applyPalette(primary: string, secondary: string, resolvedTheme: "light" | "dark") {
@@ -140,7 +144,7 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
 
   useEffect(() => {
     applyPalette(selected.primary, selected.secondary, resolvedTheme);
-    document.documentElement.dataset['colorPalette'] = selected.id;
+    document.documentElement.dataset["colorPalette"] = selected.id;
     window.localStorage.setItem(STORAGE_KEY, selected.id);
   }, [pathname, resolvedTheme, selected]);
 
@@ -164,10 +168,14 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
         <span
           aria-hidden="true"
           className="size-5 rounded-full border border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_0_14px_rgba(255,255,255,0.12)]"
-          style={{ background: `radial-gradient(circle at 30% 20%, rgba(255,255,255,0.9), transparent 22%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})` }}
+          style={{
+            background: `radial-gradient(circle at 30% 20%, rgba(255,255,255,0.9), transparent 22%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})`,
+          }}
         />
         {!compact && <span className="text-xs">{text({ en: "Colors", es: "Colores" })}</span>}
-        <span className="sr-only">{text({ en: "Open color settings", es: "Abrir ajustes de color" })}</span>
+        <span className="sr-only">
+          {text({ en: "Open color settings", es: "Abrir ajustes de color" })}
+        </span>
       </button>
 
       {open && (
@@ -181,9 +189,13 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
             <div>
               <div className="flex items-center gap-2 text-moss">
                 <Palette className="size-4" aria-hidden="true" />
-                <p className="text-xs font-bold uppercase tracking-[0.16em]">{text({ en: "Color palettes", es: "Paletas de color" })}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.16em]">
+                  {text({ en: "Color palettes", es: "Paletas de color" })}
+                </p>
               </div>
-              <h2 className="mt-2 text-2xl">{text({ en: "32 polished color choices", es: "32 opciones de color refinadas" })}</h2>
+              <h2 className="mt-2 text-2xl">
+                {text({ en: "32 polished color choices", es: "32 opciones de color refinadas" })}
+              </h2>
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
                 {text({
                   en: "Each palette changes the accent system, gradients, buttons, highlights, and interactive states while the core ocean-mist surfaces keep text readable in Light, Dark, and System mode.",
@@ -203,9 +215,13 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
 
           <div
             className="mt-5 overflow-hidden rounded-2xl border border-white/25 p-5 text-white shadow-lift"
-            style={{ background: `radial-gradient(circle at 20% 10%, rgba(255,255,255,0.42), transparent 25%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})` }}
+            style={{
+              background: `radial-gradient(circle at 20% 10%, rgba(255,255,255,0.42), transparent 25%), linear-gradient(135deg, ${selected.primary}, ${selected.secondary})`,
+            }}
           >
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/85">{text({ en: "Current palette", es: "Paleta actual" })}</p>
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/85">
+              {text({ en: "Current palette", es: "Paleta actual" })}
+            </p>
             <div className="mt-2 flex items-end justify-between gap-4">
               <p className="font-display text-3xl text-white drop-shadow">{selected.name}</p>
               <Sparkles className="size-6 text-white/90" aria-hidden="true" />
@@ -221,10 +237,15 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
                   type="button"
                   onClick={() => choose(palette.id)}
                   title={palette.name}
-                  aria-label={text({ en: `Use ${palette.name} palette`, es: `Usar la paleta ${palette.name}` })}
+                  aria-label={text({
+                    en: `Use ${palette.name} palette`,
+                    es: `Usar la paleta ${palette.name}`,
+                  })}
                   aria-pressed={active}
                   className={`group relative aspect-square overflow-hidden rounded-2xl border transition hover:-translate-y-0.5 ${active ? "border-ink ring-2 ring-ring ring-offset-2 ring-offset-background" : "border-border"}`}
-                  style={{ background: `radial-gradient(circle at 25% 15%, rgba(255,255,255,0.72), transparent 22%), linear-gradient(135deg, ${palette.primary}, ${palette.secondary})` }}
+                  style={{
+                    background: `radial-gradient(circle at 25% 15%, rgba(255,255,255,0.72), transparent 22%), linear-gradient(135deg, ${palette.primary}, ${palette.secondary})`,
+                  }}
                 >
                   <span className="absolute inset-x-1 bottom-1 rounded-lg bg-black/45 px-1 py-1 text-[0.5rem] font-bold uppercase tracking-wide text-white">
                     {palette.name}
@@ -240,13 +261,19 @@ export function ColorStudio({ compact = false }: { compact?: boolean }) {
           </div>
 
           <div className="mt-5 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-muted-foreground">{text({ en: "Saved on this device only.", es: "Se guarda solo en este dispositivo." })}</p>
+            <p className="text-xs text-muted-foreground">
+              {text({
+                en: "Saved on this device only.",
+                es: "Se guarda solo en este dispositivo.",
+              })}
+            </p>
             <button
               type="button"
               onClick={reset}
               className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-border px-4 text-xs font-semibold text-ink hover:bg-accent"
             >
-              <RotateCcw className="size-3.5" aria-hidden="true" /> {text({ en: "Reset to Ocean Mist", es: "Restablecer a Brisa Marina" })}
+              <RotateCcw className="size-3.5" aria-hidden="true" />{" "}
+              {text({ en: "Reset to Ocean Mist", es: "Restablecer a Brisa Marina" })}
             </button>
           </div>
         </div>

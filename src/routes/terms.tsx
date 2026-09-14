@@ -19,7 +19,10 @@ function TermsPage() {
   const { text } = useLanguage();
   const sections = [
     {
-      title: text({ en: "Service requests and quotes", es: "Solicitudes de servicio y cotizaciones" }),
+      title: text({
+        en: "Service requests and quotes",
+        es: "Solicitudes de servicio y cotizaciones",
+      }),
       body: text({
         en: "Information submitted through the website is a request for review. Service scope, timing, availability, and final pricing may require confirmation before an appointment is accepted.",
         es: "La información enviada mediante el sitio web constituye una solicitud para revisión. El alcance del servicio, el horario, la disponibilidad y el precio final pueden requerir confirmación antes de que se acepte una cita.",
@@ -33,7 +36,10 @@ function TermsPage() {
       }),
     },
     {
-      title: text({ en: "Custom and commercial work", es: "Trabajos personalizados y comerciales" }),
+      title: text({
+        en: "Custom and commercial work",
+        es: "Trabajos personalizados y comerciales",
+      }),
       body: text({
         en: "Large properties, partial-home requests, unusual layouts, specialty cleaning, and commercial or office work are handled through a custom quote or consultation rather than residential instant pricing.",
         es: "Las propiedades grandes, solicitudes para limpiar solo una parte del hogar, distribuciones inusuales, limpieza especializada y trabajos comerciales o de oficina se gestionan mediante una cotización personalizada o consulta, en lugar de utilizar precios residenciales automáticos.",
@@ -66,7 +72,10 @@ function TermsPage() {
     <>
       <PageHero
         eyebrow={text({ en: "Website terms", es: "Términos del sitio" })}
-        title={text({ en: "Clear expectations before service is confirmed.", es: "Expectativas claras antes de confirmar el servicio." })}
+        title={text({
+          en: "Clear expectations before service is confirmed.",
+          es: "Expectativas claras antes de confirmar el servicio.",
+        })}
         intro={text({
           en: "The website helps you understand services, review pricing, and share your cleaning needs. A website request is not a guaranteed appointment.",
           es: "El sitio web te ayuda a conocer los servicios, revisar precios y compartir tus necesidades de limpieza. Una solicitud enviada por el sitio no constituye una cita garantizada.",
@@ -85,11 +94,22 @@ function TermsPage() {
           <section>
             <h2 className="text-2xl">{text({ en: "Questions", es: "Preguntas" })}</h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              {text({ en: "For questions about service expectations, call", es: "Si tienes preguntas sobre las condiciones del servicio, llama al" })}{" "}
-              <a className="font-semibold text-moss hover:underline" href={business.phoneHref}>{business.phoneDisplay}</a>{" "}
+              {text({
+                en: "For questions about service expectations, call",
+                es: "Si tienes preguntas sobre las condiciones del servicio, llama al",
+              })}{" "}
+              <a className="font-semibold text-moss hover:underline" href={business.phoneHref}>
+                {business.phoneDisplay}
+              </a>{" "}
               {text({ en: "or email", es: "o escribe a" })}{" "}
-              <a className="font-semibold text-moss hover:underline" href={business.emailHref}>{business.email}</a>. {text({ en: "You can also use the", es: "También puedes usar la" })}{" "}
-              <Link className="font-semibold text-moss hover:underline" to="/contact">{text({ en: "contact page", es: "página de contacto" })}</Link>.
+              <a className="font-semibold text-moss hover:underline" href={business.emailHref}>
+                {business.email}
+              </a>
+              . {text({ en: "You can also use the", es: "También puedes usar la" })}{" "}
+              <Link className="font-semibold text-moss hover:underline" to="/contact">
+                {text({ en: "contact page", es: "página de contacto" })}
+              </Link>
+              .
             </p>
           </section>
         </div>

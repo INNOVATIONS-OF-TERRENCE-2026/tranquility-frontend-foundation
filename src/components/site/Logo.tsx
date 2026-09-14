@@ -27,7 +27,9 @@ export function Logo({ compact = false, hero = false }: { compact?: boolean; her
 
       {!compact && (
         <span className="hidden min-w-0 sm:block">
-          <span className={`block truncate font-display font-semibold tracking-[-0.035em] text-ink ${hero ? "text-[1.55rem] md:text-[1.9rem]" : "text-[1.2rem] md:text-[1.4rem]"}`}>
+          <span
+            className={`block truncate font-display font-semibold tracking-[-0.035em] text-ink ${hero ? "text-[1.55rem] md:text-[1.9rem]" : "text-[1.2rem] md:text-[1.4rem]"}`}
+          >
             Tranquility
           </span>
           <span className="mt-1 flex items-center gap-2">

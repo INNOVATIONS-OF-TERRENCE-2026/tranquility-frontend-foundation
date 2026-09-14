@@ -58,5 +58,8 @@ export const attribution = {
     es: "Experiencia digital desarrollada por Express Development Inc.",
   } satisfies Bilingual,
   leadershipHeading: { en: "Leadership", es: "Liderazgo" } satisfies Bilingual,
-  technologyHeading: { en: "Technology Leadership", es: "Liderazgo Tecnológico" } satisfies Bilingual,
+  technologyHeading: {
+    en: "Technology Leadership",
+    es: "Liderazgo Tecnológico",
+  } satisfies Bilingual,
 } as const;

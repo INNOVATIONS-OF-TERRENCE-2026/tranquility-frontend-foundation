@@ -109,22 +109,52 @@ function CareersPage() {
       "Additional information:",
       additional.trim() || "None provided",
     ].join("\n");
-  }, [additional, availability, city, email, experience, fullName, language, phone, transportation]);
+  }, [
+    additional,
+    availability,
+    city,
+    email,
+    experience,
+    fullName,
+    language,
+    phone,
+    transportation,
+  ]);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    if (!fullName.trim() || !email.trim() || !phone.trim() || !city.trim() || !transportation || !experience.trim() || !availability.trim()) {
-      setError(text({ en: "Please complete all required fields before continuing.", es: "Completa todos los campos obligatorios antes de continuar." }));
+    if (
+      !fullName.trim() ||
+      !email.trim() ||
+      !phone.trim() ||
+      !city.trim() ||
+      !transportation ||
+      !experience.trim() ||
+      !availability.trim()
+    ) {
+      setError(
+        text({
+          en: "Please complete all required fields before continuing.",
+          es: "Completa todos los campos obligatorios antes de continuar.",
+        }),
+      );
       return;
     }
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setError(text({ en: "Please enter a valid email address.", es: "Ingresa un correo electrónico válido." }));
+      setError(
+        text({
+          en: "Please enter a valid email address.",
+          es: "Ingresa un correo electrónico válido.",
+        }),
+      );
       return;
     }
 
     window.location.href = mailtoLink(
-      language === "es" ? `Interés de empleo: ${fullName.trim()}` : `Career interest: ${fullName.trim()}`,
+      language === "es"
+        ? `Interés de empleo: ${fullName.trim()}`
+        : `Career interest: ${fullName.trim()}`,
       body,
     );
   }
@@ -168,8 +198,12 @@ function CareersPage() {
       <section className="section bg-sand">
         <div className="container-page grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
           <div className="lg:sticky lg:top-32">
-            <p className="eyebrow">{text({ en: "Career interest form", es: "Formulario de interés de empleo" })}</p>
-            <h2 className="mt-3 text-3xl md:text-4xl">{text({ en: "Tell us about yourself.", es: "Cuéntanos sobre ti." })}</h2>
+            <p className="eyebrow">
+              {text({ en: "Career interest form", es: "Formulario de interés de empleo" })}
+            </p>
+            <h2 className="mt-3 text-3xl md:text-4xl">
+              {text({ en: "Tell us about yourself.", es: "Cuéntanos sobre ti." })}
+            </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {text({
                 en: `This frontend does not store applicant information in a database. When you continue, your email app opens with your answers prepared for ${business.email}.`,
@@ -177,7 +211,9 @@ function CareersPage() {
               })}
             </p>
             <div className="mt-6 rounded-xl border border-border bg-card p-5 text-sm leading-relaxed text-muted-foreground shadow-soft">
-              <span className="font-semibold text-ink">{text({ en: "Privacy note:", es: "Nota de privacidad:" })}</span>{" "}
+              <span className="font-semibold text-ink">
+                {text({ en: "Privacy note:", es: "Nota de privacidad:" })}
+              </span>{" "}
               {text({
                 en: "Do not include a Social Security number, banking information, driver's license image, or other sensitive identity documents.",
                 es: "No incluyas tu número de Seguro Social, información bancaria, imagen de licencia de conducir ni otros documentos sensibles de identidad.",
@@ -185,20 +221,81 @@ function CareersPage() {
             </div>
           </div>
 
-          <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-6 shadow-soft md:p-8" noValidate>
+          <form
+            onSubmit={submit}
+            className="rounded-2xl border border-border bg-card p-6 shadow-soft md:p-8"
+            noValidate
+          >
             <div className="grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2"><Label htmlFor="career-name">{text({ en: "Full name *", es: "Nombre completo *" })}</Label><Input id="career-name" value={fullName} onChange={(event) => setFullName(event.target.value)} autoComplete="name" required /></div>
-              <div className="space-y-2"><Label htmlFor="career-email">{text({ en: "Email *", es: "Correo electrónico *" })}</Label><Input id="career-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required /></div>
-              <div className="space-y-2"><Label htmlFor="career-phone">{text({ en: "Phone *", es: "Teléfono *" })}</Label><Input id="career-phone" type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" required /></div>
-              <div className="space-y-2"><Label htmlFor="career-city">{text({ en: "City *", es: "Ciudad *" })}</Label><Input id="career-city" value={city} onChange={(event) => setCity(event.target.value)} autoComplete="address-level2" required /></div>
+              <div className="space-y-2">
+                <Label htmlFor="career-name">
+                  {text({ en: "Full name *", es: "Nombre completo *" })}
+                </Label>
+                <Input
+                  id="career-name"
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                  autoComplete="name"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="career-email">
+                  {text({ en: "Email *", es: "Correo electrónico *" })}
+                </Label>
+                <Input
+                  id="career-email"
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  autoComplete="email"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="career-phone">{text({ en: "Phone *", es: "Teléfono *" })}</Label>
+                <Input
+                  id="career-phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  autoComplete="tel"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="career-city">{text({ en: "City *", es: "Ciudad *" })}</Label>
+                <Input
+                  id="career-city"
+                  value={city}
+                  onChange={(event) => setCity(event.target.value)}
+                  autoComplete="address-level2"
+                  required
+                />
+              </div>
             </div>
 
             <fieldset className="mt-6">
-              <legend className="text-sm font-medium text-ink">{text({ en: "Do you have reliable transportation? *", es: "¿Tienes transporte confiable? *" })}</legend>
+              <legend className="text-sm font-medium text-ink">
+                {text({
+                  en: "Do you have reliable transportation? *",
+                  es: "¿Tienes transporte confiable? *",
+                })}
+              </legend>
               <div className="mt-3 flex flex-wrap gap-3">
                 {(["yes", "no"] as const).map((value) => (
-                  <label key={value} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm">
-                    <input type="radio" name="transportation" value={value} checked={transportation === value} onChange={(event) => setTransportation(event.target.value as "yes" | "no")} required />
+                  <label
+                    key={value}
+                    className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm"
+                  >
+                    <input
+                      type="radio"
+                      name="transportation"
+                      value={value}
+                      checked={transportation === value}
+                      onChange={(event) => setTransportation(event.target.value as "yes" | "no")}
+                      required
+                    />
                     {value === "yes" ? text({ en: "Yes", es: "Sí" }) : text({ en: "No", es: "No" })}
                   </label>
                 ))}
@@ -206,24 +303,64 @@ function CareersPage() {
             </fieldset>
 
             <div className="mt-6 space-y-2">
-              <Label htmlFor="career-experience">{text({ en: "Cleaning experience *", es: "Experiencia en limpieza *" })}</Label>
-              <Textarea id="career-experience" rows={5} value={experience} onChange={(event) => setExperience(event.target.value)} placeholder={text({ en: "Tell us about residential, commercial, hospitality, independent, or other relevant cleaning experience.", es: "Cuéntanos sobre tu experiencia en limpieza residencial, comercial, hotelería, trabajo independiente u otra experiencia relevante." })} required />
+              <Label htmlFor="career-experience">
+                {text({ en: "Cleaning experience *", es: "Experiencia en limpieza *" })}
+              </Label>
+              <Textarea
+                id="career-experience"
+                rows={5}
+                value={experience}
+                onChange={(event) => setExperience(event.target.value)}
+                placeholder={text({
+                  en: "Tell us about residential, commercial, hospitality, independent, or other relevant cleaning experience.",
+                  es: "Cuéntanos sobre tu experiencia en limpieza residencial, comercial, hotelería, trabajo independiente u otra experiencia relevante.",
+                })}
+                required
+              />
             </div>
 
             <div className="mt-6 space-y-2">
-              <Label htmlFor="career-availability">{text({ en: "General availability *", es: "Disponibilidad general *" })}</Label>
-              <Textarea id="career-availability" rows={4} value={availability} onChange={(event) => setAvailability(event.target.value)} placeholder={text({ en: "Example: weekdays after 8 AM, weekends flexible.", es: "Ejemplo: entre semana después de las 8 AM, fines de semana flexible." })} required />
+              <Label htmlFor="career-availability">
+                {text({ en: "General availability *", es: "Disponibilidad general *" })}
+              </Label>
+              <Textarea
+                id="career-availability"
+                rows={4}
+                value={availability}
+                onChange={(event) => setAvailability(event.target.value)}
+                placeholder={text({
+                  en: "Example: weekdays after 8 AM, weekends flexible.",
+                  es: "Ejemplo: entre semana después de las 8 AM, fines de semana flexible.",
+                })}
+                required
+              />
             </div>
 
             <div className="mt-6 space-y-2">
-              <Label htmlFor="career-additional">{text({ en: "Anything else we should know?", es: "¿Hay algo más que debamos saber?" })}</Label>
-              <Textarea id="career-additional" rows={4} value={additional} onChange={(event) => setAdditional(event.target.value)} />
+              <Label htmlFor="career-additional">
+                {text({
+                  en: "Anything else we should know?",
+                  es: "¿Hay algo más que debamos saber?",
+                })}
+              </Label>
+              <Textarea
+                id="career-additional"
+                rows={4}
+                value={additional}
+                onChange={(event) => setAdditional(event.target.value)}
+              />
             </div>
 
-            {error && <p className="mt-5 text-sm font-medium text-destructive" role="alert">{error}</p>}
+            {error && (
+              <p className="mt-5 text-sm font-medium text-destructive" role="alert">
+                {error}
+              </p>
+            )}
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button type="submit" size="lg">{text({ en: "Open Application Email", es: "Abrir correo de solicitud" })}</Button>
+              <Button type="submit" size="lg">
+                {text({ en: "Open Application Email", es: "Abrir correo de solicitud" })}
+              </Button>
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {text({
                   en: "Your answers are transferred into an email draft. No public applicant database is used in this version.",

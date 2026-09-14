@@ -35,11 +35,16 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
   return (
     <label className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-card px-3.5 text-sm text-foreground shadow-soft">
       <Icon className="size-4 text-moss" aria-hidden="true" />
-      <span className="text-xs font-semibold text-muted-foreground">{text({ en: "Appearance", es: "Apariencia" })}</span>
+      <span className="text-xs font-semibold text-muted-foreground">
+        {text({ en: "Appearance", es: "Apariencia" })}
+      </span>
       <select
         value={preference}
         onChange={(event) => setPreference(event.target.value as ThemePreference)}
-        aria-label={text({ en: `Appearance preference. Current mode: ${resolvedTheme}.`, es: `Preferencia de apariencia. Modo actual: ${resolvedTheme}.` })}
+        aria-label={text({
+          en: `Appearance preference. Current mode: ${resolvedTheme}.`,
+          es: `Preferencia de apariencia. Modo actual: ${resolvedTheme}.`,
+        })}
         className="min-h-9 cursor-pointer bg-transparent pr-1 text-sm font-semibold text-ink outline-none"
       >
         {order.map((value) => (

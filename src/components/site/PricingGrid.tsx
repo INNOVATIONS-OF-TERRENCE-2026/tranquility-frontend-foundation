@@ -48,7 +48,9 @@ export function PricingGrid({ highlight }: { highlight?: ServiceId }) {
               <div className="absolute inset-x-0 top-0 h-px gold-rule" aria-hidden="true" />
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-moss">0{index + 1}</p>
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-moss">
+                    0{index + 1}
+                  </p>
                   <h3 className="mt-2 text-2xl">{text(serviceNames[service.id])}</h3>
                 </div>
                 <span className="rounded-full border border-gold/25 bg-accent/45 px-3 py-1 text-xs font-semibold text-accent-foreground">
@@ -57,7 +59,10 @@ export function PricingGrid({ highlight }: { highlight?: ServiceId }) {
               </div>
 
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                {text({ en: "Standard average 1 bed / 1 full bath home", es: "Vivienda estándar promedio de 1 dormitorio / 1 baño completo" })}
+                {text({
+                  en: "Standard average 1 bed / 1 full bath home",
+                  es: "Vivienda estándar promedio de 1 dormitorio / 1 baño completo",
+                })}
               </p>
               <p className="mt-7 font-display text-5xl text-ink">{money(service.basePrice)}</p>
               <p className="mt-1 text-[0.65rem] font-bold uppercase tracking-[0.17em] text-muted-foreground">
@@ -65,25 +70,34 @@ export function PricingGrid({ highlight }: { highlight?: ServiceId }) {
               </p>
 
               <dl className="mt-7 space-y-3 border-t border-border pt-5 text-sm">
-                {frequencies.filter((frequency) => frequency.id !== "onetime").map((frequency) => (
-                  <div key={frequency.id} className="flex items-baseline justify-between gap-3">
-                    <dt className="text-muted-foreground">
-                      {text(frequencyNames[frequency.id])}{" "}
-                      <span className="text-xs font-semibold text-moss">{text(frequencyNotes[frequency.id])}</span>
-                    </dt>
-                    <dd className="font-semibold tabular-nums text-ink">{money(servicePrice(service.id, frequency.id))}</dd>
-                  </div>
-                ))}
+                {frequencies
+                  .filter((frequency) => frequency.id !== "onetime")
+                  .map((frequency) => (
+                    <div key={frequency.id} className="flex items-baseline justify-between gap-3">
+                      <dt className="text-muted-foreground">
+                        {text(frequencyNames[frequency.id])}{" "}
+                        <span className="text-xs font-semibold text-moss">
+                          {text(frequencyNotes[frequency.id])}
+                        </span>
+                      </dt>
+                      <dd className="font-semibold tabular-nums text-ink">
+                        {money(servicePrice(service.id, frequency.id))}
+                      </dd>
+                    </div>
+                  ))}
               </dl>
 
               <div className="mt-7 flex flex-col gap-2 pt-2">
                 <Button asChild>
                   <Link to="/booking" search={{ service: service.id }}>
-                    {text({ en: "Request this service", es: "Solicitar este servicio" })} <ArrowRight className="size-4" aria-hidden="true" />
+                    {text({ en: "Request this service", es: "Solicitar este servicio" })}{" "}
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </Link>
                 </Button>
                 <Button asChild variant="ghost" size="sm">
-                  <Link to={service.route}>{text({ en: "See what is included", es: "Ver qué incluye" })}</Link>
+                  <Link to={service.route}>
+                    {text({ en: "See what is included", es: "Ver qué incluye" })}
+                  </Link>
                 </Button>
               </div>
             </article>
