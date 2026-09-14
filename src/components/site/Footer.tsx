@@ -81,11 +81,23 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {business.legalName}. {text({ en: "All rights reserved.", es: "Todos los derechos reservados." })}</p>
+          <div className="space-y-2">
+            <p>© {new Date().getFullYear()} {business.legalName}. {text({ en: "All rights reserved.", es: "Todos los derechos reservados." })}</p>
+            <p className="text-[0.7rem] tracking-[0.04em] text-gold-soft/90">{text(attribution.ownership)}</p>
+          </div>
           <div className="flex gap-5">
             <Link to="/privacy" className="hover:text-gold-soft">{text({ en: "Privacy", es: "Privacidad" })}</Link>
             <Link to="/terms" className="hover:text-gold-soft">{text({ en: "Terms", es: "Términos" })}</Link>
           </div>
+        </div>
+
+        <div className="mt-6 border-t border-border/60 pt-5 text-center sm:text-left">
+          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground/90">
+            {text(attribution.engineering)}
+          </p>
+          <p className="mt-2 text-[0.66rem] leading-5 text-muted-foreground/70">
+            {technologyLeader.name} · {text(technologyLeader.role)} · {text(technologyLeader.designation)}
+          </p>
         </div>
       </div>
     </footer>
