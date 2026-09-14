@@ -9,3 +9,8 @@
 - [ ] Enable Stripe test payments and finish paid booking confirmation — waiting for explicit payment authorization
 - [ ] Add the supplied cancellation/refund and deposit-to-invoice policy copy — waiting for business policy
 - [x] Verify completed routes, real contact submission, service maps, production build, and browser console
+
+- [x] Add real per-service booking calendar and stored booking request confirmation
+- [x] Add secure owner sign-in and private admin lead management
+- [x] Add owner-managed availability blocks and verify capacity enforcement
+- [x] Refine the full frontend into the approved warm, airy cleaning-service design while preserving every route, feature, theme, palette, language, map, and business rule

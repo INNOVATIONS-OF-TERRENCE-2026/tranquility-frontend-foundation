@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BookingRouteImport } from './routes/booking'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as CommercialCleaningRouteImport } from './routes/commercial-cleaning'
@@ -20,6 +22,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as MoveInMoveOutCleaningRouteImport } from './routes/move-in-move-out-cleaning'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as QuoteRouteImport } from './routes/quote'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ResidentialCleaningRouteImport } from './routes/residential-cleaning'
 import { Route as ServiceAreaRouteImport } from './routes/service-area'
 import { Route as ServicesRouteImport } from './routes/services'
@@ -34,6 +37,16 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingRoute = BookingRouteImport.update({
@@ -81,6 +94,11 @@ const QuoteRoute = QuoteRouteImport.update({
   path: '/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResidentialCleaningRoute = ResidentialCleaningRouteImport.update({
   id: '/residential-cleaning',
   path: '/residential-cleaning',
@@ -110,6 +128,8 @@ const TermsRoute = TermsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/careers': typeof CareersRoute
   '/commercial-cleaning': typeof CommercialCleaningRoute
@@ -119,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/residential-cleaning': typeof ResidentialCleaningRoute
   '/service-area': typeof ServiceAreaRoute
   '/services': typeof ServicesRoute
@@ -128,6 +149,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/careers': typeof CareersRoute
   '/commercial-cleaning': typeof CommercialCleaningRoute
@@ -137,6 +160,7 @@ export interface FileRoutesByTo {
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/residential-cleaning': typeof ResidentialCleaningRoute
   '/service-area': typeof ServiceAreaRoute
   '/services': typeof ServicesRoute
@@ -147,6 +171,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/careers': typeof CareersRoute
   '/commercial-cleaning': typeof CommercialCleaningRoute
@@ -156,6 +182,7 @@ export interface FileRoutesById {
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/residential-cleaning': typeof ResidentialCleaningRoute
   '/service-area': typeof ServiceAreaRoute
   '/services': typeof ServicesRoute
@@ -167,6 +194,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
+    | '/auth'
     | '/booking'
     | '/careers'
     | '/commercial-cleaning'
@@ -176,6 +205,7 @@ export interface FileRouteTypes {
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
+    | '/reset-password'
     | '/residential-cleaning'
     | '/service-area'
     | '/services'
@@ -185,6 +215,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin'
+    | '/auth'
     | '/booking'
     | '/careers'
     | '/commercial-cleaning'
@@ -194,6 +226,7 @@ export interface FileRouteTypes {
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
+    | '/reset-password'
     | '/residential-cleaning'
     | '/service-area'
     | '/services'
@@ -203,6 +236,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
+    | '/auth'
     | '/booking'
     | '/careers'
     | '/commercial-cleaning'
@@ -212,6 +247,7 @@ export interface FileRouteTypes {
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
+    | '/reset-password'
     | '/residential-cleaning'
     | '/service-area'
     | '/services'
@@ -222,6 +258,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
+  AuthRoute: typeof AuthRoute
   BookingRoute: typeof BookingRoute
   CareersRoute: typeof CareersRoute
   CommercialCleaningRoute: typeof CommercialCleaningRoute
@@ -231,6 +269,7 @@ export interface RootRouteChildren {
   MoveInMoveOutCleaningRoute: typeof MoveInMoveOutCleaningRoute
   PrivacyRoute: typeof PrivacyRoute
   QuoteRoute: typeof QuoteRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ResidentialCleaningRoute: typeof ResidentialCleaningRoute
   ServiceAreaRoute: typeof ServiceAreaRoute
   ServicesRoute: typeof ServicesRoute
@@ -252,6 +291,20 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/booking': {
@@ -317,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuoteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/residential-cleaning': {
       id: '/residential-cleaning'
       path: '/residential-cleaning'
@@ -358,6 +418,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
+  AuthRoute: AuthRoute,
   BookingRoute: BookingRoute,
   CareersRoute: CareersRoute,
   CommercialCleaningRoute: CommercialCleaningRoute,
@@ -367,6 +429,7 @@ const rootRouteChildren: RootRouteChildren = {
   MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
   PrivacyRoute: PrivacyRoute,
   QuoteRoute: QuoteRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ResidentialCleaningRoute: ResidentialCleaningRoute,
   ServiceAreaRoute: ServiceAreaRoute,
   ServicesRoute: ServicesRoute,

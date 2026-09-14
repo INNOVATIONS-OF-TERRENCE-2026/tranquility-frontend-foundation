@@ -1,16 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, ArrowRight, Check, Info, Mail } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ArrowRight, Check, Info } from "lucide-react";
+import { useMemo, useState } from "react";
 
+import { BookingCalendar } from "@/components/booking/BookingCalendar";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { QuantityField } from "@/components/site/QuantityField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { business, mailtoLink } from "@/config/business";
-import { getBookingAvailability } from "@/lib/booking.functions";
+import { business } from "@/config/business";
+import { createBookingRequest } from "@/lib/booking.functions";
 import {
   BASE_BEDROOMS,
   BASE_FULL_BATHS,
@@ -111,10 +112,6 @@ const arrivalWindows = [
   { id: "afternoon", en: "2–5 PM", es: "2–5 PM" },
 ] as const;
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 export function BookingFlow({ initialService }: { initialService?: ServiceId }) {
   const { language, text } = useLanguage();
   const steps = [
@@ -149,34 +146,10 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
     window: "",
   });
   const [errors, setErrors] = useState<Partial<Record<ContactKey, string>>>({});
-  const [availability, setAvailability] = useState<Record<string, number> | null>(null);
-  const [availabilityError, setAvailabilityError] = useState("");
-  const checkAvailability = useServerFn(getBookingAvailability);
-
-  useEffect(() => {
-    if (!contact.date || [0, 6].includes(new Date(`${contact.date}T12:00:00`).getDay())) {
-      setAvailability(null);
-      return;
-    }
-    let active = true;
-    setAvailabilityError("");
-    void checkAvailability({ data: { date: contact.date } })
-      .then((result) => {
-        if (active) setAvailability(result);
-      })
-      .catch(() => {
-        if (active)
-          setAvailabilityError(
-            text({
-              en: "Availability could not be checked.",
-              es: "No se pudo verificar la disponibilidad.",
-            }),
-          );
-      });
-    return () => {
-      active = false;
-    };
-  }, [checkAvailability, contact.date, text]);
+  const submitBooking = useServerFn(createBookingRequest);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [reference, setReference] = useState("");
 
   const sqftNumber = sqft ? Number(sqft) : null;
   const estimate = useMemo(
@@ -249,7 +222,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
         es: "Ingresa un código postal de 5 dígitos",
       });
     if (!contact.date) next.date = required;
-    else if (contact.date < todayISO())
+    else if (contact.date < new Date().toISOString().slice(0, 10))
       next.date = text({ en: "Choose today or a future date", es: "Elige hoy o una fecha futura" });
     else if ([0, 6].includes(new Date(`${contact.date}T12:00:00`).getDay()))
       next.date = text({ en: "Choose a weekday", es: "Elige un día entre semana" });
@@ -283,127 +256,47 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
   const frequencyLabel = text(frequencyCopy[frequency].name);
   const selectedWindow = arrivalWindows.find((item) => item.id === contact.window);
 
-  const emailBody = useMemo(() => {
-    const yes = language === "es" ? "Sí" : "Yes";
-    const no = language === "es" ? "No" : "No";
-    const none = language === "es" ? "Ninguno" : "None";
-    const notProvided = language === "es" ? "No proporcionado" : "Not provided";
-    const lines =
-      language === "es"
-        ? [
-            "SOLICITUD DE SERVICIO | Tranquility Level Cleaning",
-            "",
-            `Servicio: ${serviceLabel}`,
-            `Frecuencia: ${frequencyLabel}`,
-            `Subtotal del servicio: ${money(estimate.serviceSubtotal)}`,
-            `Ahorro por frecuencia: ${money(estimate.discountAmount)}`,
-            "",
-            "ALCANCE",
-            `Dormitorios: ${scope.bedrooms}`,
-            `Baños completos: ${scope.fullBaths}`,
-            `Medios baños: ${scope.halfBaths}`,
-            `Salas adicionales: ${scope.livingRooms}`,
-            `Comedores: ${scope.diningRooms}`,
-            `Oficinas: ${scope.offices}`,
-            `Lavanderías / cuartos de servicio: ${scope.laundryRooms}`,
-            `Pies cuadrados aproximados: ${sqft || notProvided}`,
-            `Solicitud parcial del hogar: ${partialHome ? yes : no}`,
-            `Mascotas: ${pets === "yes" ? petDetails : no}`,
-            `Otros espacios: ${otherSpaces || none}`,
-            `Notas: ${notes || none}`,
-            "",
-            "SERVICIOS ADICIONALES Y CARGOS POR HABITACIÓN",
-            ...(estimate.addOnLines.length
-              ? estimate.addOnLines.map(
-                  (line) =>
-                    `${addOnCopy[line.id]?.es ?? line.label} x ${line.qty}: ${line.startingAt ? "desde " : ""}${money(line.total)}`,
-                )
-              : [none]),
-            `Total de adicionales: ${money(estimate.addOnTotal)}`,
-            `Total estimado: ${money(estimate.total)}`,
-            ...(reviewItems.length
-              ? ["", "ELEMENTOS PARA REVISIÓN", ...reviewItems.map((item) => `- ${item}`)]
-              : []),
-            "",
-            "CONTACTO",
-            `Nombre: ${contact.name}`,
-            `Correo electrónico: ${contact.email}`,
-            `Teléfono: ${contact.phone}`,
-            `Dirección: ${contact.address}, ${contact.city}, TX ${contact.zip}`,
-            `Fecha preferida: ${contact.date}`,
-            `Horario preferido: ${selectedWindow?.es ?? contact.window}`,
-            "",
-            "Esta solicitud fue creada por el cliente en el sitio web. Los detalles finales del servicio y el precio están sujetos a confirmación.",
-          ]
-        : [
-            "SERVICE REQUEST | Tranquility Level Cleaning",
-            "",
-            `Service: ${serviceLabel}`,
-            `Frequency: ${frequencyLabel}`,
-            `Service subtotal: ${money(estimate.serviceSubtotal)}`,
-            `Frequency savings: ${money(estimate.discountAmount)}`,
-            "",
-            "SCOPE",
-            `Bedrooms to clean: ${scope.bedrooms}`,
-            `Full bathrooms to clean: ${scope.fullBaths}`,
-            `Half bathrooms: ${scope.halfBaths}`,
-            `Additional living rooms: ${scope.livingRooms}`,
-            `Dining rooms: ${scope.diningRooms}`,
-            `Offices: ${scope.offices}`,
-            `Laundry or utility rooms: ${scope.laundryRooms}`,
-            `Approximate square footage: ${sqft || notProvided}`,
-            `Partial-home request: ${partialHome ? yes : no}`,
-            `Pets: ${pets === "yes" ? petDetails : no}`,
-            `Other or special spaces: ${otherSpaces || none}`,
-            `Condition and service notes: ${notes || none}`,
-            "",
-            "APPROVED ADD-ONS AND ROOM CHARGES",
-            ...(estimate.addOnLines.length
-              ? estimate.addOnLines.map(
-                  (line) =>
-                    `${addOnCopy[line.id]?.en ?? line.label} x ${line.qty}: ${line.startingAt ? "starting at " : ""}${money(line.total)}`,
-                )
-              : [none]),
-            `Add-on total: ${money(estimate.addOnTotal)}`,
-            `Estimated total: ${money(estimate.total)}`,
-            ...(reviewItems.length
-              ? ["", "CUSTOM REVIEW ITEMS", ...reviewItems.map((item) => `- ${item}`)]
-              : []),
-            "",
-            "CONTACT",
-            `Name: ${contact.name}`,
-            `Email: ${contact.email}`,
-            `Phone: ${contact.phone}`,
-            `Address: ${contact.address}, ${contact.city}, TX ${contact.zip}`,
-            `Preferred date: ${contact.date}`,
-            `Preferred arrival window: ${selectedWindow?.en ?? contact.window}`,
-            "",
-            "This is a customer-generated website request. Final service details and pricing remain subject to confirmation.",
-          ];
-    return lines.join("\n");
-  }, [
-    contact,
-    estimate,
-    frequencyLabel,
-    language,
-    notes,
-    otherSpaces,
-    partialHome,
-    petDetails,
-    pets,
-    reviewItems,
-    scope,
-    selectedWindow,
-    serviceLabel,
-    sqft,
-  ]);
-
-  const mailto = mailtoLink(
-    language === "es"
-      ? `Solicitud de servicio | ${contact.name || "Cliente"}`
-      : `Service request | ${contact.name || "Customer"}`,
-    emailBody,
-  );
+  async function handleSubmit() {
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const result = await submitBooking({
+        data: {
+          service,
+          frequency,
+          serviceDate: contact.date,
+          arrivalWindow: contact.window as "morning" | "midday" | "afternoon",
+          customer: contact,
+          scope,
+          extras,
+          sqft: sqftNumber,
+          partialHome,
+          pets,
+          petDetails,
+          otherSpaces,
+          notes,
+          language,
+          website: "",
+        },
+      });
+      setReference(result.reference);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error && error.message.includes("SLOT_UNAVAILABLE")
+          ? text({
+              en: "That slot just filled. Please go back and choose another time.",
+              es: "Ese horario acaba de llenarse. Regresa y elige otro horario.",
+            })
+          : text({
+              en: "Your request could not be saved. Please try again or call us.",
+              es: "No se pudo guardar tu solicitud. Inténtalo de nuevo o llámanos.",
+            }),
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
@@ -826,57 +719,59 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
                   autoComplete="postal-code"
                 />
               </Field>
-              <Field
-                label={text({ en: "Preferred date", es: "Fecha preferida" })}
-                error={errors.date}
-              >
-                <Input
-                  type="date"
-                  min={todayISO()}
-                  value={contact.date}
-                  onChange={(event) => updateContact("date", event.target.value)}
-                />
-              </Field>
-              <Field
-                label={text({ en: "Preferred arrival window", es: "Horario de llegada preferido" })}
-                error={errors.window}
-              >
-                <select
-                  value={contact.window}
-                  onChange={(event) => updateContact("window", event.target.value)}
-                  className="flex min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
-                >
-                  <option value="">
-                    {text({ en: "Choose a window", es: "Elige un horario" })}
-                  </option>
-                  {arrivalWindows.map((item) => (
-                    <option key={item.id} value={item.id} disabled={availability?.[item.id] === 0}>
-                      {language === "es" ? item.es : item.en}
-                      {availability
-                        ? ` · ${availability[item.id]} ${text({ en: "available", es: "disponibles" })}`
-                        : ""}
-                    </option>
-                  ))}
-                </select>
-                {availabilityError && (
-                  <p className="mt-1 text-xs text-destructive" role="alert">
-                    {availabilityError}
-                  </p>
-                )}
-              </Field>
+            </div>
+            <div className="mt-6">
+              <BookingCalendar
+                service={service}
+                frequency={frequency}
+                date={contact.date}
+                window={contact.window}
+                onChange={(date, window) => {
+                  updateContact("date", date);
+                  updateContact("window", window);
+                }}
+              />
+              {(errors.date || errors.window) && (
+                <p className="mt-3 text-sm text-destructive" role="alert">
+                  {errors.date ?? errors.window}
+                </p>
+              )}
             </div>
           </div>
         )}
 
-        {step === 5 && (
+        {step === 5 && reference ? (
+          <div className="py-8 text-center" aria-live="polite">
+            <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-accent text-moss">
+              <Check className="size-7" aria-hidden="true" />
+            </span>
+            <h2 className="mt-5 text-3xl">
+              {text({ en: "Request received", es: "Solicitud recibida" })}
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              {text({
+                en: "Your preferred date and time are reserved as a request, not a confirmed appointment. Tranquility will contact you to confirm the final service details and price.",
+                es: "Tu fecha y horario preferidos quedan reservados como solicitud, no como cita confirmada. Tranquility se comunicará contigo para confirmar los detalles finales y el precio.",
+              })}
+            </p>
+            <p className="mt-5 text-sm font-semibold text-ink">
+              {text({ en: "Reference", es: "Referencia" })}: {reference}
+            </p>
+            <Button asChild variant="outline" className="mt-7">
+              <a href={business.phoneHref}>
+                {text({ en: "Call", es: "Llama al" })} {business.phoneDisplay}
+              </a>
+            </Button>
+          </div>
+        ) : step === 5 ? (
           <div>
             <h2 className="text-2xl">
               {text({ en: "Review your request", es: "Revisa tu solicitud" })}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {text({
-                en: "Nothing is submitted automatically. The button below opens a prefilled email in your mail app so you can review it before sending.",
-                es: "Nada se envía automáticamente. El botón de abajo abre un correo prellenado en tu aplicación de correo para que puedas revisarlo antes de enviarlo.",
+                en: "Confirm the information below, then send your booking request. No payment is collected and the appointment still requires Tranquility's confirmation.",
+                es: "Confirma la información y envía tu solicitud. No se cobra ningún pago y la cita aún requiere confirmación de Tranquility.",
               })}
             </p>
 
@@ -925,11 +820,10 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
             )}
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button asChild size="lg">
-                <a href={mailto}>
-                  <Mail className="size-4" aria-hidden="true" />
-                  {text({ en: "Open email request", es: "Abrir solicitud por correo" })}
-                </a>
+              <Button type="button" size="lg" disabled={submitting} onClick={handleSubmit}>
+                {submitting
+                  ? text({ en: "Sending request…", es: "Enviando solicitud…" })
+                  : text({ en: "Send booking request", es: "Enviar solicitud de reserva" })}
               </Button>
               <Button asChild size="lg" variant="outline">
                 <a href={business.phoneHref}>
@@ -937,11 +831,21 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
                 </a>
               </Button>
             </div>
+            {submitError && (
+              <p className="mt-4 text-sm text-destructive" role="alert">
+                {submitError}
+              </p>
+            )}
           </div>
-        )}
+        ) : null}
 
         <div className="mt-9 flex items-center justify-between gap-4 border-t border-border pt-6">
-          <Button type="button" variant="ghost" disabled={step === 0} onClick={goBack}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={step === 0 || Boolean(reference)}
+            onClick={goBack}
+          >
             <ArrowLeft className="size-4" aria-hidden="true" />
             {text({ en: "Back", es: "Atrás" })}
           </Button>

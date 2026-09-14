@@ -17,7 +17,7 @@ export function Footer() {
   const { text } = useLanguage();
 
   return (
-    <footer className="brand-dark mt-auto border-t border-gold/20 bg-background text-foreground">
+    <footer className="mt-auto border-t border-border bg-sand text-foreground dark:bg-night dark:text-night-foreground">
       <div className="container-page py-14 md:py-18">
         <div className="flex flex-col gap-8 border-b border-border pb-10 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
@@ -38,7 +38,7 @@ export function Footer() {
             </Link>
             <Link
               to="/quote"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/30 px-6 text-sm font-semibold text-gold-soft transition-colors hover:bg-gold/10"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-moss/40 px-6 text-sm font-semibold text-moss transition-colors hover:bg-accent"
             >
               {text({ en: "Custom Quote", es: "Cotización personalizada" })}
             </Link>
@@ -53,13 +53,13 @@ export function Footer() {
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
               {services.map((service) => (
                 <li key={service.id}>
-                  <Link to={service.route} className="transition-colors hover:text-gold-soft">
+                  <Link to={service.route} className="transition-colors hover:text-moss">
                     {text(serviceNames[service.id])}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link to="/commercial-cleaning" className="transition-colors hover:text-gold-soft">
+                <Link to="/commercial-cleaning" className="transition-colors hover:text-moss">
                   {text({ en: "Commercial / Office", es: "Comercial / oficinas" })}
                 </Link>
               </li>
@@ -72,22 +72,22 @@ export function Footer() {
             </p>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
               <li>
-                <Link to="/service-area" className="transition-colors hover:text-gold-soft">
+                <Link to="/service-area" className="transition-colors hover:text-moss">
                   {text({ en: "Service Area", es: "Área de servicio" })}
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="transition-colors hover:text-gold-soft">
+                <Link to="/faq" className="transition-colors hover:text-moss">
                   {text({ en: "FAQ", es: "Preguntas frecuentes" })}
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="transition-colors hover:text-gold-soft">
+                <Link to="/about" className="transition-colors hover:text-moss">
                   {text({ en: "About", es: "Nosotros" })}
                 </Link>
               </li>
               <li>
-                <Link to="/careers" className="transition-colors hover:text-gold-soft">
+                <Link to="/careers" className="transition-colors hover:text-moss">
                   {text({ en: "Careers", es: "Empleo" })}
                 </Link>
               </li>
@@ -101,18 +101,18 @@ export function Footer() {
             <div className="mt-5 space-y-4 text-sm text-muted-foreground">
               <a
                 href={business.phoneHref}
-                className="flex items-center gap-2 transition-colors hover:text-gold-soft"
+                className="flex items-center gap-2 transition-colors hover:text-moss"
               >
                 <Phone className="size-4 text-moss" aria-hidden="true" />
                 {business.phoneDisplay}
               </a>
               <a
                 href={business.emailHref}
-                className="block break-all transition-colors hover:text-gold-soft"
+                className="block break-all transition-colors hover:text-moss"
               >
                 {business.email}
               </a>
-              <Link to="/contact" className="inline-flex text-gold-soft hover:underline">
+              <Link to="/contact" className="inline-flex text-moss hover:underline">
                 {text({ en: "General inquiry", es: "Consulta general" })} →
               </Link>
             </div>
@@ -144,15 +144,13 @@ export function Footer() {
               © {new Date().getFullYear()} {business.legalName}.{" "}
               {text({ en: "All rights reserved.", es: "Todos los derechos reservados." })}
             </p>
-            <p className="text-[0.7rem] tracking-[0.04em] text-gold-soft/90">
-              {text(attribution.ownership)}
-            </p>
+            <p className="text-[0.7rem] text-muted-foreground">{text(attribution.ownership)}</p>
           </div>
           <div className="flex gap-5">
-            <Link to="/privacy" className="hover:text-gold-soft">
+            <Link to="/privacy" className="hover:text-moss">
               {text({ en: "Privacy", es: "Privacidad" })}
             </Link>
-            <Link to="/terms" className="hover:text-gold-soft">
+            <Link to="/terms" className="hover:text-moss">
               {text({ en: "Terms", es: "Términos" })}
             </Link>
           </div>
