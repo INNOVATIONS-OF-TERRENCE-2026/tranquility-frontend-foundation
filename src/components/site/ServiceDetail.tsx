@@ -4,7 +4,7 @@ import { Check, FileText } from "lucide-react";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import {
-  frequencies,
+  availableFrequencies,
   getService,
   money,
   servicePrice,
@@ -100,6 +100,7 @@ export function ServiceDetail({
   const { language, text } = useLanguage();
   const localizedBestFor = language === "es" ? bestForEs ?? bestFor : bestFor;
   const localizedNotes = language === "es" ? notesEs ?? notes : notes;
+  const recurringOptions = availableFrequencies(serviceId).filter((frequency) => frequency.id !== "onetime");
 
   return (
     <>
@@ -153,21 +154,36 @@ export function ServiceDetail({
           <aside className="rounded-xl border border-border bg-card p-6 shadow-soft lg:sticky lg:top-32">
             <p className="eyebrow">{text({ en: "Pricing", es: "Precios" })}</p>
             <p className="mt-3 font-display text-4xl text-ink">{money(service.basePrice)}</p>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">{text({ en: "One-time, standard average 1 bed / 1 bath home", es: "Una visita, vivienda estándar promedio de 1 dormitorio / 1 baño" })}</p>
-            <dl className="mt-6 space-y-2 border-t border-border pt-5 text-sm">
-              {frequencies.filter((frequency) => frequency.id !== "onetime").map((frequency) => (
-                <div key={frequency.id} className="flex items-baseline justify-between gap-3">
-                  <dt className="text-muted-foreground">{text(frequencyNames[frequency.id])} <span className="text-xs text-moss">({text(frequencyNotes[frequency.id])})</span></dt>
-                  <dd className="font-semibold text-ink">{money(servicePrice(service.id, frequency.id))}</dd>
-                </div>
-              ))}
-            </dl>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+              {service.recurringEligible
+                ? text({ en: "One-time, standard average 1 bed / 1 bath home", es: "Una visita, vivienda estándar promedio de 1 dormitorio / 1 baño" })
+                : text({ en: "Starting price, one-time service", es: "Precio inicial, servicio de una sola vez" })}
+            </p>
+
+            {service.recurringEligible ? (
+              <dl className="mt-6 space-y-2 border-t border-border pt-5 text-sm">
+                {recurringOptions.map((frequency) => (
+                  <div key={frequency.id} className="flex items-baseline justify-between gap-3">
+                    <dt className="text-muted-foreground">{text(frequencyNames[frequency.id])} <span className="text-xs text-moss">({text(frequencyNotes[frequency.id])})</span></dt>
+                    <dd className="font-semibold text-ink">{money(servicePrice(service.id, frequency.id))}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              <div className="mt-6 rounded-xl border border-border bg-muted/45 p-4 text-sm leading-relaxed text-muted-foreground">
+                {text({
+                  en: "Deep Clean and Move-In / Move-Out are one-time services. Recurring pricing is available only for Standard Clean.",
+                  es: "La limpieza profunda y la limpieza de entrada / salida son servicios de una sola vez. Los precios recurrentes están disponibles únicamente para la limpieza estándar.",
+                })}
+              </div>
+            )}
+
             <Button asChild className="mt-6 w-full"><Link to="/booking" search={{ service: service.id }}>{text({ en: "Build my estimate", es: "Calcular mi estimado" })}</Link></Button>
             <Button asChild variant="secondary" className="mt-2 w-full"><Link to="/quote">{text({ en: "Custom quote", es: "Cotización personalizada" })}</Link></Button>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
               {text({
-                en: "Pricing shown is based on a standard average 1-bedroom, 1-full-bath home. Final pricing can change based on square footage, layout, condition, customizations, unusual scope, or specialty work.",
-                es: "Los precios mostrados se basan en una vivienda estándar promedio de 1 dormitorio y 1 baño completo. El precio final puede cambiar según los pies cuadrados, la distribución, la condición, las personalizaciones, un alcance inusual o trabajo especializado.",
+                en: "Pricing shown is based on a standard average 1-bedroom, 1-full-bath home. Deep Clean and Move-In / Move-Out are starting prices. Final pricing can change based on square footage, layout, condition, customizations, unusual scope, or specialty work.",
+                es: "Los precios mostrados se basan en una vivienda estándar promedio de 1 dormitorio y 1 baño completo. La limpieza profunda y la limpieza de entrada / salida muestran precios iniciales. El precio final puede cambiar según los pies cuadrados, la distribución, la condición, las personalizaciones, un alcance inusual o trabajo especializado.",
               })}
             </p>
           </aside>
