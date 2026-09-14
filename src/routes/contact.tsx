@@ -59,17 +59,39 @@ function ContactPage() {
       return;
     }
     if (phone.replace(/\D/g, "").length < 10 || message.trim().length < 10) {
-      setError(text({ en: "Enter a valid phone number and at least 10 characters of detail.", es: "Ingresa un teléfono válido y al menos 10 caracteres de detalle." }));
+      setError(
+        text({
+          en: "Enter a valid phone number and at least 10 characters of detail.",
+          es: "Ingresa un teléfono válido y al menos 10 caracteres de detalle.",
+        }),
+      );
       return;
     }
     setStatus("sending");
     try {
-      const result = await submitInquiry({ data: { name, phone, email, serviceType: serviceType as "standard" | "deep" | "move" | "commercial" | "quote" | "other", preferredDate: preferredDate || undefined, notes: message, language, website: "" } });
+      const result = await submitInquiry({
+        data: {
+          name,
+          phone,
+          email,
+          serviceType: serviceType as
+            "standard" | "deep" | "move" | "commercial" | "quote" | "other",
+          preferredDate: preferredDate || undefined,
+          notes: message,
+          language,
+          website: "",
+        },
+      });
       setReference(result.reference);
       setStatus("sent");
     } catch {
       setStatus("idle");
-      setError(text({ en: "We could not send your inquiry. Please try again or contact us directly.", es: "No pudimos enviar tu consulta. Inténtalo de nuevo o contáctanos directamente." }));
+      setError(
+        text({
+          en: "We could not send your inquiry. Please try again or contact us directly.",
+          es: "No pudimos enviar tu consulta. Inténtalo de nuevo o contáctanos directamente.",
+        }),
+      );
     }
   }
 
@@ -205,19 +227,43 @@ function ContactPage() {
               </div>
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="contact-service">{text({ en: "Service type", es: "Tipo de servicio" })}</Label>
-                  <select id="contact-service" value={serviceType} onChange={(event) => setServiceType(event.target.value)} className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="standard">{text({ en: "Standard Clean", es: "Limpieza estándar" })}</option>
-                    <option value="deep">{text({ en: "Deep Clean", es: "Limpieza profunda" })}</option>
-                    <option value="move">{text({ en: "Move-In / Move-Out", es: "Entrada / salida" })}</option>
-                    <option value="commercial">{text({ en: "Commercial", es: "Comercial" })}</option>
-                    <option value="quote">{text({ en: "Custom quote", es: "Cotización personalizada" })}</option>
+                  <Label htmlFor="contact-service">
+                    {text({ en: "Service type", es: "Tipo de servicio" })}
+                  </Label>
+                  <select
+                    id="contact-service"
+                    value={serviceType}
+                    onChange={(event) => setServiceType(event.target.value)}
+                    className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
+                  >
+                    <option value="standard">
+                      {text({ en: "Standard Clean", es: "Limpieza estándar" })}
+                    </option>
+                    <option value="deep">
+                      {text({ en: "Deep Clean", es: "Limpieza profunda" })}
+                    </option>
+                    <option value="move">
+                      {text({ en: "Move-In / Move-Out", es: "Entrada / salida" })}
+                    </option>
+                    <option value="commercial">
+                      {text({ en: "Commercial", es: "Comercial" })}
+                    </option>
+                    <option value="quote">
+                      {text({ en: "Custom quote", es: "Cotización personalizada" })}
+                    </option>
                     <option value="other">{text({ en: "Other", es: "Otro" })}</option>
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="contact-date">{text({ en: "Preferred date", es: "Fecha preferida" })}</Label>
-                  <Input id="contact-date" type="date" value={preferredDate} onChange={(event) => setPreferredDate(event.target.value)} />
+                  <Label htmlFor="contact-date">
+                    {text({ en: "Preferred date", es: "Fecha preferida" })}
+                  </Label>
+                  <Input
+                    id="contact-date"
+                    type="date"
+                    value={preferredDate}
+                    onChange={(event) => setPreferredDate(event.target.value)}
+                  />
                 </div>
               </div>
               <div className="space-y-2">
@@ -237,9 +283,21 @@ function ContactPage() {
                   {error}
                 </p>
               )}
-              {status === "sent" && <p className="rounded-lg bg-accent/40 p-4 text-sm text-accent-foreground" role="status">{text({ en: `Your inquiry was received. Reference ${reference}.`, es: `Recibimos tu consulta. Referencia ${reference}.` })}</p>}
+              {status === "sent" && (
+                <p
+                  className="rounded-lg bg-accent/40 p-4 text-sm text-accent-foreground"
+                  role="status"
+                >
+                  {text({
+                    en: `Your inquiry was received. Reference ${reference}.`,
+                    es: `Recibimos tu consulta. Referencia ${reference}.`,
+                  })}
+                </p>
+              )}
               <Button type="submit" size="lg" disabled={status !== "idle"}>
-                {status === "sending" ? text({ en: "Sending…", es: "Enviando…" }) : text({ en: "Send Inquiry", es: "Enviar consulta" })}
+                {status === "sending"
+                  ? text({ en: "Sending…", es: "Enviando…" })
+                  : text({ en: "Send Inquiry", es: "Enviar consulta" })}
               </Button>
             </form>
           </div>

@@ -267,25 +267,33 @@ function QuotePage() {
     if (!validate()) return;
     setStatus("sending");
     try {
-      const result = await submitRequest({ data: {
-        propertyType: values.propertyType,
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        city: values.city,
-        approximateSize: values.size || undefined,
-        scope: values.scope,
-        desiredTiming: values.timing || undefined,
-        contactPreference: values.contactPreference,
-        notes: values.notes || undefined,
-        language,
-        website: "",
-      }});
+      const result = await submitRequest({
+        data: {
+          propertyType: values.propertyType,
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
+          city: values.city,
+          approximateSize: values.size || undefined,
+          scope: values.scope,
+          desiredTiming: values.timing || undefined,
+          contactPreference: values.contactPreference,
+          notes: values.notes || undefined,
+          language,
+          website: "",
+        },
+      });
       setReference(result.reference);
       setStatus("sent");
     } catch {
       setStatus("idle");
-      setErrors((previous) => ({ ...previous, scope: text({ en: "We could not submit your request. Please try again or contact us directly.", es: "No pudimos enviar tu solicitud. Inténtalo de nuevo o contáctanos directamente." }) }));
+      setErrors((previous) => ({
+        ...previous,
+        scope: text({
+          en: "We could not submit your request. Please try again or contact us directly.",
+          es: "No pudimos enviar tu solicitud. Inténtalo de nuevo o contáctanos directamente.",
+        }),
+      }));
     }
   }
 
@@ -550,7 +558,19 @@ function QuotePage() {
               <Button type="submit" size="lg">
                 {text({ en: "Review my request", es: "Revisar mi solicitud" })}
               </Button>
-              {ready && <Button type="button" size="lg" variant="outline" onClick={sendRequest} disabled={status !== "idle"}>{status === "sending" ? text({ en: "Sending…", es: "Enviando…" }) : text({ en: "Submit request", es: "Enviar solicitud" })}</Button>}
+              {ready && (
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="outline"
+                  onClick={sendRequest}
+                  disabled={status !== "idle"}
+                >
+                  {status === "sending"
+                    ? text({ en: "Sending…", es: "Enviando…" })
+                    : text({ en: "Submit request", es: "Enviar solicitud" })}
+                </Button>
+              )}
             </div>
             {ready && (
               <p
@@ -558,8 +578,14 @@ function QuotePage() {
                 role="status"
               >
                 {text({
-                  en: status === "sent" ? `Your request was received. Reference ${reference}. Selected photos remain on your device and were not uploaded.` : "Your required details are complete. Review them, then submit your request securely. Selected photos remain on your device and are not uploaded.",
-                  es: status === "sent" ? `Recibimos tu solicitud. Referencia ${reference}. Las fotos seleccionadas permanecen en tu dispositivo y no se cargaron.` : "Los datos obligatorios están completos. Revísalos y luego envía tu solicitud de forma segura. Las fotos permanecen en tu dispositivo y no se cargan.",
+                  en:
+                    status === "sent"
+                      ? `Your request was received. Reference ${reference}. Selected photos remain on your device and were not uploaded.`
+                      : "Your required details are complete. Review them, then submit your request securely. Selected photos remain on your device and are not uploaded.",
+                  es:
+                    status === "sent"
+                      ? `Recibimos tu solicitud. Referencia ${reference}. Las fotos seleccionadas permanecen en tu dispositivo y no se cargaron.`
+                      : "Los datos obligatorios están completos. Revísalos y luego envía tu solicitud de forma segura. Las fotos permanecen en tu dispositivo y no se cargan.",
                 })}
               </p>
             )}

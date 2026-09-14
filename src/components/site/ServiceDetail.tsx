@@ -241,7 +241,10 @@ export function ServiceDetail({
       <section className="section bg-sand">
         <div className="container-page">
           <SectionHeading
-            eyebrow={text({ en: "Dallas-Fort Worth coverage", es: "Cobertura de Dallas-Fort Worth" })}
+            eyebrow={text({
+              en: "Dallas-Fort Worth coverage",
+              es: "Cobertura de Dallas-Fort Worth",
+            })}
             title={text({ en: "Explore the service area", es: "Explora el área de servicio" })}
             intro={text({
               en: "Choose a listed city and review nearby communities before requesting this service.",
