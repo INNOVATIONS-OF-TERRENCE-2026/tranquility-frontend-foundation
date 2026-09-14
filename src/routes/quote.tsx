@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ImagePlus, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { PageHero } from "@/components/site/PageHero";
@@ -8,8 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { business, mailtoLink } from "@/config/business";
+import { business } from "@/config/business";
 import { seo } from "@/lib/seo";
+import { submitQuoteRequest } from "@/lib/submissions.functions";
 
 export const Route = createFileRoute("/quote")({
   head: () =>
@@ -96,8 +98,11 @@ function QuotePage() {
   const [errors, setErrors] = useState<Partial<Record<ErrorKey, string | undefined>>>({});
   const [photos, setPhotos] = useState<LocalPhoto[]>([]);
   const [ready, setReady] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [reference, setReference] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const photosRef = useRef<LocalPhoto[]>([]);
+  const submitRequest = useServerFn(submitQuoteRequest);
 
   const propertyTypes: { id: PropertyType; label: string; note: string }[] = [
     {
@@ -258,62 +263,39 @@ function QuotePage() {
     return valid;
   }
 
-  const propertyLabel =
-    propertyTypes.find((item) => item.id === values.propertyType)?.label ?? values.propertyType;
-  const contactLabel =
-    contactPrefs.find((item) => item.id === values.contactPreference)?.label ??
-    values.contactPreference;
-
-  const body = useMemo(() => {
-    if (language === "es") {
-      return [
-        "SOLICITUD DE COTIZACIÓN / CONSULTA",
-        "",
-        `Tipo de propiedad: ${propertyLabel}`,
-        `Nombre: ${values.name}`,
-        `Correo electrónico: ${values.email}`,
-        `Teléfono: ${values.phone}`,
-        `Ciudad: ${values.city}`,
-        `Tamaño aproximado: ${values.size || "no proporcionado"}`,
-        `Contacto preferido: ${contactLabel}`,
-        `Fecha o periodo deseado: ${values.timing || "flexible"}`,
-        "",
-        "ALCANCE Y CONDICIÓN",
-        values.scope,
-        "",
-        "NOTAS ADICIONALES",
-        values.notes || "ninguna",
-        photos.length
-          ? `\nEl cliente seleccionó ${photos.length} foto(s) localmente para compartirlas cuando se solicite.`
-          : "",
-        "",
-        "Las fotos seleccionadas no se adjuntan ni se cargan desde este sitio web.",
-      ].join("\n");
+  async function sendRequest() {
+    if (!validate()) return;
+    setStatus("sending");
+    try {
+      const result = await submitRequest({
+        data: {
+          propertyType: values.propertyType,
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
+          city: values.city,
+          approximateSize: values.size || undefined,
+          scope: values.scope,
+          desiredTiming: values.timing || undefined,
+          contactPreference: values.contactPreference,
+          notes: values.notes || undefined,
+          language,
+          website: "",
+        },
+      });
+      setReference(result.reference);
+      setStatus("sent");
+    } catch {
+      setStatus("idle");
+      setErrors((previous) => ({
+        ...previous,
+        scope: text({
+          en: "We could not submit your request. Please try again or contact us directly.",
+          es: "No pudimos enviar tu solicitud. Inténtalo de nuevo o contáctanos directamente.",
+        }),
+      }));
     }
-    return [
-      "CUSTOM QUOTE / CONSULTATION REQUEST",
-      "",
-      `Property type: ${propertyLabel}`,
-      `Name: ${values.name}`,
-      `Email: ${values.email}`,
-      `Phone: ${values.phone}`,
-      `City: ${values.city}`,
-      `Approximate size: ${values.size || "not provided"}`,
-      `Preferred contact: ${contactLabel}`,
-      `Desired timing: ${values.timing || "flexible"}`,
-      "",
-      "SCOPE & CONDITION",
-      values.scope,
-      "",
-      "ADDITIONAL NOTES",
-      values.notes || "none",
-      photos.length
-        ? `\nCustomer selected ${photos.length} photo(s) locally to share on request.`
-        : "",
-      "",
-      "Selected photos are not attached or uploaded from this website.",
-    ].join("\n");
-  }, [contactLabel, language, photos.length, propertyLabel, values]);
+  }
 
   const selectedBytes = photos.reduce((sum, photo) => sum + photo.size, 0);
 
@@ -577,17 +559,16 @@ function QuotePage() {
                 {text({ en: "Review my request", es: "Revisar mi solicitud" })}
               </Button>
               {ready && (
-                <Button asChild size="lg" variant="outline">
-                  <a
-                    href={mailtoLink(
-                      language === "es"
-                        ? `Solicitud de cotización: ${values.name}`
-                        : `Custom quote request: ${values.name}`,
-                      body,
-                    )}
-                  >
-                    {text({ en: "Send by email", es: "Enviar por correo" })}
-                  </a>
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="outline"
+                  onClick={sendRequest}
+                  disabled={status !== "idle"}
+                >
+                  {status === "sending"
+                    ? text({ en: "Sending…", es: "Enviando…" })
+                    : text({ en: "Submit request", es: "Enviar solicitud" })}
                 </Button>
               )}
             </div>
@@ -597,8 +578,14 @@ function QuotePage() {
                 role="status"
               >
                 {text({
-                  en: "Your required details are complete. Send by email opens your email app with the request filled in. Nothing is stored on this site.",
-                  es: "Los datos obligatorios están completos. Enviar por correo abre tu aplicación de correo con la solicitud preparada. Nada se guarda en este sitio.",
+                  en:
+                    status === "sent"
+                      ? `Your request was received. Reference ${reference}. Selected photos remain on your device and were not uploaded.`
+                      : "Your required details are complete. Review them, then submit your request securely. Selected photos remain on your device and are not uploaded.",
+                  es:
+                    status === "sent"
+                      ? `Recibimos tu solicitud. Referencia ${reference}. Las fotos seleccionadas permanecen en tu dispositivo y no se cargaron.`
+                      : "Los datos obligatorios están completos. Revísalos y luego envía tu solicitud de forma segura. Las fotos permanecen en tu dispositivo y no se cargan.",
                 })}
               </p>
             )}

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, ArrowRight, Check, Info, Mail } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { QuantityField } from "@/components/site/QuantityField";
@@ -9,14 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { business, mailtoLink } from "@/config/business";
+import { getBookingAvailability } from "@/lib/booking.functions";
 import {
   BASE_BEDROOMS,
   BASE_FULL_BATHS,
   CUSTOM_REVIEW_SQFT,
   addOnPrice,
   buildEstimate,
+  availableFrequencies,
   defaultScope,
-  frequencies,
   getAddOn,
   money,
   selectableAddOns,
@@ -104,10 +106,9 @@ const addOnCopy: Record<string, { en: string; es: string }> = {
 };
 
 const arrivalWindows = [
-  { id: "morning", en: "Morning", es: "Mañana" },
-  { id: "midday", en: "Midday", es: "Mediodía" },
-  { id: "afternoon", en: "Afternoon", es: "Tarde" },
-  { id: "flexible", en: "Flexible", es: "Flexible" },
+  { id: "morning", en: "8–11 AM", es: "8–11 AM" },
+  { id: "midday", en: "11 AM–2 PM", es: "11 AM–2 PM" },
+  { id: "afternoon", en: "2–5 PM", es: "2–5 PM" },
 ] as const;
 
 function todayISO() {
@@ -148,6 +149,34 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
     window: "",
   });
   const [errors, setErrors] = useState<Partial<Record<ContactKey, string>>>({});
+  const [availability, setAvailability] = useState<Record<string, number> | null>(null);
+  const [availabilityError, setAvailabilityError] = useState("");
+  const checkAvailability = useServerFn(getBookingAvailability);
+
+  useEffect(() => {
+    if (!contact.date || [0, 6].includes(new Date(`${contact.date}T12:00:00`).getDay())) {
+      setAvailability(null);
+      return;
+    }
+    let active = true;
+    setAvailabilityError("");
+    void checkAvailability({ data: { date: contact.date } })
+      .then((result) => {
+        if (active) setAvailability(result);
+      })
+      .catch(() => {
+        if (active)
+          setAvailabilityError(
+            text({
+              en: "Availability could not be checked.",
+              es: "No se pudo verificar la disponibilidad.",
+            }),
+          );
+      });
+    return () => {
+      active = false;
+    };
+  }, [checkAvailability, contact.date, text]);
 
   const sqftNumber = sqft ? Number(sqft) : null;
   const estimate = useMemo(
@@ -222,6 +251,8 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
     if (!contact.date) next.date = required;
     else if (contact.date < todayISO())
       next.date = text({ en: "Choose today or a future date", es: "Elige hoy o una fecha futura" });
+    else if ([0, 6].includes(new Date(`${contact.date}T12:00:00`).getDay()))
+      next.date = text({ en: "Choose a weekday", es: "Elige un día entre semana" });
     if (!contact.window) next.window = required;
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -413,7 +444,10 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setService(item.id)}
+                  onClick={() => {
+                    setService(item.id);
+                    if (item.id !== "standard") setFrequency("onetime");
+                  }}
                   aria-pressed={service === item.id}
                   className={`rounded-xl border p-5 text-left transition-colors ${service === item.id ? "border-moss bg-accent/45" : "border-border bg-card hover:border-moss/60"}`}
                 >
@@ -451,7 +485,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
               })}
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {frequencies.map((item) => (
+              {availableFrequencies(service).map((item) => (
                 <button
                   key={item.id}
                   type="button"
@@ -816,11 +850,19 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
                     {text({ en: "Choose a window", es: "Elige un horario" })}
                   </option>
                   {arrivalWindows.map((item) => (
-                    <option key={item.id} value={item.id}>
+                    <option key={item.id} value={item.id} disabled={availability?.[item.id] === 0}>
                       {language === "es" ? item.es : item.en}
+                      {availability
+                        ? ` · ${availability[item.id]} ${text({ en: "available", es: "disponibles" })}`
+                        : ""}
                     </option>
                   ))}
                 </select>
+                {availabilityError && (
+                  <p className="mt-1 text-xs text-destructive" role="alert">
+                    {availabilityError}
+                  </p>
+                )}
               </Field>
             </div>
           </div>

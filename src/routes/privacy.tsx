@@ -24,8 +24,8 @@ function PrivacyPage() {
         es: "Funcionamiento actual de los formularios",
       }),
       body: text({
-        en: "The current website does not use a customer database, payment processor, or account system. Contact, career, service request, and quote experiences may prepare information locally in your browser and open your email application so you can send it directly to Tranquility Level Cleaning.",
-        es: "El sitio web actual no utiliza una base de datos de clientes, un procesador de pagos ni un sistema de cuentas. Los formularios de contacto, empleo, solicitud de servicio y cotización pueden preparar la información localmente en tu navegador y abrir tu aplicación de correo para que puedas enviarla directamente a Tranquility Level Cleaning.",
+        en: "Contact, career, and quote forms securely store the information you submit so Tranquility Level Cleaning can review and respond. The website does not currently provide customer accounts or collect payment-card information.",
+        es: "Los formularios de contacto, empleo y cotización guardan de forma segura la información que envías para que Tranquility Level Cleaning pueda revisarla y responder. El sitio no ofrece actualmente cuentas de clientes ni recopila información de tarjetas de pago.",
       }),
     },
     {
@@ -58,8 +58,8 @@ function PrivacyPage() {
     {
       title: text({ en: "Future service changes", es: "Cambios futuros del servicio" }),
       body: text({
-        en: "If the website later adds hosted form submissions, online payments, customer accounts, analytics, or other connected services, this notice should be updated to describe those systems before they are relied upon for customer information.",
-        es: "Si en el futuro el sitio incorpora formularios alojados, pagos en línea, cuentas de clientes, analítica u otros servicios conectados, este aviso deberá actualizarse para describir dichos sistemas antes de utilizarlos para gestionar información de clientes.",
+        en: "Submitted information is used to respond to requests, evaluate service needs, and review career interest. It is not made publicly available. This notice will be updated before online payments, customer accounts, or other materially different uses are introduced.",
+        es: "La información enviada se utiliza para responder solicitudes, evaluar necesidades de servicio y revisar interés laboral. No se publica. Este aviso se actualizará antes de incorporar pagos en línea, cuentas de clientes u otros usos sustancialmente diferentes.",
       }),
     },
   ];

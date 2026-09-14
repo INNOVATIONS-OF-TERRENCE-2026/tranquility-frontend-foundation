@@ -4,7 +4,7 @@ import { Check, FileText } from "lucide-react";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import {
-  frequencies,
+  availableFrequencies,
   getService,
   money,
   servicePrice,
@@ -13,6 +13,7 @@ import {
 } from "@/config/pricing";
 import { CTABand } from "./CTABand";
 import { PageHero, SectionHeading } from "./PageHero";
+import { ServiceAreaExplorer } from "./ServiceAreaExplorer";
 
 interface ServiceDetailProps {
   serviceId: ServiceId;
@@ -191,7 +192,7 @@ export function ServiceDetail({
               })}
             </p>
             <dl className="mt-6 space-y-2 border-t border-border pt-5 text-sm">
-              {frequencies
+              {availableFrequencies(service.id)
                 .filter((frequency) => frequency.id !== "onetime")
                 .map((frequency) => (
                   <div key={frequency.id} className="flex items-baseline justify-between gap-3">
@@ -206,6 +207,16 @@ export function ServiceDetail({
                     </dd>
                   </div>
                 ))}
+              {service.id !== "standard" && (
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt className="text-muted-foreground">
+                    {text({ en: "Availability", es: "Disponibilidad" })}
+                  </dt>
+                  <dd className="font-semibold text-ink">
+                    {text({ en: "One-time only", es: "Solo una vez" })}
+                  </dd>
+                </div>
+              )}
             </dl>
             <Button asChild className="mt-6 w-full">
               <Link to="/booking" search={{ service: service.id }}>
@@ -224,6 +235,25 @@ export function ServiceDetail({
               })}
             </p>
           </aside>
+        </div>
+      </section>
+
+      <section className="section bg-sand">
+        <div className="container-page">
+          <SectionHeading
+            eyebrow={text({
+              en: "Dallas-Fort Worth coverage",
+              es: "Cobertura de Dallas-Fort Worth",
+            })}
+            title={text({ en: "Explore the service area", es: "Explora el área de servicio" })}
+            intro={text({
+              en: "Choose a listed city and review nearby communities before requesting this service.",
+              es: "Elige una ciudad incluida y consulta las comunidades cercanas antes de solicitar este servicio.",
+            })}
+          />
+          <div className="mt-8">
+            <ServiceAreaExplorer />
+          </div>
         </div>
       </section>
 
