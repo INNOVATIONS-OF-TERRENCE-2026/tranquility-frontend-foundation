@@ -53,7 +53,7 @@ async function admin() {
 }
 
 export const submitContactInquiry = createServerFn({ method: "POST" })
-  .inputValidator((input) => contactSchema.parse(input))
+  .validator((input) => contactSchema.parse(input))
   .handler(async ({ data }) => {
     const client = await admin();
     const { data: row, error } = await client
@@ -74,7 +74,7 @@ export const submitContactInquiry = createServerFn({ method: "POST" })
   });
 
 export const submitCareerApplication = createServerFn({ method: "POST" })
-  .inputValidator((input) => careerSchema.parse(input))
+  .validator((input) => careerSchema.parse(input))
   .handler(async ({ data }) => {
     const client = await admin();
     const { data: row, error } = await client
@@ -97,7 +97,7 @@ export const submitCareerApplication = createServerFn({ method: "POST" })
   });
 
 export const submitQuoteRequest = createServerFn({ method: "POST" })
-  .inputValidator((input) => quoteSchema.parse(input))
+  .validator((input) => quoteSchema.parse(input))
   .handler(async ({ data }) => {
     const client = await admin();
     const { data: row, error } = await client
