@@ -20,7 +20,6 @@ function iso(date: Date) {
 
 export function BookingCalendar({
   service,
-  frequency,
   date,
   window,
   onChange,
