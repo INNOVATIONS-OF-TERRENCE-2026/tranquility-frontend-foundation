@@ -30,10 +30,16 @@ export function Footer() {
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Link to="/booking" className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/35 bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-gold">
+            <Link
+              to="/booking"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/35 bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-gold"
+            >
               {text({ en: "Request Service", es: "Solicitar servicio" })}
             </Link>
-            <Link to="/quote" className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/30 px-6 text-sm font-semibold text-gold-soft transition-colors hover:bg-gold/10">
+            <Link
+              to="/quote"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/30 px-6 text-sm font-semibold text-gold-soft transition-colors hover:bg-gold/10"
+            >
               {text({ en: "Custom Quote", es: "Cotización personalizada" })}
             </Link>
           </div>
@@ -41,54 +47,114 @@ export function Footer() {
 
         <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">{text({ en: "Services", es: "Servicios" })}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">
+              {text({ en: "Services", es: "Servicios" })}
+            </p>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
               {services.map((service) => (
-                <li key={service.id}><Link to={service.route} className="transition-colors hover:text-gold-soft">{text(serviceNames[service.id])}</Link></li>
+                <li key={service.id}>
+                  <Link to={service.route} className="transition-colors hover:text-gold-soft">
+                    {text(serviceNames[service.id])}
+                  </Link>
+                </li>
               ))}
-              <li><Link to="/commercial-cleaning" className="transition-colors hover:text-gold-soft">{text({ en: "Commercial / Office", es: "Comercial / oficinas" })}</Link></li>
+              <li>
+                <Link to="/commercial-cleaning" className="transition-colors hover:text-gold-soft">
+                  {text({ en: "Commercial / Office", es: "Comercial / oficinas" })}
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">{text({ en: "Explore", es: "Explorar" })}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">
+              {text({ en: "Explore", es: "Explorar" })}
+            </p>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
-              <li><Link to="/service-area" className="transition-colors hover:text-gold-soft">{text({ en: "Service Area", es: "Área de servicio" })}</Link></li>
-              <li><Link to="/faq" className="transition-colors hover:text-gold-soft">{text({ en: "FAQ", es: "Preguntas frecuentes" })}</Link></li>
-              <li><Link to="/about" className="transition-colors hover:text-gold-soft">{text({ en: "About", es: "Nosotros" })}</Link></li>
-              <li><Link to="/careers" className="transition-colors hover:text-gold-soft">{text({ en: "Careers", es: "Empleo" })}</Link></li>
+              <li>
+                <Link to="/service-area" className="transition-colors hover:text-gold-soft">
+                  {text({ en: "Service Area", es: "Área de servicio" })}
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" className="transition-colors hover:text-gold-soft">
+                  {text({ en: "FAQ", es: "Preguntas frecuentes" })}
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="transition-colors hover:text-gold-soft">
+                  {text({ en: "About", es: "Nosotros" })}
+                </Link>
+              </li>
+              <li>
+                <Link to="/careers" className="transition-colors hover:text-gold-soft">
+                  {text({ en: "Careers", es: "Empleo" })}
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">{text({ en: "Contact", es: "Contacto" })}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">
+              {text({ en: "Contact", es: "Contacto" })}
+            </p>
             <div className="mt-5 space-y-4 text-sm text-muted-foreground">
-              <a href={business.phoneHref} className="flex items-center gap-2 transition-colors hover:text-gold-soft"><Phone className="size-4 text-moss" aria-hidden="true" />{business.phoneDisplay}</a>
-              <a href={business.emailHref} className="block break-all transition-colors hover:text-gold-soft">{business.email}</a>
-              <Link to="/contact" className="inline-flex text-gold-soft hover:underline">{text({ en: "General inquiry", es: "Consulta general" })} →</Link>
+              <a
+                href={business.phoneHref}
+                className="flex items-center gap-2 transition-colors hover:text-gold-soft"
+              >
+                <Phone className="size-4 text-moss" aria-hidden="true" />
+                {business.phoneDisplay}
+              </a>
+              <a
+                href={business.emailHref}
+                className="block break-all transition-colors hover:text-gold-soft"
+              >
+                {business.email}
+              </a>
+              <Link to="/contact" className="inline-flex text-gold-soft hover:underline">
+                {text({ en: "General inquiry", es: "Consulta general" })} →
+              </Link>
             </div>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">{text({ en: "Service area", es: "Área de servicio" })}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">
+              {text({ en: "Service area", es: "Área de servicio" })}
+            </p>
             <div className="mt-5 flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
               <MapPin className="mt-0.5 size-4 shrink-0 text-moss" aria-hidden="true" />
-              <span>{text({ en: business.serviceAreaLabel, es: "Dallas-Fort Worth y comunidades cercanas" })}</span>
+              <span>
+                {text({
+                  en: business.serviceAreaLabel,
+                  es: "Dallas-Fort Worth y comunidades cercanas",
+                })}
+              </span>
             </div>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground/80">
-              {cities.slice(0, 9).join(" · ")} {text({ en: "and surrounding communities.", es: "y comunidades cercanas." })}
+              {cities.slice(0, 9).join(" · ")}{" "}
+              {text({ en: "and surrounding communities.", es: "y comunidades cercanas." })}
             </p>
           </div>
         </div>
 
         <div className="flex flex-col gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <p>© {new Date().getFullYear()} {business.legalName}. {text({ en: "All rights reserved.", es: "Todos los derechos reservados." })}</p>
-            <p className="text-[0.7rem] tracking-[0.04em] text-gold-soft/90">{text(attribution.ownership)}</p>
+            <p>
+              © {new Date().getFullYear()} {business.legalName}.{" "}
+              {text({ en: "All rights reserved.", es: "Todos los derechos reservados." })}
+            </p>
+            <p className="text-[0.7rem] tracking-[0.04em] text-gold-soft/90">
+              {text(attribution.ownership)}
+            </p>
           </div>
           <div className="flex gap-5">
-            <Link to="/privacy" className="hover:text-gold-soft">{text({ en: "Privacy", es: "Privacidad" })}</Link>
-            <Link to="/terms" className="hover:text-gold-soft">{text({ en: "Terms", es: "Términos" })}</Link>
+            <Link to="/privacy" className="hover:text-gold-soft">
+              {text({ en: "Privacy", es: "Privacidad" })}
+            </Link>
+            <Link to="/terms" className="hover:text-gold-soft">
+              {text({ en: "Terms", es: "Términos" })}
+            </Link>
           </div>
         </div>
 
@@ -97,7 +163,8 @@ export function Footer() {
             {text(attribution.engineering)}
           </p>
           <p className="mt-2 text-[0.66rem] leading-5 text-muted-foreground/70">
-            {technologyLeader.name} · {text(technologyLeader.role)} · {text(technologyLeader.designation)}
+            {technologyLeader.name} · {text(technologyLeader.role)} ·{" "}
+            {text(technologyLeader.designation)}
           </p>
         </div>
       </div>

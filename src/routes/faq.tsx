@@ -3,7 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { CTABand } from "@/components/site/CTABand";
 import { PageHero } from "@/components/site/PageHero";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { faqs } from "@/config/faqs";
 import { seo } from "@/lib/seo";
 
@@ -48,10 +53,16 @@ function FaqPage() {
 
       <section className="section">
         <div className="container-page max-w-3xl">
-          <Accordion type="single" collapsible className="w-full rounded-2xl border border-border bg-card px-5 shadow-soft md:px-7">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full rounded-2xl border border-border bg-card px-5 shadow-soft md:px-7"
+          >
             {faqs.map((faq, index) => (
               <AccordionItem key={faq.question} value={`item-${index}`}>
-                <AccordionTrigger className="text-left text-base">{language === "es" ? faq.questionEs : faq.question}</AccordionTrigger>
+                <AccordionTrigger className="text-left text-base">
+                  {language === "es" ? faq.questionEs : faq.question}
+                </AccordionTrigger>
                 <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
                   {language === "es" ? faq.answerEs : faq.answer}
                 </AccordionContent>

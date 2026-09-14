@@ -26,17 +26,17 @@ There is exactly one approved Tranquility Level Cleaning logo source.
 
 Production asset:
 
-`/public/tranquility-official-logo.webp`
+`/public/brand/tranquility-logo-master.png`
 
-This asset is a crop and web-optimized derivative of the business-supplied official logo. It is not a redesign.
+This transparent master preserves the business-supplied official artwork. All web, app, and browser icon derivatives are generated from it without redesigning the mark.
 
 Rules:
 
 1. Do not draw, generate, approximate, trace, or substitute another Tranquility logo.
 2. Do not use any previous SVG monogram, custom TL icon, alternate leaf mark, or generated logo treatment.
 3. Use the official logo for navigation branding, favicon/browser identity, install icon, Apple touch icon, branded feature panels, and any future approved social metadata that needs the company mark.
-4. The official logo may be resized and cropped responsively, but its artwork must not be altered.
-5. The black field that is part of the supplied logo is intentional and should remain intact.
+4. The official logo may be resized proportionally but must not be cropped or altered.
+5. The transparent field is intentional. Do not add a baked-in background or recolor the gold artwork.
 6. Text such as the company name may appear beside the logo as accessible HTML, but it must never be presented as a replacement mark.
 
 ## UI principles

@@ -99,6 +99,7 @@ Do not make quantity-sensitive services simple yes/no checkboxes when that would
 
 BOOKING / SERVICE REQUEST EXPERIENCE
 Build a refined guided multi-step experience, concise and mobile-friendly:
+
 1. Cleaning type
 2. Frequency
 3. Home/profile and scope

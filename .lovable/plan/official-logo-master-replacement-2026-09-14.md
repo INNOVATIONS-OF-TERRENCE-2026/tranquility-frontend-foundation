@@ -1,9 +1,11 @@
 # Official Logo Master Replacement
 
 ## Goal
+
 Make the attached gold TL house monogram the single official Tranquility Level Cleaning brand image across the site without changing business logic, pricing, language behavior, routes, or service flows.
 
 ## Implementation
+
 1. **Create one approved asset family**
    - Preserve the uploaded artwork exactly and retain its existing alpha transparency and dark bevel details.
    - Produce the master PNG, optimized WebP, 512, 256, 192, 180, 96, 64, 48, 32, and 16 pixel PNGs, plus `favicon.ico` when supported.
@@ -32,6 +34,7 @@ Make the attached gold TL house monogram the single official Tranquility Level C
    - Test the live preview at 320, 375, 390, 414, 768, 1024, 1280, 1440, and 1920 pixels, including header/footer visibility and browser console/network asset errors.
 
 ## Technical details
+
 - The uploaded 1448×1086 RGBA image is the immutable visual source.
 - Website assets remain transparent and gold; themes and all 32 palettes affect surrounding UI only.
 - Repeated decorative instances use empty alternative text where nearby text already names the business; linked brand marks expose a clear destination name.

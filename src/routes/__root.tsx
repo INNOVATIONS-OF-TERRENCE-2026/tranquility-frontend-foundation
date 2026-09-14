@@ -14,6 +14,7 @@ import { LanguageProvider, useLanguage } from "@/components/language/LanguagePro
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ThemeProvider, themeBootstrapScript } from "@/components/theme/ThemeProvider";
+import { absoluteBrandAsset, brandAssets, productionSiteUrl } from "@/config/brand";
 import { business, cities } from "@/config/business";
 import { businessLeader, technologyLeader } from "@/config/leadership";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -21,7 +22,10 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 function NotFoundComponent() {
   const { text } = useLanguage();
   return (
-    <section className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24" aria-labelledby="not-found-title">
+    <section
+      className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24"
+      aria-labelledby="not-found-title"
+    >
       <div className="max-w-lg rounded-3xl border border-border bg-card p-8 text-center shadow-lift md:p-12">
         <p className="eyebrow">404</p>
         <h1 id="not-found-title" className="mt-4 text-4xl md:text-5xl">
@@ -34,7 +38,10 @@ function NotFoundComponent() {
           })}
         </p>
         <div className="mt-8">
-          <Link to="/" className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/40 bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-gold">
+          <Link
+            to="/"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/40 bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-gold"
+          >
             {text({ en: "Return home", es: "Volver al inicio" })}
           </Link>
         </div>
@@ -53,7 +60,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <section className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24" aria-labelledby="error-title">
+    <section
+      className="flex min-h-[60vh] items-center justify-center bg-sand px-4 py-24"
+      aria-labelledby="error-title"
+    >
       <div className="max-w-lg rounded-3xl border border-border bg-card p-8 text-center shadow-lift md:p-12">
         <p className="eyebrow">{text({ en: "Something went wrong", es: "Algo salió mal" })}</p>
         <h1 id="error-title" className="mt-4 text-4xl">
@@ -66,10 +76,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           })}
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <button type="button" onClick={() => { router.invalidate(); reset(); }} className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/40 bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-gold">
+          <button
+            type="button"
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/40 bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-gold"
+          >
             {text({ en: "Try again", es: "Intentar de nuevo" })}
           </button>
-          <a href="/" className="inline-flex min-h-11 items-center justify-center rounded-full border border-input bg-background px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent">
+          <a
+            href="/"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-input bg-background px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
+          >
             {text({ en: "Return home", es: "Volver al inicio" })}
           </a>
         </div>
@@ -92,15 +112,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: business.legalName },
       { name: "theme-color", content: "#0b2733" },
       { property: "og:title", content: business.legalName },
-      { property: "og:description", content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth." },
+      {
+        property: "og:description",
+        content: "Come home to tranquility. Professional cleaning across Dallas-Fort Worth.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: business.legalName },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/tranquility-official-logo.webp", type: "image/webp" },
-      { rel: "apple-touch-icon", href: "/tranquility-official-logo.webp" },
+      { rel: "icon", href: brandAssets.faviconIco, sizes: "any" },
+      { rel: "icon", href: brandAssets.favicon32, type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: brandAssets.favicon16, type: "image/png", sizes: "16x16" },
+      { rel: "apple-touch-icon", href: brandAssets.appleTouchIcon, sizes: "180x180" },
       { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [
@@ -110,7 +135,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "CleaningService",
           name: business.legalName,
-          url: "https://heytlcleaning.lovable.app",
+          url: productionSiteUrl,
+          logo: absoluteBrandAsset(brandAssets.logoMaster),
+          image: absoluteBrandAsset(brandAssets.logoMaster),
           telephone: business.phoneDisplay,
           email: business.email,
           areaServed: cities.map((name) => ({ "@type": "City", name })),
@@ -184,7 +211,10 @@ function AppShell() {
   const { text } = useLanguage();
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <a href="#main-content" className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform focus:translate-y-0">
+      <a
+        href="#main-content"
+        className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform focus:translate-y-0"
+      >
         {text({ en: "Skip to content", es: "Saltar al contenido" })}
       </a>
       <Header />

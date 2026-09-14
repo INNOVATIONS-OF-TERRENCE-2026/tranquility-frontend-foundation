@@ -26,7 +26,7 @@ function readPreference(): ThemePreference {
 function applyResolvedTheme(theme: ResolvedTheme) {
   const root = document.documentElement;
   root.classList.toggle("dark", theme === "dark");
-  root.dataset['theme'] = theme;
+  root.dataset["theme"] = theme;
   root.style.colorScheme = theme;
   const themeColor = document.querySelector('meta[name="theme-color"]');
   themeColor?.setAttribute("content", theme === "dark" ? "#06172c" : "#f8f5ef");

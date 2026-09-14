@@ -19,14 +19,20 @@ function PrivacyPage() {
   const { text } = useLanguage();
   const sections = [
     {
-      title: text({ en: "Current website form behavior", es: "Funcionamiento actual de los formularios" }),
+      title: text({
+        en: "Current website form behavior",
+        es: "Funcionamiento actual de los formularios",
+      }),
       body: text({
         en: "The current website does not use a customer database, payment processor, or account system. Contact, career, service request, and quote experiences may prepare information locally in your browser and open your email application so you can send it directly to Tranquility Level Cleaning.",
         es: "El sitio web actual no utiliza una base de datos de clientes, un procesador de pagos ni un sistema de cuentas. Los formularios de contacto, empleo, solicitud de servicio y cotización pueden preparar la información localmente en tu navegador y abrir tu aplicación de correo para que puedas enviarla directamente a Tranquility Level Cleaning.",
       }),
     },
     {
-      title: text({ en: "Information you choose to provide", es: "Información que eliges proporcionar" }),
+      title: text({
+        en: "Information you choose to provide",
+        es: "Información que eliges proporcionar",
+      }),
       body: text({
         en: "Depending on the form, you may choose to provide your name, email, phone number, service address, property details, scheduling preferences, cleaning scope, career information, and written notes. Only provide information that is relevant to your request.",
         es: "Dependiendo del formulario, puedes proporcionar tu nombre, correo electrónico, número de teléfono, dirección del servicio, detalles de la propiedad, preferencias de horario, alcance de limpieza, información laboral y notas escritas. Proporciona únicamente la información pertinente a tu solicitud.",
@@ -40,7 +46,10 @@ function PrivacyPage() {
       }),
     },
     {
-      title: text({ en: "Photos selected for virtual consultation", es: "Fotografías seleccionadas para una consulta virtual" }),
+      title: text({
+        en: "Photos selected for virtual consultation",
+        es: "Fotografías seleccionadas para una consulta virtual",
+      }),
       body: text({
         en: "In the current frontend version, selecting property photos does not upload them to a server. Browser previews remain local to your device unless you separately choose to send files using a communication method provided by Tranquility.",
         es: "En la versión actual del sitio, seleccionar fotografías de la propiedad no las carga a un servidor. Las vistas previas permanecen localmente en tu dispositivo a menos que decidas enviar los archivos por separado mediante un método de comunicación proporcionado por Tranquility.",
@@ -59,7 +68,10 @@ function PrivacyPage() {
     <>
       <PageHero
         eyebrow={text({ en: "Privacy", es: "Privacidad" })}
-        title={text({ en: "Your information should be handled with care.", es: "Tu información debe tratarse con cuidado." })}
+        title={text({
+          en: "Your information should be handled with care.",
+          es: "Tu información debe tratarse con cuidado.",
+        })}
         intro={text({
           en: "This page explains how the current Tranquility website handles information entered into its frontend forms.",
           es: "Esta página explica cómo el sitio actual de Tranquility maneja la información ingresada en sus formularios.",
@@ -78,10 +90,18 @@ function PrivacyPage() {
           <section>
             <h2 className="text-2xl">{text({ en: "Contact", es: "Contacto" })}</h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              {text({ en: "Questions about website privacy can be directed to", es: "Las preguntas sobre la privacidad del sitio pueden dirigirse a" })}{" "}
-              <a className="font-semibold text-moss hover:underline" href={business.emailHref}>{business.email}</a>{" "}
+              {text({
+                en: "Questions about website privacy can be directed to",
+                es: "Las preguntas sobre la privacidad del sitio pueden dirigirse a",
+              })}{" "}
+              <a className="font-semibold text-moss hover:underline" href={business.emailHref}>
+                {business.email}
+              </a>{" "}
               {text({ en: "or", es: "o al" })}{" "}
-              <a className="font-semibold text-moss hover:underline" href={business.phoneHref}>{business.phoneDisplay}</a>.
+              <a className="font-semibold text-moss hover:underline" href={business.phoneHref}>
+                {business.phoneDisplay}
+              </a>
+              .
             </p>
           </section>
         </div>

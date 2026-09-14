@@ -324,9 +324,7 @@ export function buildEstimate(input: EstimateInput): Estimate {
     line("laundry-room", scope.laundryRooms, input.service),
   ];
 
-  const chosen = Object.entries(input.extras).map(([id, qty]) =>
-    line(id, qty, input.service),
-  );
+  const chosen = Object.entries(input.extras).map(([id, qty]) => line(id, qty, input.service));
 
   const addOnLines = [...derived, ...chosen].filter((item): item is EstimateLine => item !== null);
   const addOnTotal = addOnLines.reduce((sum, item) => sum + item.total, 0);

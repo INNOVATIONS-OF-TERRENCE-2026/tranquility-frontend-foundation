@@ -37,7 +37,10 @@ export function QuantityField({
         >
           <Minus className="size-4" aria-hidden="true" />
         </button>
-        <span className="w-9 text-center text-sm font-bold tabular-nums text-ink" aria-live="polite">
+        <span
+          className="w-9 text-center text-sm font-bold tabular-nums text-ink"
+          aria-live="polite"
+        >
           {value}
         </span>
         <button
