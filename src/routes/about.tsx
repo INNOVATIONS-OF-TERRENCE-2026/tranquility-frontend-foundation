@@ -185,69 +185,6 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="leadership-title">
-        <div className="container-page">
-          <SectionHeading
-            eyebrow={text(attribution.leadershipHeading)}
-            title={text({ en: "Behind Tranquility", es: "Detrás de Tranquility" })}
-          />
-
-          <div className="mt-10 overflow-hidden rounded-[2rem] border border-border bg-card shadow-lift">
-            <div className="h-1 w-full bg-[linear-gradient(90deg,var(--color-gold,#c9a227),transparent)]" aria-hidden="true" />
-            <div className="p-7 md:p-12">
-              <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-moss">
-                {text(businessLeader.role)}
-              </p>
-              <h3 id="leadership-title" className="mt-3 font-display text-4xl leading-tight text-ink md:text-5xl">
-                {businessLeader.name}
-              </h3>
-              <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                {businessLeader.company}
-              </p>
-              <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-gold/40 px-4 py-2 text-xs font-semibold tracking-[0.08em] text-foreground">
-                <ShieldCheck className="size-4 text-gold" aria-hidden="true" />
-                {text(businessLeader.credential)}
-              </p>
-              <p className="mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">
-                {text(businessLeader.bio)}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 rounded-[2rem] border border-border/80 bg-sand/60 p-7 md:p-10">
-            <p className="flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-moss">
-              <Code2 className="size-4" aria-hidden="true" />
-              {text(attribution.technologyHeading)}
-            </p>
-            <div className="mt-4 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-              <div>
-                <p className="font-display text-2xl leading-tight text-ink md:text-3xl">{technologyLeader.name}</p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  {text(technologyLeader.role)} · {technologyLeader.company}
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">{text(technologyLeader.designation)}</p>
-              </div>
-              <div>
-                <p className="text-sm leading-relaxed text-muted-foreground">{text(technologyLeader.bio)}</p>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {technologyLeader.disciplines.map((discipline) => (
-                    <li
-                      key={discipline.en}
-                      className="rounded-full border border-border bg-background px-3 py-1.5 text-[0.7rem] font-medium tracking-[0.02em] text-muted-foreground"
-                    >
-                      {text(discipline)}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-6 border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground">
-                  {text(attribution.engineering)}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <CTABand />
     </>
   );
