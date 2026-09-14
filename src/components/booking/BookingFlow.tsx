@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Check, Info, Mail } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { QuantityField } from "@/components/site/QuantityField";
@@ -14,9 +14,9 @@ import {
   BASE_FULL_BATHS,
   CUSTOM_REVIEW_SQFT,
   addOnPrice,
+  availableFrequencies,
   buildEstimate,
   defaultScope,
-  frequencies,
   getAddOn,
   money,
   selectableAddOns,
@@ -43,29 +43,20 @@ type ContactKey = keyof ContactValues;
 const serviceCopy: Record<ServiceId, { name: { en: string; es: string }; description: { en: string; es: string } }> = {
   standard: {
     name: { en: "Standard Clean", es: "Limpieza estándar" },
-    description: {
-      en: "Consistent upkeep for a home that already feels cared for.",
-      es: "Mantenimiento constante para un hogar que ya recibe cuidado regular.",
-    },
+    description: { en: "Consistent upkeep for a home that already feels cared for.", es: "Mantenimiento constante para un hogar que ya recibe cuidado regular." },
   },
   deep: {
     name: { en: "Deep Clean", es: "Limpieza profunda" },
-    description: {
-      en: "A detailed reset for homes that need more than routine upkeep.",
-      es: "Una renovación detallada para hogares que necesitan más que mantenimiento rutinario.",
-    },
+    description: { en: "A detailed one-time reset for homes that need more than routine upkeep.", es: "Una renovación detallada de una sola vez para hogares que necesitan más que mantenimiento rutinario." },
   },
   move: {
     name: { en: "Move-In / Move-Out Clean", es: "Limpieza de entrada / salida" },
-    description: {
-      en: "Detailed cleaning for an empty or nearly empty home in transition.",
-      es: "Limpieza detallada para una vivienda vacía o casi vacía durante una mudanza.",
-    },
+    description: { en: "Detailed one-time cleaning for an empty or nearly empty home in transition.", es: "Limpieza detallada de una sola vez para una vivienda vacía o casi vacía durante una mudanza." },
   },
 };
 
 const frequencyCopy: Record<FrequencyId, { name: { en: string; es: string }; note: { en: string; es: string } }> = {
-  onetime: { name: { en: "One-time", es: "Una vez" }, note: { en: "No commitment", es: "Sin compromiso" } },
+  onetime: { name: { en: "One-time", es: "Una vez" }, note: { en: "No recurring commitment", es: "Sin compromiso recurrente" } },
   weekly: { name: { en: "Weekly", es: "Semanal" }, note: { en: "20% savings", es: "20% de ahorro" } },
   biweekly: { name: { en: "Bi-weekly", es: "Cada dos semanas" }, note: { en: "15% savings", es: "15% de ahorro" } },
   monthly: { name: { en: "Monthly", es: "Mensual" }, note: { en: "10% savings", es: "10% de ahorro" } },
@@ -119,18 +110,11 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
   const [otherSpaces, setOtherSpaces] = useState("");
   const [notes, setNotes] = useState("");
   const [extras, setExtras] = useState<Record<string, number>>({});
-  const [contact, setContact] = useState<ContactValues>({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    zip: "",
-    date: "",
-    window: "",
-  });
+  const [contact, setContact] = useState<ContactValues>({ name: "", email: "", phone: "", address: "", city: "", zip: "", date: "", window: "" });
   const [errors, setErrors] = useState<Partial<Record<ContactKey, string>>>({});
 
+  const activeService = services.find((item) => item.id === service) ?? services[0]!;
+  const frequencyOptions = availableFrequencies(service);
   const sqftNumber = sqft ? Number(sqft) : null;
   const estimate = useMemo(
     () => buildEstimate({ service, frequency, scope, extras, sqft: sqftNumber, partialHome }),
@@ -140,25 +124,18 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
   const reviewItems = useMemo(() => {
     const items: string[] = [];
     if (sqftNumber && sqftNumber >= CUSTOM_REVIEW_SQFT) {
-      items.push(text({
-        en: `Homes around ${CUSTOM_REVIEW_SQFT.toLocaleString()} sq ft and larger require custom review.`,
-        es: `Las viviendas de aproximadamente ${CUSTOM_REVIEW_SQFT.toLocaleString()} pies cuadrados o más requieren una revisión personalizada.`,
-      }));
+      items.push(text({ en: `Homes around ${CUSTOM_REVIEW_SQFT.toLocaleString()} sq ft and larger require custom review.`, es: `Las viviendas de aproximadamente ${CUSTOM_REVIEW_SQFT.toLocaleString()} pies cuadrados o más requieren una revisión personalizada.` }));
     }
-    if (partialHome) {
-      items.push(text({
-        en: "Partial-home service is custom scope and may require a direct quote.",
-        es: "La limpieza de solo una parte del hogar es un alcance personalizado y puede requerir una cotización directa.",
-      }));
-    }
-    if (estimate.hasStartingAt) {
-      items.push(text({
-        en: "One or more selected items use starting-at pricing and may change after review.",
-        es: "Uno o más servicios seleccionados usan un precio inicial y pueden cambiar después de la revisión.",
-      }));
-    }
+    if (partialHome) items.push(text({ en: "Partial-home service is custom scope and may require a direct quote.", es: "La limpieza de solo una parte del hogar es un alcance personalizado y puede requerir una cotización directa." }));
+    if (estimate.hasStartingAt) items.push(text({ en: "One or more selected items use starting-at pricing and may change after review.", es: "Uno o más servicios seleccionados usan un precio inicial y pueden cambiar después de la revisión." }));
     return items;
   }, [estimate.hasStartingAt, partialHome, sqftNumber, text]);
+
+  function chooseService(next: ServiceId) {
+    setService(next);
+    const nextDefinition = services.find((item) => item.id === next);
+    if (!nextDefinition?.recurringEligible) setFrequency("onetime");
+  }
 
   function setExtra(id: string, quantity: number) {
     setExtras((current) => {
@@ -207,7 +184,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
   }
 
   const serviceLabel = text(serviceCopy[service].name);
-  const frequencyLabel = text(frequencyCopy[frequency].name);
+  const frequencyLabel = text(frequencyCopy[estimate.frequency.id].name);
   const selectedWindow = arrivalWindows.find((item) => item.id === contact.window);
 
   const emailBody = useMemo(() => {
@@ -215,6 +192,13 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
     const no = language === "es" ? "No" : "No";
     const none = language === "es" ? "Ninguno" : "None";
     const notProvided = language === "es" ? "No proporcionado" : "Not provided";
+    const addOnLines = estimate.addOnLines.length
+      ? estimate.addOnLines.map((line) => `${addOnCopy[line.id]?.[language] ?? line.label} x ${line.qty}: ${line.startingAt ? (language === "es" ? "desde " : "starting at ") : ""}${money(line.total)}`)
+      : [none];
+    const frequencySavings = estimate.discountAmount > 0
+      ? [language === "es" ? `Ahorro por frecuencia: ${money(estimate.discountAmount)}` : `Frequency savings: ${money(estimate.discountAmount)}`]
+      : [];
+
     const lines = language === "es"
       ? [
           "SOLICITUD DE SERVICIO | Tranquility Level Cleaning",
@@ -222,7 +206,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
           `Servicio: ${serviceLabel}`,
           `Frecuencia: ${frequencyLabel}`,
           `Subtotal del servicio: ${money(estimate.serviceSubtotal)}`,
-          `Ahorro por frecuencia: ${money(estimate.discountAmount)}`,
+          ...frequencySavings,
           "",
           "ALCANCE",
           `Dormitorios: ${scope.bedrooms}`,
@@ -239,9 +223,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
           `Notas: ${notes || none}`,
           "",
           "SERVICIOS ADICIONALES Y CARGOS POR HABITACIÓN",
-          ...(estimate.addOnLines.length
-            ? estimate.addOnLines.map((line) => `${addOnCopy[line.id]?.es ?? line.label} x ${line.qty}: ${line.startingAt ? "desde " : ""}${money(line.total)}`)
-            : [none]),
+          ...addOnLines,
           `Total de adicionales: ${money(estimate.addOnTotal)}`,
           `Total estimado: ${money(estimate.total)}`,
           ...(reviewItems.length ? ["", "ELEMENTOS PARA REVISIÓN", ...reviewItems.map((item) => `- ${item}`)] : []),
@@ -262,7 +244,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
           `Service: ${serviceLabel}`,
           `Frequency: ${frequencyLabel}`,
           `Service subtotal: ${money(estimate.serviceSubtotal)}`,
-          `Frequency savings: ${money(estimate.discountAmount)}`,
+          ...frequencySavings,
           "",
           "SCOPE",
           `Bedrooms to clean: ${scope.bedrooms}`,
@@ -279,9 +261,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
           `Condition and service notes: ${notes || none}`,
           "",
           "APPROVED ADD-ONS AND ROOM CHARGES",
-          ...(estimate.addOnLines.length
-            ? estimate.addOnLines.map((line) => `${addOnCopy[line.id]?.en ?? line.label} x ${line.qty}: ${line.startingAt ? "starting at " : ""}${money(line.total)}`)
-            : [none]),
+          ...addOnLines,
           `Add-on total: ${money(estimate.addOnTotal)}`,
           `Estimated total: ${money(estimate.total)}`,
           ...(reviewItems.length ? ["", "CUSTOM REVIEW ITEMS", ...reviewItems.map((item) => `- ${item}`)] : []),
@@ -324,13 +304,14 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
             <p className="mt-2 text-sm text-muted-foreground">{text({ en: "Published pricing is based on a standard average 1-bedroom, 1-full-bath home.", es: "Los precios publicados se basan en una vivienda estándar promedio de 1 dormitorio y 1 baño completo." })}</p>
             <div className="mt-6 grid gap-4">
               {services.map((item) => (
-                <button key={item.id} type="button" onClick={() => setService(item.id)} aria-pressed={service === item.id} className={`rounded-xl border p-5 text-left transition-colors ${service === item.id ? "border-moss bg-accent/45" : "border-border bg-card hover:border-moss/60"}`}>
+                <button key={item.id} type="button" onClick={() => chooseService(item.id)} aria-pressed={service === item.id} className={`rounded-xl border p-5 text-left transition-colors ${service === item.id ? "border-moss bg-accent/45" : "border-border bg-card hover:border-moss/60"}`}>
                   <span className="flex items-start justify-between gap-4">
                     <span>
                       <span className="block text-lg font-semibold text-ink">{text(serviceCopy[item.id].name)}</span>
                       <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{text(serviceCopy[item.id].description)}</span>
+                      {!item.recurringEligible && <span className="mt-2 block text-[0.68rem] font-bold uppercase tracking-[0.13em] text-moss">{text({ en: "One-time service · Starting price", es: "Servicio de una sola vez · Precio inicial" })}</span>}
                     </span>
-                    <span className="shrink-0 font-display text-2xl text-ink">{money(item.basePrice)}</span>
+                    <span className="shrink-0 text-right"><span className="block font-display text-2xl text-ink">{money(item.basePrice)}</span>{!item.recurringEligible && <span className="mt-1 block text-[0.62rem] text-muted-foreground">{text({ en: "starting at", es: "desde" })}</span>}</span>
                   </span>
                 </button>
               ))}
@@ -340,15 +321,19 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
 
         {step === 1 && (
           <fieldset>
-            <legend className="text-2xl">{text({ en: "How often would you like service?", es: "¿Con qué frecuencia deseas el servicio?" })}</legend>
-            <p className="mt-2 text-sm text-muted-foreground">{text({ en: "Recurring savings apply to the service subtotal only. Add-ons remain at their listed rate.", es: "Los descuentos recurrentes se aplican solo al subtotal del servicio. Los servicios adicionales conservan su precio publicado." })}</p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {frequencies.map((item) => (
-                <button key={item.id} type="button" onClick={() => setFrequency(item.id)} aria-pressed={frequency === item.id} className={`rounded-xl border p-5 text-left transition-colors ${frequency === item.id ? "border-moss bg-accent/45" : "border-border bg-card hover:border-moss/60"}`}>
+            <legend className="text-2xl">{activeService.recurringEligible ? text({ en: "How often would you like service?", es: "¿Con qué frecuencia deseas el servicio?" }) : text({ en: "Service frequency", es: "Frecuencia del servicio" })}</legend>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {activeService.recurringEligible
+                ? text({ en: "Recurring savings are available for Standard Clean and apply to the service subtotal only. Add-ons remain at their listed rate.", es: "Los ahorros recurrentes están disponibles para la limpieza estándar y se aplican solo al subtotal del servicio. Los servicios adicionales conservan su precio publicado." })
+                : text({ en: "Deep Clean and Move-In / Move-Out are offered as one-time services. The published amount is a starting price and the final price is confirmed after scope review.", es: "La limpieza profunda y la limpieza de entrada / salida se ofrecen como servicios de una sola vez. El monto publicado es un precio inicial y el precio final se confirma después de revisar el alcance." })}
+            </p>
+            <div className={`mt-6 grid gap-4 ${activeService.recurringEligible ? "sm:grid-cols-2" : "max-w-lg"}`}>
+              {frequencyOptions.map((item) => (
+                <button key={item.id} type="button" onClick={() => setFrequency(item.id)} aria-pressed={estimate.frequency.id === item.id} className={`rounded-xl border p-5 text-left transition-colors ${estimate.frequency.id === item.id ? "border-moss bg-accent/45" : "border-border bg-card hover:border-moss/60"}`}>
                   <span className="block text-lg font-semibold text-ink">{text(frequencyCopy[item.id].name)}</span>
                   <span className="mt-1 block text-xs text-moss">{text(frequencyCopy[item.id].note)}</span>
                   <span className="mt-4 block font-display text-3xl text-ink">{money(servicePrice(service, item.id))}</span>
-                  <span className="text-xs text-muted-foreground">{text({ en: "base service per visit", es: "servicio base por visita" })}</span>
+                  <span className="text-xs text-muted-foreground">{activeService.recurringEligible ? text({ en: "base service per visit", es: "servicio base por visita" }) : text({ en: "starting price", es: "precio inicial" })}</span>
                 </button>
               ))}
             </div>
@@ -359,7 +344,6 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
           <div>
             <h2 className="text-2xl">{text({ en: "Your home and cleaning scope", es: "Tu hogar y el alcance de la limpieza" })}</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text({ en: `Base pricing includes ${BASE_BEDROOMS} bedroom and ${BASE_FULL_BATHS} full bathroom. Additional room charges are derived from the quantities below so they are counted once.`, es: `El precio base incluye ${BASE_BEDROOMS} dormitorio y ${BASE_FULL_BATHS} baño completo. Los cargos por habitaciones adicionales se calculan con las cantidades siguientes para evitar cargos duplicados.` })}</p>
-
             <div className="mt-6 grid gap-3">
               <QuantityField label={text({ en: "Bedrooms to clean", es: "Dormitorios a limpiar" })} value={scope.bedrooms} min={1} onChange={(value) => setScope((current) => ({ ...current, bedrooms: value }))} hint={text({ en: "1 included in base price", es: "1 incluido en el precio base" })} price={`+${money(addOnPrice(getAddOn("extra-bedroom"), service))} ${text({ en: "each additional", es: "cada adicional" })}`} />
               <QuantityField label={text({ en: "Full bathrooms to clean", es: "Baños completos a limpiar" })} value={scope.fullBaths} min={1} onChange={(value) => setScope((current) => ({ ...current, fullBaths: value }))} hint={text({ en: "1 included in base price", es: "1 incluido en el precio base" })} price={`${text({ en: "starting at", es: "desde" })} +${money(addOnPrice(getAddOn("extra-full-bath"), service))} ${text({ en: "each additional", es: "cada adicional" })}`} />
@@ -490,8 +474,9 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
       <aside className="rounded-2xl border border-gold/20 bg-card/80 p-5 shadow-lift lg:sticky lg:top-32">
         <p className="eyebrow">{text({ en: "Your estimate", es: "Tu estimado" })}</p>
         <h3 className="mt-2 text-2xl">{serviceLabel}</h3>
+        {!activeService.recurringEligible && <p className="mt-1 text-xs font-semibold uppercase tracking-[0.11em] text-moss">{text({ en: "One-time · Starting price", es: "Una vez · Precio inicial" })}</p>}
         <div className="mt-5 space-y-3 border-y border-border py-4 text-sm">
-          <SummaryRow label={text({ en: "Base", es: "Base" })} value={money(estimate.basePrice)} />
+          <SummaryRow label={activeService.recurringEligible ? text({ en: "Base", es: "Base" }) : text({ en: "Starting base", es: "Base inicial" })} value={money(estimate.basePrice)} />
           {estimate.discountAmount > 0 && <SummaryRow label={text({ en: "Recurring savings", es: "Ahorro recurrente" })} value={`-${money(estimate.discountAmount)}`} />}
           <SummaryRow label={text({ en: "Service subtotal", es: "Subtotal del servicio" })} value={money(estimate.serviceSubtotal)} />
           <SummaryRow label={text({ en: "Rooms and add-ons", es: "Habitaciones y adicionales" })} value={money(estimate.addOnTotal)} />
@@ -504,7 +489,7 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) {
+function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return <label className="block"><span className="mb-2 block text-sm font-medium text-ink">{label}</span>{children}{error && <span className="mt-1 block text-xs text-destructive">{error}</span>}</label>;
 }
 
