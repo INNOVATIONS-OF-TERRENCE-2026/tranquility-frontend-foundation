@@ -94,10 +94,18 @@ export function getFrequency(id: FrequencyId): FrequencyDef {
   return frequency;
 }
 
+/** Deep and move services are approved as one-time services only. */
+export function availableFrequencies(service: ServiceId): FrequencyDef[] {
+  return service === "standard"
+    ? frequencies
+    : frequencies.filter((frequency) => frequency.id === "onetime");
+}
+
 /** Discounts apply only to the service subtotal, never to add-ons. */
 export function servicePrice(service: ServiceId, frequency: FrequencyId): number {
   const base = getService(service).basePrice;
-  return Math.round(base * (1 - getFrequency(frequency).discount));
+  const approvedFrequency = service === "standard" ? frequency : "onetime";
+  return Math.round(base * (1 - getFrequency(approvedFrequency).discount));
 }
 
 export type AddOnGroup = "scope" | "laundry" | "detail";
@@ -308,7 +316,7 @@ function line(
 
 export function buildEstimate(input: EstimateInput): Estimate {
   const service = getService(input.service);
-  const frequency = getFrequency(input.frequency);
+  const frequency = getFrequency(input.service === "standard" ? input.frequency : "onetime");
   const basePrice = service.basePrice;
   const serviceSubtotal = servicePrice(input.service, input.frequency);
   const discountAmount = basePrice - serviceSubtotal;
