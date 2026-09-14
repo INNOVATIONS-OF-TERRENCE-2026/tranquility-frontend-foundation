@@ -16,7 +16,7 @@ import {
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { business, cities } from "@/config/business";
-import { frequencies, money, services, servicePrice, type FrequencyId, type ServiceId } from "@/config/pricing";
+import { availableFrequencies, money, services, servicePrice, type FrequencyId, type ServiceId } from "@/config/pricing";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -68,7 +68,7 @@ function Home() {
     {
       icon: FileText,
       label: text({ en: "Custom Care", es: "Servicio personalizado" }),
-      note: text({ en: "CONSULTATION FOR A SPECIFIC SCOPE.", es: "Consulta para alcances especiales." }),
+      note: text({ en: "Consultation for a specific scope.", es: "Consulta para alcances especiales." }),
       to: "/quote" as const,
     },
   ];
@@ -97,10 +97,7 @@ function Home() {
         <div className="container-page grid min-h-[43rem] gap-10 pb-14 pt-28 md:min-h-[46rem] md:pt-32 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-16 lg:pb-16 lg:pt-28">
           <div className="max-w-3xl">
             <p className="max-w-xl text-[0.66rem] font-bold uppercase leading-5 tracking-[0.24em] text-gold-soft sm:text-[0.7rem]">
-              {text({
-                en: "Premium cleaning across Dallas - Fort Worth",
-                es: "Limpieza premium en Dallas - Fort Worth",
-              })}
+              {text({ en: "Premium cleaning across Dallas - Fort Worth", es: "Limpieza premium en Dallas - Fort Worth" })}
             </p>
 
             <h1 className="mt-5 max-w-[12ch] font-display text-[clamp(3.15rem,8vw,6rem)] font-medium leading-[0.93] tracking-[-0.045em] text-white">
@@ -116,27 +113,16 @@ function Home() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button asChild size="lg" className="min-w-52 justify-between px-7">
-                <Link to="/booking">
-                  {text({ en: "Book Your Clean", es: "Reserva tu limpieza" })}
-                  <ArrowRight className="size-4" aria-hidden="true" />
-                </Link>
+                <Link to="/booking">{text({ en: "Book Your Clean", es: "Reserva tu limpieza" })}<ArrowRight className="size-4" aria-hidden="true" /></Link>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="min-w-56 justify-between border-white/25 bg-white/6 px-7 text-white hover:border-white/45 hover:bg-white/10 hover:text-white"
-              >
-                <Link to="/quote">
-                  {text({ en: "Get a Custom Quote", es: "Cotización personalizada" })}
-                  <FileText className="size-4 text-gold-soft" aria-hidden="true" />
-                </Link>
+              <Button asChild size="lg" variant="outline" className="min-w-56 justify-between border-white/25 bg-white/6 px-7 text-white hover:border-white/45 hover:bg-white/10 hover:text-white">
+                <Link to="/quote">{text({ en: "Get a Custom Quote", es: "Cotización personalizada" })}<FileText className="size-4 text-gold-soft" aria-hidden="true" /></Link>
               </Button>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs text-white/68">
               <span className="inline-flex items-center gap-2"><Check className="size-3.5 text-gold-soft" aria-hidden="true" />{text({ en: "Standard from $145", es: "Estándar desde $145" })}</span>
-              <span className="inline-flex items-center gap-2"><Check className="size-3.5 text-gold-soft" aria-hidden="true" />{text({ en: "Weekly saves 20%", es: "Semanal ahorra 20%" })}</span>
+              <span className="inline-flex items-center gap-2"><Check className="size-3.5 text-gold-soft" aria-hidden="true" />{text({ en: "Standard weekly saves 20%", es: "Estándar semanal ahorra 20%" })}</span>
               <span className="inline-flex items-center gap-2"><Check className="size-3.5 text-gold-soft" aria-hidden="true" />{text({ en: "DFW service area", es: "Área de servicio DFW" })}</span>
             </div>
           </div>
@@ -158,9 +144,7 @@ function Home() {
                   decoding="async"
                 />
               </Link>
-              <p className="mt-4 text-center text-[0.6rem] font-bold uppercase tracking-[0.22em] text-gold-soft">
-                {text({ en: "View Service Area Map", es: "Ver mapa del área de servicio" })}
-              </p>
+              <p className="mt-4 text-center text-[0.6rem] font-bold uppercase tracking-[0.22em] text-gold-soft">{text({ en: "View Service Area Map", es: "Ver mapa del área de servicio" })}</p>
               <div className="mt-6 text-center">
                 <p className="font-display text-3xl text-white">Tranquility Level Cleaning</p>
                 <p className="mt-2 text-[0.65rem] font-bold uppercase tracking-[0.24em] text-gold-soft">{text({ en: "Clean spaces. Calmer days.", es: "Espacios limpios. Días más tranquilos." })}</p>
@@ -178,13 +162,8 @@ function Home() {
           <div className="container-page grid sm:grid-cols-2 lg:grid-cols-4">
             {heroServices.map(({ icon: Icon, label, note, to }) => (
               <Link key={label} to={to} className="group flex min-h-28 items-center gap-4 border-b border-white/8 px-4 py-5 transition-colors hover:bg-white/[0.035] sm:border-r lg:border-b-0">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-white/8 bg-white/5 text-gold-soft">
-                  <Icon className="size-6 stroke-[1.5]" aria-hidden="true" />
-                </span>
-                <span>
-                  <span className="block text-[0.7rem] font-bold uppercase tracking-[0.1em] text-white">{label}</span>
-                  <span className="mt-2 block max-w-44 text-[0.58rem] font-medium uppercase leading-4 tracking-[0.1em] text-white/52">{note}</span>
-                </span>
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-white/8 bg-white/5 text-gold-soft"><Icon className="size-6 stroke-[1.5]" aria-hidden="true" /></span>
+                <span><span className="block text-[0.7rem] font-bold uppercase tracking-[0.1em] text-white">{label}</span><span className="mt-2 block max-w-44 text-[0.58rem] font-medium uppercase leading-4 tracking-[0.1em] text-white/52">{note}</span></span>
               </Link>
             ))}
           </div>
@@ -195,37 +174,48 @@ function Home() {
         <div className="container-page grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
           <div className="lg:sticky lg:top-28">
             <p className="eyebrow">{text({ en: "Clear Pricing", es: "Precios claros" })}</p>
-            <h2 className="mt-4 max-w-xl text-4xl md:text-5xl">
-              {text({ en: "Know the starting point before you book.", es: "Conoce el punto de partida antes de reservar." })}
-            </h2>
+            <h2 className="mt-4 max-w-xl text-4xl md:text-5xl">{text({ en: "Know the starting point before you book.", es: "Conoce el punto de partida antes de reservar." })}</h2>
             <p className="mt-5 max-w-lg text-sm leading-7 text-muted-foreground">
               {text({
-                en: "Residential pricing begins with a standard average 1-bedroom, 1-full-bath home. Recurring savings apply to the service subtotal only.",
-                es: "Los precios residenciales parten de una vivienda estándar promedio de 1 dormitorio y 1 baño completo. Los ahorros por servicio recurrente se aplican solo al subtotal del servicio.",
+                en: "Residential pricing begins with a standard average 1-bedroom, 1-full-bath home. Recurring savings are available for Standard Clean only. Deep Clean and Move-In / Move-Out are one-time services with starting prices.",
+                es: "Los precios residenciales parten de una vivienda estándar promedio de 1 dormitorio y 1 baño completo. Los ahorros recurrentes están disponibles únicamente para la limpieza estándar. La limpieza profunda y la limpieza de entrada / salida son servicios de una sola vez con precios iniciales.",
               })}
             </p>
             <Button asChild className="mt-7"><Link to="/services">{text({ en: "Explore Services", es: "Explorar servicios" })}<ArrowRight className="size-4" aria-hidden="true" /></Link></Button>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            {services.map((service) => (
-              <article key={service.id} className="rounded-3xl border border-border bg-card p-6 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift">
-                <p className="text-[0.62rem] font-bold uppercase tracking-[0.15em] text-moss">{text(serviceNames[service.id])}</p>
-                <p className="mt-5 font-display text-5xl text-ink">{money(service.basePrice)}</p>
-                <p className="mt-2 text-xs leading-5 text-muted-foreground">{text({ en: "One-time starting price for the standard base scope.", es: "Precio inicial por una sola visita para el alcance base estándar." })}</p>
-                <div className="mt-6 space-y-2 border-t border-border pt-5">
-                  {frequencies.filter((frequency) => frequency.id !== "onetime").map((frequency) => (
-                    <div key={frequency.id} className="flex items-center justify-between gap-3 text-xs">
-                      <span className="text-muted-foreground">{text(frequencyNames[frequency.id])}</span>
-                      <span className="font-semibold tabular-nums text-ink">{money(servicePrice(service.id, frequency.id))}</span>
+            {services.map((service) => {
+              const recurringOptions = availableFrequencies(service.id).filter((frequency) => frequency.id !== "onetime");
+              return (
+                <article key={service.id} className="flex rounded-3xl border border-border bg-card p-6 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift flex-col">
+                  <p className="text-[0.62rem] font-bold uppercase tracking-[0.15em] text-moss">{text(serviceNames[service.id])}</p>
+                  <p className="mt-5 font-display text-5xl text-ink">{money(service.basePrice)}</p>
+                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                    {service.recurringEligible
+                      ? text({ en: "One-time base price for the standard base scope.", es: "Precio base por una sola visita para el alcance base estándar." })
+                      : text({ en: "One-time starting price. Final price is confirmed after scope review.", es: "Precio inicial por una sola visita. El precio final se confirma después de revisar el alcance." })}
+                  </p>
+                  {service.recurringEligible ? (
+                    <div className="mt-6 space-y-2 border-t border-border pt-5">
+                      {recurringOptions.map((frequency) => (
+                        <div key={frequency.id} className="flex items-center justify-between gap-3 text-xs">
+                          <span className="text-muted-foreground">{text(frequencyNames[frequency.id])}</span>
+                          <span className="font-semibold tabular-nums text-ink">{money(servicePrice(service.id, frequency.id))}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-                <Link to="/booking" search={{ service: service.id }} className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-moss hover:underline">
-                  {text({ en: "Request this service", es: "Solicitar este servicio" })}<ArrowRight className="size-4" aria-hidden="true" />
-                </Link>
-              </article>
-            ))}
+                  ) : (
+                    <div className="mt-6 border-t border-border pt-5 text-xs leading-5 text-muted-foreground">
+                      {text({ en: "No recurring pricing for this service.", es: "Este servicio no tiene precios recurrentes." })}
+                    </div>
+                  )}
+                  <Link to="/booking" search={{ service: service.id }} className="mt-auto inline-flex min-h-11 items-center gap-2 pt-6 text-sm font-semibold text-moss hover:underline">
+                    {text({ en: "Request this service", es: "Solicitar este servicio" })}<ArrowRight className="size-4" aria-hidden="true" />
+                  </Link>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -236,12 +226,7 @@ function Home() {
             <Waves className="mx-auto size-7 text-moss" aria-hidden="true" />
             <p className="eyebrow mt-4">{text({ en: "A smoother experience", es: "Una experiencia más fluida" })}</p>
             <h2 className="mt-4 text-4xl md:text-5xl">{text({ en: "Simple choices. Thoughtful care. No clutter.", es: "Decisiones simples. Cuidado atento. Sin complicaciones." })}</h2>
-            <p className="mt-5 text-sm leading-7 text-muted-foreground md:text-base">
-              {text({
-                en: "Choose the service you need, add only the rooms and extras that matter, then review the estimate before sending your request.",
-                es: "Elige el servicio que necesitas, agrega solo las habitaciones y extras importantes, y revisa el estimado antes de enviar tu solicitud.",
-              })}
-            </p>
+            <p className="mt-5 text-sm leading-7 text-muted-foreground md:text-base">{text({ en: "Choose the service you need, add only the rooms and extras that matter, then review the estimate before sending your request.", es: "Elige el servicio que necesitas, agrega solo las habitaciones y extras importantes, y revisa el estimado antes de enviar tu solicitud." })}</p>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {[
@@ -249,11 +234,7 @@ function Home() {
               { icon: ShieldCheck, en: "Thoughtful handling", es: "Cuidado atento", bodyEn: "Tell us about pets, surfaces, access, and special conditions.", bodyEs: "Cuéntanos sobre mascotas, superficies, acceso y condiciones especiales." },
               { icon: Wind, en: "Calm finish", es: "Resultado tranquilo", bodyEn: "The goal is a home that feels lighter when you return.", bodyEs: "El objetivo es un hogar que se sienta más ligero cuando regreses." },
             ].map(({ icon: Icon, en, es, bodyEn, bodyEs }) => (
-              <article key={en} className="rounded-3xl border border-border bg-card p-6 shadow-soft">
-                <span className="flex size-11 items-center justify-center rounded-2xl bg-accent text-moss"><Icon className="size-5" aria-hidden="true" /></span>
-                <h3 className="mt-5 text-2xl">{text({ en, es })}</h3>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{text({ en: bodyEn, es: bodyEs })}</p>
-              </article>
+              <article key={en} className="rounded-3xl border border-border bg-card p-6 shadow-soft"><span className="flex size-11 items-center justify-center rounded-2xl bg-accent text-moss"><Icon className="size-5" aria-hidden="true" /></span><h3 className="mt-5 text-2xl">{text({ en, es })}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{text({ en: bodyEn, es: bodyEs })}</p></article>
             ))}
           </div>
         </div>
@@ -264,21 +245,11 @@ function Home() {
           <div>
             <p className="eyebrow">{text({ en: "Service Area", es: "Área de servicio" })}</p>
             <h2 className="mt-4 text-4xl md:text-5xl">{text({ en: "Dallas - Fort Worth and surrounding communities.", es: "Dallas - Fort Worth y comunidades cercanas." })}</h2>
-            <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
-              {text({
-                en: "Search the service-area map, choose a city, and explore nearby listed communities by mileage radius.",
-                es: "Busca en el mapa del área de servicio, elige una ciudad y explora comunidades cercanas por radio de millas.",
-              })}
-            </p>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">{text({ en: "Search the service-area map, choose a city, and explore nearby listed communities by mileage radius.", es: "Busca en el mapa del área de servicio, elige una ciudad y explora comunidades cercanas por radio de millas." })}</p>
             <Button asChild variant="outline" className="mt-7"><Link to="/service-area">{text({ en: "Open Service Area Map", es: "Abrir mapa del área de servicio" })}</Link></Button>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {cities.slice(0, 12).map((city) => (
-              <div key={city} className="flex min-h-14 items-center gap-3 rounded-2xl border border-border bg-card px-4 shadow-soft">
-                <MapPin className="size-4 text-moss" aria-hidden="true" />
-                <span className="text-sm font-semibold text-ink">{city}</span>
-              </div>
-            ))}
+            {cities.slice(0, 12).map((city) => <div key={city} className="flex min-h-14 items-center gap-3 rounded-2xl border border-border bg-card px-4 shadow-soft"><MapPin className="size-4 text-moss" aria-hidden="true" /><span className="text-sm font-semibold text-ink">{city}</span></div>)}
           </div>
         </div>
       </section>
@@ -286,14 +257,8 @@ function Home() {
       <section className="brand-dark relative overflow-hidden bg-night py-14 text-night-foreground">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(143,215,209,0.16),transparent_26%)]" aria-hidden="true" />
         <div className="container-page relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.23em] text-gold-soft">{text({ en: "Come home to tranquility", es: "Vuelve a casa con tranquilidad" })}</p>
-            <h2 className="mt-3 max-w-2xl text-3xl text-white md:text-4xl">{text({ en: "Ready for a cleaner space and a calmer day?", es: "¿Listo para un espacio más limpio y un día más tranquilo?" })}</h2>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="lg"><Link to="/booking">{text({ en: "Book Your Clean", es: "Reserva tu limpieza" })}</Link></Button>
-            <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/8 hover:text-white"><a href={business.phoneHref}>{text({ en: "Call", es: "Llamar" })} {business.phoneDisplay}</a></Button>
-          </div>
+          <div><p className="text-[0.62rem] font-bold uppercase tracking-[0.23em] text-gold-soft">{text({ en: "Come home to tranquility", es: "Vuelve a casa con tranquilidad" })}</p><h2 className="mt-3 max-w-2xl text-3xl text-white md:text-4xl">{text({ en: "Ready for a cleaner space and a calmer day?", es: "¿Listo para un espacio más limpio y un día más tranquilo?" })}</h2></div>
+          <div className="flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><Link to="/booking">{text({ en: "Book Your Clean", es: "Reserva tu limpieza" })}</Link></Button><Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/8 hover:text-white"><a href={business.phoneHref}>{text({ en: "Call", es: "Llamar" })} {business.phoneDisplay}</a></Button></div>
         </div>
       </section>
     </>
