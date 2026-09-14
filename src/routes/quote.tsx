@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { ImagePlus, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { PageHero } from "@/components/site/PageHero";
@@ -288,63 +288,6 @@ function QuotePage() {
       setErrors((previous) => ({ ...previous, scope: text({ en: "We could not submit your request. Please try again or contact us directly.", es: "No pudimos enviar tu solicitud. Inténtalo de nuevo o contáctanos directamente." }) }));
     }
   }
-
-  const propertyLabel =
-    propertyTypes.find((item) => item.id === values.propertyType)?.label ?? values.propertyType;
-  const contactLabel =
-    contactPrefs.find((item) => item.id === values.contactPreference)?.label ??
-    values.contactPreference;
-
-  const body = useMemo(() => {
-    if (language === "es") {
-      return [
-        "SOLICITUD DE COTIZACIÓN / CONSULTA",
-        "",
-        `Tipo de propiedad: ${propertyLabel}`,
-        `Nombre: ${values.name}`,
-        `Correo electrónico: ${values.email}`,
-        `Teléfono: ${values.phone}`,
-        `Ciudad: ${values.city}`,
-        `Tamaño aproximado: ${values.size || "no proporcionado"}`,
-        `Contacto preferido: ${contactLabel}`,
-        `Fecha o periodo deseado: ${values.timing || "flexible"}`,
-        "",
-        "ALCANCE Y CONDICIÓN",
-        values.scope,
-        "",
-        "NOTAS ADICIONALES",
-        values.notes || "ninguna",
-        photos.length
-          ? `\nEl cliente seleccionó ${photos.length} foto(s) localmente para compartirlas cuando se solicite.`
-          : "",
-        "",
-        "Las fotos seleccionadas no se adjuntan ni se cargan desde este sitio web.",
-      ].join("\n");
-    }
-    return [
-      "CUSTOM QUOTE / CONSULTATION REQUEST",
-      "",
-      `Property type: ${propertyLabel}`,
-      `Name: ${values.name}`,
-      `Email: ${values.email}`,
-      `Phone: ${values.phone}`,
-      `City: ${values.city}`,
-      `Approximate size: ${values.size || "not provided"}`,
-      `Preferred contact: ${contactLabel}`,
-      `Desired timing: ${values.timing || "flexible"}`,
-      "",
-      "SCOPE & CONDITION",
-      values.scope,
-      "",
-      "ADDITIONAL NOTES",
-      values.notes || "none",
-      photos.length
-        ? `\nCustomer selected ${photos.length} photo(s) locally to share on request.`
-        : "",
-      "",
-      "Selected photos are not attached or uploaded from this website.",
-    ].join("\n");
-  }, [contactLabel, language, photos.length, propertyLabel, values]);
 
   const selectedBytes = photos.reduce((sum, photo) => sum + photo.size, 0);
 

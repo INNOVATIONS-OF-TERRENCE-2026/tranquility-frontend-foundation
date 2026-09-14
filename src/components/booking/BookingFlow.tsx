@@ -414,7 +414,10 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setService(item.id)}
+                  onClick={() => {
+                    setService(item.id);
+                    if (item.id !== "standard") setFrequency("onetime");
+                  }}
                   aria-pressed={service === item.id}
                   className={`rounded-xl border p-5 text-left transition-colors ${service === item.id ? "border-moss bg-accent/45" : "border-border bg-card hover:border-moss/60"}`}
                 >
