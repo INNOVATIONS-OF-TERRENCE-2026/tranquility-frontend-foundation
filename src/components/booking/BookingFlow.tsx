@@ -167,7 +167,10 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
       .catch(() => {
         if (active)
           setAvailabilityError(
-            text({ en: "Availability could not be checked.", es: "No se pudo verificar la disponibilidad." }),
+            text({
+              en: "Availability could not be checked.",
+              es: "No se pudo verificar la disponibilidad.",
+            }),
           );
       });
     return () => {
@@ -849,11 +852,17 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
                   {arrivalWindows.map((item) => (
                     <option key={item.id} value={item.id} disabled={availability?.[item.id] === 0}>
                       {language === "es" ? item.es : item.en}
-                      {availability ? ` · ${availability[item.id]} ${text({ en: "available", es: "disponibles" })}` : ""}
+                      {availability
+                        ? ` · ${availability[item.id]} ${text({ en: "available", es: "disponibles" })}`
+                        : ""}
                     </option>
                   ))}
                 </select>
-                {availabilityError && <p className="mt-1 text-xs text-destructive" role="alert">{availabilityError}</p>}
+                {availabilityError && (
+                  <p className="mt-1 text-xs text-destructive" role="alert">
+                    {availabilityError}
+                  </p>
+                )}
               </Field>
             </div>
           </div>
