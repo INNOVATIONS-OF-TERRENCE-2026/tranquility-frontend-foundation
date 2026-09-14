@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import {
-  availableFrequencies,
+  frequencies,
   money,
   services,
   servicePrice,
@@ -40,7 +40,6 @@ export function PricingGrid({ highlight }: { highlight?: ServiceId }) {
       <div className="grid gap-5 md:grid-cols-3">
         {services.map((service, index) => {
           const isHighlight = highlight === service.id;
-          const recurringOptions = availableFrequencies(service.id).filter((frequency) => frequency.id !== "onetime");
           return (
             <article
               key={service.id}
@@ -62,33 +61,22 @@ export function PricingGrid({ highlight }: { highlight?: ServiceId }) {
               </p>
               <p className="mt-7 font-display text-5xl text-ink">{money(service.basePrice)}</p>
               <p className="mt-1 text-[0.65rem] font-bold uppercase tracking-[0.17em] text-muted-foreground">
-                {service.recurringEligible
-                  ? text({ en: "One-time base price", es: "Precio base por una sola visita" })
-                  : text({ en: "One-time starting price", es: "Precio inicial por una sola visita" })}
+                {text({ en: "One-time base price", es: "Precio base por una sola visita" })}
               </p>
 
-              {service.recurringEligible ? (
-                <dl className="mt-7 space-y-3 border-t border-border pt-5 text-sm">
-                  {recurringOptions.map((frequency) => (
-                    <div key={frequency.id} className="flex items-baseline justify-between gap-3">
-                      <dt className="text-muted-foreground">
-                        {text(frequencyNames[frequency.id])}{" "}
-                        <span className="text-xs font-semibold text-moss">{text(frequencyNotes[frequency.id])}</span>
-                      </dt>
-                      <dd className="font-semibold tabular-nums text-ink">{money(servicePrice(service.id, frequency.id))}</dd>
-                    </div>
-                  ))}
-                </dl>
-              ) : (
-                <div className="mt-7 rounded-xl border border-border bg-muted/45 p-4 text-sm leading-relaxed text-muted-foreground">
-                  {text({
-                    en: "This service is offered as a one-time clean. The final price is confirmed after the requested scope is reviewed.",
-                    es: "Este servicio se ofrece como una limpieza de una sola vez. El precio final se confirma después de revisar el alcance solicitado.",
-                  })}
-                </div>
-              )}
+              <dl className="mt-7 space-y-3 border-t border-border pt-5 text-sm">
+                {frequencies.filter((frequency) => frequency.id !== "onetime").map((frequency) => (
+                  <div key={frequency.id} className="flex items-baseline justify-between gap-3">
+                    <dt className="text-muted-foreground">
+                      {text(frequencyNames[frequency.id])}{" "}
+                      <span className="text-xs font-semibold text-moss">{text(frequencyNotes[frequency.id])}</span>
+                    </dt>
+                    <dd className="font-semibold tabular-nums text-ink">{money(servicePrice(service.id, frequency.id))}</dd>
+                  </div>
+                ))}
+              </dl>
 
-              <div className="mt-auto flex flex-col gap-2 pt-7">
+              <div className="mt-7 flex flex-col gap-2 pt-2">
                 <Button asChild>
                   <Link to="/booking" search={{ service: service.id }}>
                     {text({ en: "Request this service", es: "Solicitar este servicio" })} <ArrowRight className="size-4" aria-hidden="true" />
@@ -106,8 +94,8 @@ export function PricingGrid({ highlight }: { highlight?: ServiceId }) {
       <div className="mt-6 rounded-xl border border-border bg-muted/45 px-5 py-4">
         <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
           {text({
-            en: "Pricing shown is based on a standard average 1-bedroom, 1-full-bath home. Deep Clean starts at $215 and Move-In / Move-Out starts at $235. Recurring savings are available for Standard Clean only. Final pricing can change based on square footage, layout, condition, customizations, unusual scope, or specialty work. Final service details are confirmed before cleaning begins.",
-            es: "Los precios mostrados se basan en una vivienda estándar promedio de 1 dormitorio y 1 baño completo. La limpieza profunda comienza en $215 y la limpieza de entrada / salida comienza en $235. Los ahorros por servicio recurrente están disponibles únicamente para la limpieza estándar. El precio final puede cambiar según los pies cuadrados, la distribución, la condición, las personalizaciones, un alcance inusual o trabajo especializado. Los detalles finales del servicio se confirman antes de comenzar la limpieza.",
+            en: "Pricing shown is based on a standard average 1-bedroom, 1-full-bath home. Your final price can change based on square footage, layout, condition, customizations, unusual scope, or specialty work. Final service details are confirmed with you before any cleaning takes place. Recurring savings apply to the service price only, not to add-ons.",
+            es: "Los precios mostrados se basan en una vivienda estándar promedio de 1 dormitorio y 1 baño completo. El precio final puede cambiar según los pies cuadrados, la distribución, la condición, las personalizaciones, un alcance inusual o trabajo especializado. Los detalles finales del servicio se confirman contigo antes de realizar cualquier limpieza. Los descuentos recurrentes se aplican solo al precio del servicio, no a los servicios adicionales.",
           })}
         </p>
       </div>

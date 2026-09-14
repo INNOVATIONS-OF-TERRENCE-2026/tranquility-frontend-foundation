@@ -14,7 +14,7 @@ export const Route = createFileRoute("/services")({
     seo({
       title: "Cleaning Services in DFW | Tranquility Level Cleaning",
       description:
-        "Standard, deep, move-in/move-out, and commercial cleaning across Dallas-Fort Worth with approved starting prices, recurring Standard Clean savings, and custom quote options.",
+        "Standard, deep, move-in/move-out, and commercial cleaning across Dallas-Fort Worth with approved base pricing, recurring savings, and custom quote options.",
       path: "/services",
     }),
   component: ServicesPage,
@@ -39,8 +39,8 @@ const serviceCopy: Record<ServiceId, { name: { en: string; es: string }; descrip
   deep: {
     name: { en: "Deep Clean", es: "Limpieza profunda" },
     description: {
-      en: "A detailed one-time reset for homes that need more attention, including build-up, edges, and the places routine cleaning tends to pass over.",
-      es: "Una renovación detallada de una sola vez para hogares que necesitan más atención, incluyendo acumulación, bordes y áreas que una limpieza rutinaria suele pasar por alto.",
+      en: "A detailed reset for homes that need more attention, including build-up, edges, and the places routine cleaning tends to pass over.",
+      es: "Una renovación detallada para hogares que necesitan más atención, incluyendo acumulación, bordes y áreas que una limpieza rutinaria suele pasar por alto.",
     },
     includesEs: [
       "Todo lo incluido en la limpieza estándar, con mayor detalle",
@@ -52,8 +52,8 @@ const serviceCopy: Record<ServiceId, { name: { en: string; es: string }; descrip
   move: {
     name: { en: "Move-In / Move-Out Clean", es: "Limpieza de entrada / salida" },
     description: {
-      en: "A detailed one-time clean for a home in transition, whether you are handing keys over or moving into a space that should feel genuinely fresh.",
-      es: "Una limpieza detallada de una sola vez para una vivienda en transición, ya sea que entregues las llaves o llegues a un espacio que debe sentirse verdaderamente renovado.",
+      en: "An empty-home clean for transitions, whether you are handing keys over or walking into a space that should feel genuinely new.",
+      es: "Una limpieza para viviendas vacías o casi vacías durante una mudanza, ya sea que entregues las llaves o llegues a un espacio que debe sentirse verdaderamente renovado.",
     },
     includesEs: [
       "Limpieza detallada de toda la vivienda vacía o casi vacía",
@@ -85,7 +85,13 @@ const addOnEs: Record<string, string> = {
   "carpet-spot": "Limpieza puntual de alfombra",
 };
 
-const unitEs: Record<string, string> = { bedroom: "dormitorio", bathroom: "baño", "half bath": "medio baño", room: "habitación", load: "carga" };
+const unitEs: Record<string, string> = {
+  bedroom: "dormitorio",
+  bathroom: "baño",
+  "half bath": "medio baño",
+  room: "habitación",
+  load: "carga",
+};
 
 function ServicesPage() {
   const { language, text } = useLanguage();
@@ -96,8 +102,8 @@ function ServicesPage() {
         eyebrow={text({ en: "Services", es: "Servicios" })}
         title={text({ en: "Choose the level of care your home needs.", es: "Elige el nivel de cuidado que necesita tu hogar." })}
         intro={text({
-          en: "Three residential cleaning types have published starting prices. Standard Clean may be scheduled one-time or recurring. Deep Clean and Move-In / Move-Out are one-time services. Commercial work is quoted after consultation.",
-          es: "Tres tipos de limpieza residencial tienen precios iniciales publicados. La limpieza estándar puede programarse una sola vez o de forma recurrente. La limpieza profunda y la limpieza de entrada / salida son servicios de una sola vez. El trabajo comercial se cotiza después de una consulta.",
+          en: "Three residential cleaning types have published starting prices. Commercial work is quoted after consultation. Residential services can be adjusted with approved room charges and add-ons without hiding the pricing foundation.",
+          es: "Tres tipos de limpieza residencial tienen precios iniciales publicados. El trabajo comercial se cotiza después de una consulta. Los servicios residenciales pueden ajustarse con cargos aprobados por habitaciones y servicios adicionales sin ocultar la base del precio.",
         })}
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -112,8 +118,8 @@ function ServicesPage() {
             eyebrow={text({ en: "Residential services", es: "Servicios residenciales" })}
             title={text({ en: "Clear starting points. Flexible scope.", es: "Puntos de partida claros. Alcance flexible." })}
             intro={text({
-              en: "Each service starts with the approved rate for a standard average 1-bedroom, 1-full-bath home and can be adjusted with approved room charges and add-ons. Deep Clean and Move-In / Move-Out amounts are starting prices.",
-              es: "Cada servicio parte de la tarifa aprobada para una vivienda estándar promedio de 1 dormitorio y 1 baño completo, y puede ajustarse con cargos aprobados por habitaciones y servicios adicionales. Los montos de limpieza profunda y entrada / salida son precios iniciales.",
+              en: "Each service starts with the approved base rate for a standard average 1-bedroom, 1-full-bath home and can be adjusted with approved room charges and add-ons.",
+              es: "Cada servicio parte de la tarifa base aprobada para una vivienda estándar promedio de 1 dormitorio y 1 baño completo, y puede ajustarse con cargos aprobados por habitaciones y servicios adicionales.",
             })}
           />
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
@@ -125,11 +131,10 @@ function ServicesPage() {
                 <article key={service.id} className="group flex min-h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-soft transition duration-200 hover:-translate-y-1 hover:border-moss/45 hover:shadow-lift">
                   <div className="flex items-start justify-between gap-4">
                     <span className="flex size-12 items-center justify-center rounded-full border border-moss/25 bg-accent/45 text-moss"><Icon className="size-5" aria-hidden="true" /></span>
-                    <span className="text-right"><span className="block font-display text-3xl text-ink">{money(service.basePrice)}</span><span className="mt-1 block text-[0.62rem] uppercase tracking-[0.12em] text-muted-foreground">{service.recurringEligible ? text({ en: "Base price", es: "Precio base" }) : text({ en: "Starting price", es: "Precio inicial" })}</span></span>
+                    <span className="font-display text-3xl text-ink">{money(service.basePrice)}</span>
                   </div>
                   <h2 className="mt-5 text-3xl">{text(localized.name)}</h2>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{text(localized.description)}</p>
-                  {!service.recurringEligible && <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-moss">{text({ en: "One-time service", es: "Servicio de una sola vez" })}</p>}
                   <ul className="mt-5 flex-1 space-y-2 text-sm text-foreground/80">
                     {included.map((item) => <li key={item} className="flex gap-2"><span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-moss" aria-hidden="true" />{item}</li>)}
                   </ul>
@@ -146,7 +151,12 @@ function ServicesPage() {
             <span className="flex size-12 items-center justify-center rounded-full border border-gold/30 bg-gold/5 text-moss"><Building2 className="size-5" aria-hidden="true" /></span>
             <div>
               <h2 className="text-3xl text-ink">{text({ en: "Commercial / Office Cleaning", es: "Limpieza comercial / de oficinas" })}</h2>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{text({ en: "Offices, suites, and light commercial spaces vary too much to price like a home. Commercial work always goes through a custom quote or consultation.", es: "Las oficinas, suites y espacios comerciales ligeros varían demasiado para cotizarlos como una vivienda. El trabajo comercial siempre pasa por una cotización personalizada o una consulta." })}</p>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                {text({
+                  en: "Offices, suites, and light commercial spaces vary too much to price like a home. Commercial work always goes through a custom quote or consultation.",
+                  es: "Las oficinas, suites y espacios comerciales ligeros varían demasiado para cotizarlos como una vivienda. El trabajo comercial siempre pasa por una cotización personalizada o una consulta.",
+                })}
+              </p>
             </div>
             <Button asChild><Link to="/commercial-cleaning">{text({ en: "Commercial details", es: "Detalles comerciales" })} <ArrowRight className="size-4" aria-hidden="true" /></Link></Button>
           </article>
@@ -157,10 +167,10 @@ function ServicesPage() {
         <div className="container-page">
           <SectionHeading
             eyebrow={text({ en: "Pricing", es: "Precios" })}
-            title={text({ en: "Approved starting pricing", es: "Precios iniciales aprobados" })}
+            title={text({ en: "Approved base pricing", es: "Precios base aprobados" })}
             intro={text({
-              en: "Recurring savings are available only for Standard Clean and apply to its service subtotal. Deep Clean and Move-In / Move-Out remain one-time services at starting prices of $215 and $235.",
-              es: "Los ahorros recurrentes están disponibles únicamente para la limpieza estándar y se aplican a su subtotal de servicio. La limpieza profunda y la limpieza de entrada / salida siguen siendo servicios de una sola vez con precios iniciales de $215 y $235.",
+              en: "Recurring savings apply only to the service subtotal. Add-ons stay at their listed rate.",
+              es: "Los descuentos por servicio recurrente se aplican solo al subtotal del servicio. Los servicios adicionales conservan su precio publicado.",
             })}
           />
           <div className="mt-10"><PricingGrid /></div>
@@ -172,16 +182,30 @@ function ServicesPage() {
           <SectionHeading
             eyebrow={text({ en: "Add-ons", es: "Servicios adicionales" })}
             title={text({ en: "Customize only what you need", es: "Agrega solo lo que necesitas" })}
-            intro={text({ en: "Add-on pricing varies by cleaning type where noted. Items marked starting at are minimum prices and may be adjusted after review.", es: "El precio de los servicios adicionales varía según el tipo de limpieza cuando se indica. Los artículos marcados como precio inicial representan un mínimo y pueden ajustarse después de la revisión." })}
+            intro={text({
+              en: "Add-on pricing varies by cleaning type where noted. Items marked starting at are minimum prices and may be adjusted after review.",
+              es: "El precio de los servicios adicionales varía según el tipo de limpieza cuando se indica. Los artículos marcados como precio inicial representan un mínimo y pueden ajustarse después de la revisión.",
+            })}
           />
           <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-lift">
             <table className="w-full min-w-[38rem] text-sm">
               <caption className="sr-only">{text({ en: "Add-on pricing by cleaning type", es: "Precios de servicios adicionales por tipo de limpieza" })}</caption>
-              <thead className="bg-muted text-left"><tr><th scope="col" className="px-5 py-4 font-semibold">{text({ en: "Add-on", es: "Adicional" })}</th><th scope="col" className="px-5 py-4 text-right font-semibold">{text({ en: "Standard", es: "Estándar" })}</th><th scope="col" className="px-5 py-4 text-right font-semibold">{text({ en: "Deep", es: "Profunda" })}</th><th scope="col" className="px-5 py-4 text-right font-semibold">{text({ en: "Move-In / Out", es: "Entrada / salida" })}</th></tr></thead>
+              <thead className="bg-muted text-left">
+                <tr>
+                  <th scope="col" className="px-5 py-4 font-semibold">{text({ en: "Add-on", es: "Adicional" })}</th>
+                  <th scope="col" className="px-5 py-4 text-right font-semibold">{text({ en: "Standard", es: "Estándar" })}</th>
+                  <th scope="col" className="px-5 py-4 text-right font-semibold">{text({ en: "Deep", es: "Profunda" })}</th>
+                  <th scope="col" className="px-5 py-4 text-right font-semibold">{text({ en: "Move-In / Out", es: "Entrada / salida" })}</th>
+                </tr>
+              </thead>
               <tbody className="divide-y divide-border">
                 {addOns.map((addOn) => (
                   <tr key={addOn.id} className="transition-colors hover:bg-accent/25">
-                    <th scope="row" className="px-5 py-4 text-left font-medium text-ink">{language === "es" ? addOnEs[addOn.id] ?? addOn.name : addOn.name}{addOn.startingAt && <span className="ml-2 text-xs font-normal text-muted-foreground">{text({ en: "starting at", es: "desde" })}</span>}{addOn.unit && <span className="ml-2 text-xs font-normal text-muted-foreground">{text({ en: `per ${addOn.unit}`, es: `por ${unitEs[addOn.unit] ?? addOn.unit}` })}</span>}</th>
+                    <th scope="row" className="px-5 py-4 text-left font-medium text-ink">
+                      {language === "es" ? addOnEs[addOn.id] ?? addOn.name : addOn.name}
+                      {addOn.startingAt && <span className="ml-2 text-xs font-normal text-muted-foreground">{text({ en: "starting at", es: "desde" })}</span>}
+                      {addOn.unit && <span className="ml-2 text-xs font-normal text-muted-foreground">{text({ en: `per ${addOn.unit}`, es: `por ${unitEs[addOn.unit] ?? addOn.unit}` })}</span>}
+                    </th>
                     <td className="px-5 py-4 text-right font-semibold tabular-nums text-ink">+{money(addOnPrice(addOn, "standard"))}</td>
                     <td className="px-5 py-4 text-right font-semibold tabular-nums text-ink">+{money(addOnPrice(addOn, "deep"))}</td>
                     <td className="px-5 py-4 text-right font-semibold tabular-nums text-ink">+{money(addOnPrice(addOn, "move"))}</td>
@@ -190,7 +214,12 @@ function ServicesPage() {
               </tbody>
             </table>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">{text({ en: "Base pricing already includes 1 bedroom and 1 full bathroom. Additional rooms are counted from there so nothing is charged twice.", es: "El precio base ya incluye 1 dormitorio y 1 baño completo. Las habitaciones adicionales se cuentan a partir de ahí para evitar cargos duplicados." })}</p>
+          <p className="mt-4 text-sm text-muted-foreground">
+            {text({
+              en: "Base pricing already includes 1 bedroom and 1 full bathroom. Additional rooms are counted from there so nothing is charged twice.",
+              es: "El precio base ya incluye 1 dormitorio y 1 baño completo. Las habitaciones adicionales se cuentan a partir de ahí para evitar cargos duplicados.",
+            })}
+          </p>
         </div>
       </section>
 

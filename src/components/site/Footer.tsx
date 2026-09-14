@@ -3,7 +3,7 @@ import { MapPin, Phone } from "lucide-react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { business, cities } from "@/config/business";
-import { attribution, businessLeader, technologyLeader } from "@/config/leadership";
+import { attribution, technologyLeader } from "@/config/leadership";
 import { services, type ServiceId } from "@/config/pricing";
 import { Logo } from "./Logo";
 
@@ -76,32 +76,29 @@ export function Footer() {
               <span>{text({ en: business.serviceAreaLabel, es: "Dallas-Fort Worth y comunidades cercanas" })}</span>
             </div>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground/80">
-              {cities.slice(0, 10).join(" · ")} {text({ en: "and surrounding communities.", es: "y comunidades cercanas." })}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-5 border-t border-border py-7 md:grid-cols-[1fr_auto] md:items-center">
-          <div>
-            <p className="text-xs font-semibold text-foreground">{text(attribution.ownership)}</p>
-            <p className="mt-1 text-[0.7rem] leading-relaxed text-muted-foreground">
-              {businessLeader.name} · {text(businessLeader.role)} · {text(businessLeader.credential)}
-            </p>
-          </div>
-          <div className="md:text-right">
-            <p className="text-xs font-medium text-gold-soft">{text(attribution.engineering)}</p>
-            <p className="mt-1 text-[0.7rem] leading-relaxed text-muted-foreground">
-              {technologyLeader.name} · {text(technologyLeader.role)} · {text(technologyLeader.designation)}
+              {cities.slice(0, 9).join(" · ")} {text({ en: "and surrounding communities.", es: "y comunidades cercanas." })}
             </p>
           </div>
         </div>
 
         <div className="flex flex-col gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {business.legalName}. {text({ en: "All rights reserved.", es: "Todos los derechos reservados." })}</p>
+          <div className="space-y-2">
+            <p>© {new Date().getFullYear()} {business.legalName}. {text({ en: "All rights reserved.", es: "Todos los derechos reservados." })}</p>
+            <p className="text-[0.7rem] tracking-[0.04em] text-gold-soft/90">{text(attribution.ownership)}</p>
+          </div>
           <div className="flex gap-5">
             <Link to="/privacy" className="hover:text-gold-soft">{text({ en: "Privacy", es: "Privacidad" })}</Link>
             <Link to="/terms" className="hover:text-gold-soft">{text({ en: "Terms", es: "Términos" })}</Link>
           </div>
+        </div>
+
+        <div className="mt-6 border-t border-border/60 pt-5 text-center sm:text-left">
+          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground/90">
+            {text(attribution.engineering)}
+          </p>
+          <p className="mt-2 text-[0.66rem] leading-5 text-muted-foreground/70">
+            {technologyLeader.name} · {text(technologyLeader.role)} · {text(technologyLeader.designation)}
+          </p>
         </div>
       </div>
     </footer>
