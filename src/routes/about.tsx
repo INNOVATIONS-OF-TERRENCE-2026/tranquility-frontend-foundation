@@ -4,6 +4,7 @@ import { Code2, Droplets, ShieldCheck, Sparkles, Wind } from "lucide-react";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { CTABand } from "@/components/site/CTABand";
 import { PageHero, SectionHeading } from "@/components/site/PageHero";
+import { brandAssets } from "@/config/brand";
 import { business } from "@/config/business";
 import { attribution, businessLeader, technologyLeader } from "@/config/leadership";
 import { seo } from "@/lib/seo";
@@ -73,11 +74,11 @@ function AboutPage() {
             <div className="relative">
               <div className="mx-auto flex size-52 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.03] p-3">
                 <img
-                  src="/tranquility-official-logo.png"
-                  alt="Tranquility Level Cleaning official logo"
+                  src={brandAssets.logo}
+                  alt="Tranquility Level Cleaning"
                   className="h-full w-full object-contain drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]"
-                  width={1024}
-                  height={1024}
+                  width={1448}
+                  height={1086}
                   loading="lazy"
                   decoding="async"
                 />

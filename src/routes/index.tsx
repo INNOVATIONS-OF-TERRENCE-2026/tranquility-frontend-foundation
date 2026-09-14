@@ -15,6 +15,7 @@ import {
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { Button } from "@/components/ui/button";
+import { brandAssets } from "@/config/brand";
 import { business, cities } from "@/config/business";
 import { frequencies, money, services, servicePrice, type FrequencyId, type ServiceId } from "@/config/pricing";
 import { seo } from "@/lib/seo";
@@ -150,11 +151,11 @@ function Home() {
                 className="group mx-auto flex size-48 items-center justify-center rounded-[2rem] border border-white/12 bg-white/[0.03] p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/45 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:size-56"
               >
                 <img
-                  src="/tranquility-official-logo.png"
-                  alt="Tranquility Level Cleaning official logo"
+                  src={brandAssets.logo}
+                  alt="Tranquility Level Cleaning"
                   className="h-full w-full object-contain drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none"
-                  width={1024}
-                  height={1024}
+                  width={1448}
+                  height={1086}
                   decoding="async"
                 />
               </Link>

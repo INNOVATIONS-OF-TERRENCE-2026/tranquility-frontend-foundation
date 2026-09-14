@@ -14,6 +14,7 @@ import { LanguageProvider, useLanguage } from "@/components/language/LanguagePro
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ThemeProvider, themeBootstrapScript } from "@/components/theme/ThemeProvider";
+import { absoluteBrandAsset, brandAssets, productionSiteUrl } from "@/config/brand";
 import { business, cities } from "@/config/business";
 import { businessLeader, technologyLeader } from "@/config/leadership";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -99,8 +100,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/tranquility-official-logo.webp", type: "image/webp" },
-      { rel: "apple-touch-icon", href: "/tranquility-official-logo.webp" },
+      { rel: "icon", href: brandAssets.faviconIco, sizes: "any" },
+      { rel: "icon", href: brandAssets.favicon32, type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: brandAssets.favicon16, type: "image/png", sizes: "16x16" },
+      { rel: "apple-touch-icon", href: brandAssets.appleTouchIcon, sizes: "180x180" },
       { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [
@@ -110,7 +113,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "CleaningService",
           name: business.legalName,
-          url: "https://heytlcleaning.lovable.app",
+          url: productionSiteUrl,
+          logo: absoluteBrandAsset(brandAssets.logoMaster),
+          image: absoluteBrandAsset(brandAssets.logoMaster),
           telephone: business.phoneDisplay,
           email: business.email,
           areaServed: cities.map((name) => ({ "@type": "City", name })),

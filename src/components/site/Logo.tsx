@@ -1,22 +1,26 @@
 import { Link } from "@tanstack/react-router";
 
+import { brandAssets } from "@/config/brand";
+
 export function Logo({ compact = false, hero = false }: { compact?: boolean; hero?: boolean }) {
   return (
     <Link
       to="/"
-      className="group inline-flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none"
+      className="group inline-flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       aria-label="Tranquility Level Cleaning home"
     >
       <span
-        className={`relative shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_12px_36px_-18px_rgba(0,0,0,0.75)] ${
-          hero ? "size-14 md:size-16" : "size-11 md:size-12"
+        className={`relative shrink-0 ${
+          hero ? "h-14 w-[4.7rem] md:h-16 md:w-[5.35rem]" : "h-11 w-[3.7rem] md:h-12 md:w-16"
         }`}
       >
         <img
-          src="/tranquility-official-logo.webp"
+          src={brandAssets.logo}
           alt=""
           aria-hidden="true"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain drop-shadow-[0_7px_10px_rgba(0,0,0,0.35)]"
+          width={1448}
+          height={1086}
           decoding="async"
         />
       </span>
