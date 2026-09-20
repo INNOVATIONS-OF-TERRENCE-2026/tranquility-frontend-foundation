@@ -43,7 +43,7 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await requireAdmin(context);
-    const [bookings, quotes, careers, inquiries, blocks] = await Promise.all([
+    const [bookings, quotes, careers, inquiries, blocks, cities] = await Promise.all([
       context.supabase
         .from("booking_holds")
         .select("*")
