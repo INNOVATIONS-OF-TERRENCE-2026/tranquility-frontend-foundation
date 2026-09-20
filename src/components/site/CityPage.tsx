@@ -66,8 +66,8 @@ export function CityPage({ city, intro, neighborhoods, nearby }: CityPageProps) 
                   <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
                     {text({ en: "Starting price", es: "Precio inicial" })}
                   </p>
-                  <Link
-                    to={serviceLinks[service.id] ?? "/services"}
+                  <a
+                    href={service.route}
                     className="mt-4 inline-flex text-sm font-semibold text-moss underline-offset-4 hover:underline"
                   >
                     {text({ en: "See what is included", es: "Ver lo que incluye" })}
