@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { business } from "@/config/business";
 import { seo } from "@/lib/seo";
+import { uploadQuotePhoto } from "@/integrations/supabase/public-api";
 import { submitQuoteRequest } from "@/lib/submissions.functions";
 
 export const Route = createFileRoute("/quote")({
@@ -41,6 +42,7 @@ interface Values {
 }
 
 type LocalPhoto = {
+  file: File;
   name: string;
   url: string;
   size: number;
@@ -100,6 +102,7 @@ function QuotePage() {
   const [ready, setReady] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [reference, setReference] = useState("");
+  const [uploadWarning, setUploadWarning] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const photosRef = useRef<LocalPhoto[]>([]);
   const submitRequest = useServerFn(submitQuoteRequest);
@@ -215,6 +218,7 @@ function QuotePage() {
 
       totalBytes += file.size;
       next.push({
+        file,
         name: file.name,
         size: file.size,
         type: file.type || `image/${fileExtension(file.name)}`,
@@ -266,6 +270,7 @@ function QuotePage() {
   async function sendRequest() {
     if (!validate()) return;
     setStatus("sending");
+    setUploadWarning("");
     try {
       const result = await submitRequest({
         data: {
@@ -283,6 +288,30 @@ function QuotePage() {
           website: "",
         },
       });
+
+      if (photos.length) {
+        const failed: string[] = [];
+        for (const photo of photos) {
+          try {
+            await uploadQuotePhoto({
+              quoteId: result.id,
+              uploadToken: result.uploadToken,
+              file: photo.file,
+            });
+          } catch {
+            failed.push(photo.name);
+          }
+        }
+        if (failed.length) {
+          setUploadWarning(
+            text({
+              en: `Your request was saved, but ${failed.length} photo(s) could not be uploaded. Please contact us if you need help sending them.`,
+              es: `Tu solicitud se guardó, pero no se pudieron cargar ${failed.length} foto(s). Contáctanos si necesitas ayuda para enviarlas.`,
+            }),
+          );
+        }
+      }
+
       setReference(result.reference);
       setStatus("sent");
     } catch {
@@ -471,8 +500,8 @@ function QuotePage() {
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 {text({
-                  en: "You can preview photos of the space here to help describe it. Selected files stay on your device in this version. Nothing is uploaded or attached automatically. Ask us for a secure way to send photos and we will arrange it.",
-                  es: "Puedes previsualizar fotos del espacio aquí para ayudar a describirlo. En esta versión, los archivos seleccionados permanecen en tu dispositivo. Nada se carga ni se adjunta automáticamente. Solicita una forma segura de enviarnos las fotos y la coordinaremos contigo.",
+                  en: "Add photos of the space to help us understand the scope. Photos are uploaded securely only after you submit the quote request.",
+                  es: "Agrega fotos del espacio para ayudarnos a comprender el alcance. Las fotos se cargan de forma segura únicamente después de enviar la solicitud de cotización.",
                 })}
               </p>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -580,13 +609,18 @@ function QuotePage() {
                 {text({
                   en:
                     status === "sent"
-                      ? `Your request was received. Reference ${reference}. Selected photos remain on your device and were not uploaded.`
-                      : "Your required details are complete. Review them, then submit your request securely. Selected photos remain on your device and are not uploaded.",
+                      ? `Your request was received. Reference ${reference}. ${photos.length ? "Your selected photos were uploaded securely." : "No photos were attached."}`
+                      : "Your required details are complete. Review them, then submit your request securely. Selected photos will upload only when you submit.",
                   es:
                     status === "sent"
-                      ? `Recibimos tu solicitud. Referencia ${reference}. Las fotos seleccionadas permanecen en tu dispositivo y no se cargaron.`
-                      : "Los datos obligatorios están completos. Revísalos y luego envía tu solicitud de forma segura. Las fotos permanecen en tu dispositivo y no se cargan.",
+                      ? `Recibimos tu solicitud. Referencia ${reference}. ${photos.length ? "Tus fotos seleccionadas se cargaron de forma segura." : "No se adjuntaron fotos."}`
+                      : "Los datos obligatorios están completos. Revísalos y luego envía tu solicitud de forma segura. Las fotos seleccionadas se cargarán únicamente al enviar.",
                 })}
+              </p>
+            )}
+            {uploadWarning && (
+              <p className="rounded-lg border border-gold/30 bg-gold/10 p-4 text-sm leading-relaxed text-ink" role="alert">
+                {uploadWarning}
               </p>
             )}
           </form>
