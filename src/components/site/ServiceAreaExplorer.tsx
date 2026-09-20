@@ -32,22 +32,44 @@ export function ServiceAreaExplorer() {
   const [radius, setRadius] = useState<(typeof radiusOptions)[number]>(25);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [cities, setCities] = useState(serviceCities);
+  const loadCities = useServerFn(listServiceCities);
 
-  const selected = serviceCities.find((city) => city.name === selectedName) ?? serviceCities[0]!;
+  useEffect(() => {
+    let active = true;
+    void loadCities()
+      .then((rows) => {
+        if (active && rows.length > 0) {
+          setCities(
+            rows.map((row) => ({
+              name: row.name,
+              latitude: row.latitude,
+              longitude: row.longitude,
+            })),
+          );
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [loadCities]);
+
+  const selected = cities.find((city) => city.name === selectedName) ?? cities[0]!;
 
   const matchingCities = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return serviceCities;
-    return serviceCities.filter((city) => city.name.toLowerCase().includes(query));
-  }, [search]);
+    if (!query) return cities;
+    return cities.filter((city) => city.name.toLowerCase().includes(query));
+  }, [cities, search]);
 
   const nearbyCities = useMemo(
     () =>
-      serviceCities
+      cities
         .map((city) => ({ city, miles: distanceMiles(selected, city) }))
         .filter(({ miles }) => miles <= radius)
         .sort((a, b) => a.miles - b.miles),
-    [radius, selected],
+    [cities, radius, selected],
   );
 
   const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${selected.name}, Texas`)}&z=10&output=embed`;
