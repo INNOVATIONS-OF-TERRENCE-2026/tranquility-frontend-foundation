@@ -15,10 +15,10 @@ export interface CityPageProps {
   nearby: { label: string; to: string }[];
 }
 
-const serviceLinks: Record<string, string> = {
-  standard: "/residential-cleaning",
-  deep: "/deep-cleaning",
-  move: "/move-in-move-out-cleaning",
+const serviceNames: Record<string, { en: string; es: string }> = {
+  standard: { en: "Standard Clean", es: "Limpieza estándar" },
+  deep: { en: "Deep Clean", es: "Limpieza profunda" },
+  move: { en: "Move-In / Move-Out Clean", es: "Limpieza de entrada / salida" },
 };
 
 export function CityPage({ city, intro, neighborhoods, nearby }: CityPageProps) {
