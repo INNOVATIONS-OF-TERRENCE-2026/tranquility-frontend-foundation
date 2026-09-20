@@ -289,6 +289,44 @@ export type Database = {
         }
         Relationships: []
       }
+      quote_media: {
+        Row: {
+          content_type: string
+          created_at: string
+          file_name: string
+          id: string
+          object_path: string
+          quote_request_id: string
+          size_bytes: number
+        }
+        Insert: {
+          content_type: string
+          created_at?: string
+          file_name: string
+          id?: string
+          object_path: string
+          quote_request_id: string
+          size_bytes: number
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          file_name?: string
+          id?: string
+          object_path?: string
+          quote_request_id?: string
+          size_bytes?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_media_quote_request_id_fkey"
+            columns: ["quote_request_id"]
+            isOneToOne: false
+            referencedRelation: "quote_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quote_requests: {
         Row: {
           approximate_size: string | null
