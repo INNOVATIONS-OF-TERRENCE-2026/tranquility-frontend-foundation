@@ -66,6 +66,13 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Section = "bookings" | "quotes" | "careers" | "inquiries";
+
+function windowLabel(value: string) {
+  if (value === "morning") return "8 to 11 AM";
+  if (value === "midday") return "11 AM to 2 PM";
+  if (value === "afternoon") return "2 to 5 PM";
+  return value;
+}
 type Dashboard = Awaited<ReturnType<ReturnType<typeof useServerFn<typeof getAdminDashboard>>>>;
 
 function AdminPage() {
