@@ -35,7 +35,7 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await requireAdmin(context);
-    const [bookings, quotes, careers, inquiries, blocks, media] = await Promise.all([
+    const [bookings, quotes, careers, inquiries, blocks, media, cities] = await Promise.all([
       context.supabase
         .from("booking_holds")
         .select("*")
@@ -66,9 +66,14 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
         .select("*")
         .order("created_at", { ascending: true })
         .limit(500),
+      context.supabase
+        .from("service_cities")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("name", { ascending: true }),
     ]);
 
-    const failure = [bookings, quotes, careers, inquiries, blocks, media].find(
+    const failure = [bookings, quotes, careers, inquiries, blocks, media, cities].find(
       (result) => result.error,
     )?.error;
     if (failure) throw new Error("Unable to load administrator records.");
@@ -89,6 +94,7 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
       inquiries: inquiries.data ?? [],
       blocks: blocks.data ?? [],
       quoteMedia,
+      cities: cities.data ?? [],
     };
   });
 
@@ -188,5 +194,54 @@ export const deleteAvailabilityBlock = createServerFn({ method: "POST" })
     await requireAdmin(context);
     const { error } = await context.supabase.from("availability_blocks").delete().eq("id", data.id);
     if (error) throw new Error("Unable to reopen availability.");
+    return { ok: true as const };
+  });
+
+function citySlug(name: string) {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export const upsertServiceCity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input) =>
+    z
+      .object({
+        id: z.string().uuid().optional(),
+        name: z.string().trim().min(2).max(100),
+        latitude: z.number().min(25).max(40),
+        longitude: z.number().min(-105).max(-90),
+        isActive: z.boolean(),
+        sortOrder: z.number().int().min(0).max(1000),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const values = {
+      name: data.name,
+      slug: citySlug(data.name),
+      latitude: data.latitude,
+      longitude: data.longitude,
+      is_active: data.isActive,
+      sort_order: data.sortOrder,
+    };
+    const { error } = data.id
+      ? await context.supabase.from("service_cities").update(values).eq("id", data.id)
+      : await context.supabase.from("service_cities").insert(values);
+    if (error) throw new Error("Unable to save this city.");
+    return { ok: true as const };
+  });
+
+export const deleteServiceCity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const { error } = await context.supabase.from("service_cities").delete().eq("id", data.id);
+    if (error) throw new Error("Unable to remove this city.");
     return { ok: true as const };
   });
