@@ -600,6 +600,82 @@ function AdminPage() {
           </form>
         </DialogContent>
       </Dialog>
+      <Dialog open={cityOpen} onOpenChange={setCityOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{city.id ? "Edit city" : "Add city"}</DialogTitle>
+            <DialogDescription>
+              Cities shown here power the public service area map and list.
+            </DialogDescription>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={saveCity}>
+            <div>
+              <Label htmlFor="city-name">City name</Label>
+              <Input
+                id="city-name"
+                className="mt-2"
+                required
+                value={city.name}
+                onChange={(event) => setCity({ ...city, name: event.target.value })}
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="city-lat">Latitude</Label>
+                <Input
+                  id="city-lat"
+                  className="mt-2"
+                  required
+                  inputMode="decimal"
+                  value={city.latitude}
+                  onChange={(event) => setCity({ ...city, latitude: event.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="city-lng">Longitude</Label>
+                <Input
+                  id="city-lng"
+                  className="mt-2"
+                  required
+                  inputMode="decimal"
+                  value={city.longitude}
+                  onChange={(event) => setCity({ ...city, longitude: event.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="city-order">List order</Label>
+                <Input
+                  id="city-order"
+                  className="mt-2"
+                  inputMode="numeric"
+                  value={city.sortOrder}
+                  onChange={(event) => setCity({ ...city, sortOrder: event.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Shown on the website</Label>
+                <Select
+                  value={city.isActive ? "yes" : "no"}
+                  onValueChange={(value) => setCity({ ...city, isActive: value === "yes" })}
+                >
+                  <SelectTrigger className="mt-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Shown</SelectItem>
+                    <SelectItem value="no">Hidden</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <Button type="submit" className="w-full">
+              Save city
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
       <Dialog open={blockOpen} onOpenChange={setBlockOpen}>
         <DialogContent>
           <DialogHeader>
