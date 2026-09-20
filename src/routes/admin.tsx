@@ -39,8 +39,10 @@ import {
   createAvailabilityBlock,
   deleteAdminRecord,
   deleteAvailabilityBlock,
+  deleteServiceCity,
   getAdminDashboard,
   updateAdminRecord,
+  upsertServiceCity,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
