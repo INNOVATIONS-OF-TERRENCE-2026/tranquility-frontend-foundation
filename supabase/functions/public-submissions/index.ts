@@ -57,6 +57,82 @@ const admin = createClient(Deno.env.get("SUPABASE_URL")!, secretKey(), {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
+const OWNER_EMAIL = "tlcllc26@gmail.com";
+const FROM_EMAIL = "Tranquility Level Cleaning <notifications@heytlcleaning.com>";
+
+function escapeHtml(value: unknown) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+async function sendOwnerEmail(input: {
+  eventType: string;
+  entityType: string;
+  entityId: string;
+  subject: string;
+  replyTo?: string;
+  html: string;
+}) {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  const { data: delivery } = await admin.from("notification_deliveries").insert({
+    event_type: input.eventType,
+    entity_type: input.entityType,
+    entity_id: input.entityId,
+    recipient: OWNER_EMAIL,
+    status: apiKey ? "pending" : "skipped",
+    error_message: apiKey ? null : "RESEND_API_KEY is not configured",
+  }).select("id").single();
+
+  if (!apiKey) return { sent: false, skipped: true };
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: FROM_EMAIL,
+        to: [OWNER_EMAIL],
+        subject: input.subject,
+        reply_to: input.replyTo ? [input.replyTo] : undefined,
+        html: input.html,
+      }),
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(typeof payload?.message === "string" ? payload.message : "Resend rejected the email");
+    }
+
+    if (delivery?.id) {
+      await admin.from("notification_deliveries").update({
+        status: "sent",
+        provider_message_id: typeof payload?.id === "string" ? payload.id : null,
+        sent_at: new Date().toISOString(),
+        error_message: null,
+      }).eq("id", delivery.id);
+    }
+
+    return { sent: true };
+  } catch (error) {
+    if (delivery?.id) {
+      await admin.from("notification_deliveries").update({
+        status: "failed",
+        error_message: error instanceof Error ? error.message.slice(0, 1000) : "Unknown email error",
+      }).eq("id", delivery.id);
+    }
+    console.error("owner email failed", error);
+    return { sent: false };
+  }
+}
+
+
 async function rateLimit(req: Request, kind: "contact" | "career" | "quote") {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
     ?? req.headers.get("cf-connecting-ip")
@@ -121,7 +197,27 @@ Deno.serve(async (req: Request) => {
         notes, language,
       }).select("id").single();
       if (error) throw error;
-      return json(req, { ok: true, reference: row.id.slice(0, 8).toUpperCase() });
+      const reference = row.id.slice(0, 8).toUpperCase();
+      await sendOwnerEmail({
+        eventType: "contact_inquiry_created",
+        entityType: "contact_inquiries",
+        entityId: row.id,
+        subject: `New Tranquility inquiry · ${name} · ${reference}`,
+        replyTo: email,
+        html: `
+          <div style="font-family:Arial,sans-serif;line-height:1.55;color:#252927">
+            <h2 style="margin:0 0 16px">New customer inquiry</h2>
+            <p><strong>Reference:</strong> ${escapeHtml(reference)}</p>
+            <p><strong>Name:</strong> ${escapeHtml(name)}<br>
+            <strong>Phone:</strong> ${escapeHtml(phone)}<br>
+            <strong>Email:</strong> ${escapeHtml(email)}<br>
+            <strong>Service:</strong> ${escapeHtml(serviceType)}<br>
+            <strong>Preferred date:</strong> ${escapeHtml(preferredDate || "Not provided")}</p>
+            <p><strong>Message:</strong><br>${escapeHtml(notes).replaceAll("\n","<br>")}</p>
+            <p style="color:#626b67">Submitted through heytlcleaning.com</p>
+          </div>`,
+      });
+      return json(req, { ok: true, reference });
     }
 
     if (kind === "career") {
@@ -144,7 +240,29 @@ Deno.serve(async (req: Request) => {
         experience, availability, additional_information: additionalInformation, language,
       }).select("id").single();
       if (error) throw error;
-      return json(req, { ok: true, reference: row.id.slice(0, 8).toUpperCase() });
+      const reference = row.id.slice(0, 8).toUpperCase();
+      await sendOwnerEmail({
+        eventType: "career_application_created",
+        entityType: "career_applications",
+        entityId: row.id,
+        subject: `New Tranquility career application · ${fullName} · ${reference}`,
+        replyTo: email,
+        html: `
+          <div style="font-family:Arial,sans-serif;line-height:1.55;color:#252927">
+            <h2 style="margin:0 0 16px">New career application</h2>
+            <p><strong>Reference:</strong> ${escapeHtml(reference)}</p>
+            <p><strong>Name:</strong> ${escapeHtml(fullName)}<br>
+            <strong>Phone:</strong> ${escapeHtml(phone)}<br>
+            <strong>Email:</strong> ${escapeHtml(email)}<br>
+            <strong>City:</strong> ${escapeHtml(city)}<br>
+            <strong>Reliable transportation:</strong> ${reliableTransportation ? "Yes" : "No"}</p>
+            <p><strong>Experience:</strong><br>${escapeHtml(experience).replaceAll("\n","<br>")}</p>
+            <p><strong>Availability:</strong><br>${escapeHtml(availability).replaceAll("\n","<br>")}</p>
+            ${additionalInformation ? `<p><strong>Additional information:</strong><br>${escapeHtml(additionalInformation).replaceAll("\n","<br>")}</p>` : ""}
+            <p style="color:#626b67">Submitted through heytlcleaning.com</p>
+          </div>`,
+      });
+      return json(req, { ok: true, reference });
     }
 
     const propertyType = clean(data.propertyType, 30);
@@ -178,10 +296,35 @@ Deno.serve(async (req: Request) => {
     }).select("id").single();
     if (error) throw error;
 
+    const reference = row.id.slice(0, 8).toUpperCase();
+    await sendOwnerEmail({
+      eventType: "quote_request_created",
+      entityType: "quote_requests",
+      entityId: row.id,
+      subject: `New Tranquility quote request · ${name} · ${reference}`,
+      replyTo: email,
+      html: `
+        <div style="font-family:Arial,sans-serif;line-height:1.55;color:#252927">
+          <h2 style="margin:0 0 16px">New custom quote request</h2>
+          <p><strong>Reference:</strong> ${escapeHtml(reference)}</p>
+          <p><strong>Name:</strong> ${escapeHtml(name)}<br>
+          <strong>Phone:</strong> ${escapeHtml(phone)}<br>
+          <strong>Email:</strong> ${escapeHtml(email)}<br>
+          <strong>City:</strong> ${escapeHtml(city)}<br>
+          <strong>Property type:</strong> ${escapeHtml(propertyType)}<br>
+          <strong>Approximate size:</strong> ${escapeHtml(approximateSize || "Not provided")}<br>
+          <strong>Desired timing:</strong> ${escapeHtml(desiredTiming || "Not provided")}<br>
+          <strong>Contact preference:</strong> ${escapeHtml(contactPreference)}</p>
+          <p><strong>Scope:</strong><br>${escapeHtml(scope).replaceAll("\n","<br>")}</p>
+          ${notes ? `<p><strong>Additional notes:</strong><br>${escapeHtml(notes).replaceAll("\n","<br>")}</p>` : ""}
+          <p style="color:#626b67">Submitted through heytlcleaning.com. Any selected photos upload securely after the request is created.</p>
+        </div>`,
+    });
+
     return json(req, {
       ok: true,
       id: row.id,
-      reference: row.id.slice(0, 8).toUpperCase(),
+      reference,
       uploadToken,
     });
   } catch (error) {
