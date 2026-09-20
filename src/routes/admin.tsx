@@ -312,14 +312,159 @@ function AdminPage() {
               ))}
             </div>
             {tables && (
-              <Tabs defaultValue="bookings" className="mt-8">
+              <Tabs defaultValue="overview" className="mt-8">
                 <TabsList className="h-auto w-full justify-start overflow-x-auto bg-card p-1">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="bookings">Bookings</TabsTrigger>
                   <TabsTrigger value="quotes">Quotes</TabsTrigger>
                   <TabsTrigger value="careers">Careers</TabsTrigger>
                   <TabsTrigger value="inquiries">Inquiries</TabsTrigger>
                   <TabsTrigger value="availability">Availability</TabsTrigger>
+                  <TabsTrigger value="service-area">Service area</TabsTrigger>
                 </TabsList>
+                <TabsContent value="overview" className="mt-5 space-y-5">
+                  <div className="rounded-lg border bg-card p-5">
+                    <h2 className="text-xl">Today</h2>
+                    {todays.length === 0 ? (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        No appointments scheduled for today.
+                      </p>
+                    ) : (
+                      <ul className="mt-3 space-y-3">
+                        {todays.map((item) => (
+                          <li key={item.id} className="rounded-lg border border-border p-4">
+                            <p className="font-semibold">
+                              {item.customer_name} · {windowLabel(item.arrival_window)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {item.service_type} · {item.frequency} · {item.service_address},{" "}
+                              {item.city} {item.zip}
+                            </p>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Estimate ${(item.estimate_cents / 100).toFixed(2)} · {item.status} ·{" "}
+                              {item.customer_phone}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="rounded-lg border bg-card p-5">
+                    <h2 className="text-xl">Next seven days</h2>
+                    {upcoming.length === 0 ? (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        No upcoming appointments this week.
+                      </p>
+                    ) : (
+                      <ul className="mt-3 space-y-2 text-sm">
+                        {upcoming.map((item) => (
+                          <li
+                            key={item.id}
+                            className="flex flex-col gap-1 border-b border-border pb-2 sm:flex-row sm:items-center sm:justify-between"
+                          >
+                            <span className="font-semibold">
+                              {item.service_date} · {windowLabel(item.arrival_window)}
+                            </span>
+                            <span className="text-muted-foreground">
+                              {item.customer_name} · {item.service_type} · {item.city}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="rounded-lg border bg-card p-5">
+                    <h2 className="text-xl">Demand by city</h2>
+                    {demand.length === 0 ? (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        No city activity recorded yet.
+                      </p>
+                    ) : (
+                      <ul className="mt-3 space-y-2 text-sm">
+                        {demand.map((item) => (
+                          <li
+                            key={item.name}
+                            className="flex items-center justify-between border-b border-border pb-2"
+                          >
+                            <span className="font-semibold">{item.name}</span>
+                            <span className="text-muted-foreground">
+                              {item.bookings} bookings · {item.quotes} quotes · {item.inquiries}{" "}
+                              applicants
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="service-area" className="mt-5 rounded-lg border bg-card p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <h2 className="text-xl">Cities we serve</h2>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setCity({
+                          id: "",
+                          name: "",
+                          latitude: "",
+                          longitude: "",
+                          isActive: true,
+                          sortOrder: "100",
+                        });
+                        setCityOpen(true);
+                      }}
+                    >
+                      <Plus /> Add city
+                    </Button>
+                  </div>
+                  <ul className="mt-4 space-y-2 text-sm">
+                    {data.cities.map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex flex-col gap-2 border-b border-border pb-2 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div>
+                          <p className="font-semibold">
+                            {item.name} {item.is_active ? "" : "(hidden)"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {item.latitude.toFixed(4)}, {item.longitude.toFixed(4)} · order{" "}
+                            {item.sort_order}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setCity({
+                                id: item.id,
+                                name: item.name,
+                                latitude: String(item.latitude),
+                                longitude: String(item.longitude),
+                                isActive: item.is_active,
+                                sortOrder: String(item.sort_order),
+                              });
+                              setCityOpen(true);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={async () => {
+                              await removeCityFn({ data: { id: item.id } });
+                              await refresh();
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </TabsContent>
                 {(["bookings", "quotes", "careers", "inquiries"] as Section[]).map((section) => (
                   <TabsContent
                     key={section}
