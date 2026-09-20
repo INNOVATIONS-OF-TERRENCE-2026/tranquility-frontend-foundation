@@ -1,16 +1,22 @@
 # Roadmap
 
-- [x] Add private storage and server validation for contact, quote, and career submissions
-- [x] Add evergreen careers listing and direct email option for Treva
-- [x] Add shared Dallas-Fort Worth map to residential service pages
-- [x] Enforce one-time-only pricing for Deep and Move-In/Move-Out services
-- [x] Update privacy disclosure for privately stored inquiry records
-- [ ] Activate branded email delivery to tlcllc26@gmail.com — blocked until the email-domain setup is completed
-- [ ] Enable Stripe test payments and finish paid booking confirmation — waiting for explicit payment authorization
-- [ ] Add the supplied cancellation/refund and deposit-to-invoice policy copy — waiting for business policy
-- [x] Verify completed routes, real contact submission, service maps, production build, and browser console
+## Done
+- Owner dashboard: overview (today, next 7 days, demand by city), search, service-area tab with city add/edit/hide/remove
+- Booking calendar wired to real availability (capacity 5 per service/window, weekday-only, owner blocks); bookings save as leads with date, window, service, estimate, reference
+- Backend: contact, careers, quote, booking save directly to the database (edge functions removed); quote photo upload route with token validation
+- Local search: 5 city pages (Euless, Bedford, Hurst, Colleyville, Grapevine), sitemap, Euless mentions, live 19-city service-area data
+- Warm porcelain redesign across all routes; bilingual + light/dark preserved; all 32 palettes intact
+- Full QA: 22 routes 200, forms end-to-end with references, ES + dark + mobile, zero console errors
 
-- [x] Add real per-service booking calendar and stored booking request confirmation
-- [x] Add secure owner sign-in and private admin lead management
-- [x] Add owner-managed availability blocks and verify capacity enforcement
-- [x] Refine the full frontend into the approved warm, airy cleaning-service design while preserving every route, feature, theme, palette, language, map, and business rule
+## Blocked on you
+- Google OAuth: add client ID/secret in Lovable Cloud Auth settings, then owner sign-in with Google works
+- Email delivery to tlcllc26@gmail.com: set up the email domain; until then submissions are stored privately with references, no email is sent
+- Stripe payments: not authorized; no payment collected anywhere
+- Cancellation/refund/deposit policy: needs your wording before it appears on the site
+- Reviews/citations: set up Google Business Profile for Euless, then Bing Places, Apple Business Connect, Yelp, Nextdoor with identical name/phone/service area
+
+## Open follow-ups
+- Stale pending booking holds never expire (expires_at = infinity); add expiry sweep
+- Move capacity 5 into an editable setting
+- Restrict direct sign-ups at the provider level once owner account exists
+- ColorStudio navy token does not adapt to warm palette; about page has two dark regions in light mode
