@@ -63,8 +63,8 @@ function ServiceAreaPage() {
           <SectionHeading
             eyebrow={text({ en: "Core communities", es: "Comunidades principales" })}
             title={text({
-              en: `${cities.length} listed DFW cities`,
-              es: `${cities.length} ciudades de DFW incluidas`,
+              en: `${cityNames.length} listed DFW cities`,
+              es: `${cityNames.length} ciudades de DFW incluidas`,
             })}
             intro={text({
               en: "The list includes Euless. Surrounding communities may also be considered after address review.",
@@ -72,7 +72,7 @@ function ServiceAreaPage() {
             })}
           />
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {cities.map((city) => (
+            {cityNames.map((city) => (
               <li
                 key={city}
                 className="rounded-2xl border border-border bg-card px-5 py-4 text-base font-semibold text-ink shadow-soft"
