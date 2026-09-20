@@ -289,9 +289,19 @@ function AdminPage() {
               Manage requests, follow-ups, notes, and schedule availability.
             </p>
           </div>
-          <Button onClick={() => setBlockOpen(true)}>
-            <CalendarOff /> Block availability
-          </Button>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <Input
+              type="search"
+              placeholder="Search name, email, city, status"
+              aria-label="Search records"
+              className="sm:w-72"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <Button onClick={() => setBlockOpen(true)}>
+              <CalendarOff /> Block availability
+            </Button>
+          </div>
         </div>
         {error && (
           <p
