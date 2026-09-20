@@ -71,7 +71,7 @@ export function CityPage({ city, intro, neighborhoods, nearby }: CityPageProps) 
                     className="mt-4 inline-flex text-sm font-semibold text-moss underline-offset-4 hover:underline"
                   >
                     {text({ en: "See what is included", es: "Ver lo que incluye" })}
-                  </Link>
+                  </a>
                 </article>
               ))}
             </div>
