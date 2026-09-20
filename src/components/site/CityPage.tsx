@@ -57,7 +57,9 @@ export function CityPage({ city, intro, neighborhoods, nearby }: CityPageProps) 
                   className="rounded-3xl border border-border bg-card p-6 shadow-soft"
                 >
                   <Sparkles className="size-5 text-gold" aria-hidden="true" />
-                  <h3 className="mt-3 text-xl">{text(service.name)}</h3>
+                  <h3 className="mt-3 text-xl">
+                    {text(serviceNames[service.id] ?? { en: service.name, es: service.name })}
+                  </h3>
                   <p className="mt-2 font-display text-3xl text-ink">
                     {money(servicePrice(service.id, "onetime"))}
                   </p>
