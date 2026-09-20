@@ -117,7 +117,11 @@ function AdminPage() {
 
   const tables = useMemo(() => {
     if (!data) return null;
-    return {
+    const query = search.trim().toLowerCase();
+    const matches = (row: AdminRow) =>
+      !query ||
+      `${row.title} ${row.subtitle} ${row.status} ${row.date}`.toLowerCase().includes(query);
+    const all = {
       bookings: data.bookings.map((item) => ({
         id: item.id,
         title: item.customer_name,
@@ -129,7 +133,7 @@ function AdminPage() {
       quotes: data.quotes.map((item) => ({
         id: item.id,
         title: item.name,
-        subtitle: `${item.email} · ${item.property_type}`,
+        subtitle: `${item.email} · ${item.property_type} · ${item.city}`,
         status: item.status,
         date: new Date(item.created_at).toLocaleDateString(),
         raw: item as unknown as Record<string, unknown>,
@@ -151,6 +155,33 @@ function AdminPage() {
         raw: item as unknown as Record<string, unknown>,
       })),
     };
+    return {
+      bookings: all.bookings.filter(matches),
+      quotes: all.quotes.filter(matches),
+      careers: all.careers.filter(matches),
+      inquiries: all.inquiries.filter(matches),
+    };
+  }, [data, search]);
+
+  const overview = useMemo(() => {
+    if (!data) return null;
+    const today = new Date().toISOString().slice(0, 10);
+    const weekEnd = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+    const active = data.bookings.filter((item) => !["cancelled", "completed"].includes(item.status));
+    const todays = active
+      .filter((item) => item.service_date === today)
+      .sort((a, b) => a.arrival_window.localeCompare(b.arrival_window));
+    const upcoming = active
+      .filter((item) => item.service_date > today && item.service_date <= weekEnd)
+      .sort((a, b) =>
+        `${a.service_date}${a.arrival_window}`.localeCompare(`${b.service_date}${b.arrival_window}`),
+      );
+    const demand = new Map<string, number>();
+    for (const item of data.bookings) demand.set(item.city, (demand.get(item.city) ?? 0) + 1);
+    for (const item of data.quotes) demand.set(item.city, (demand.get(item.city) ?? 0) + 1);
+    for (const item of data.careers) demand.set(item.city, (demand.get(item.city) ?? 0) + 1);
+    const demandByCity = [...demand.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
+    return { today, todays, upcoming, demandByCity };
   }, [data]);
 
   const editingMedia = useMemo(
