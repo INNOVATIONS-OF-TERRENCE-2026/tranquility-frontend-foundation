@@ -30,9 +30,9 @@ import { seo } from "@/lib/seo";
 export const Route = createFileRoute("/")({
   head: () =>
     seo({
-      title: "Tranquility Level Cleaning | Premium Cleaning in Dallas-Fort Worth",
+      title: "House Cleaning in Euless and Dallas-Fort Worth | Tranquility Level Cleaning",
       description:
-        "Premium residential, deep, move-in, move-out, and commercial cleaning across Dallas-Fort Worth with clear pricing and thoughtful care.",
+        "Residential, deep, move-in, move-out, and commercial cleaning in Euless, Bedford, Hurst, Colleyville, Grapevine, and across Dallas-Fort Worth with clear pricing and online booking.",
       path: "/",
     }),
   component: Home,
