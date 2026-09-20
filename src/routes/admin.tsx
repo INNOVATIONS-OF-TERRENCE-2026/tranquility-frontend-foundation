@@ -253,7 +253,8 @@ function AdminPage() {
     };
     for (const item of data?.bookings ?? []) bump(item.city, "bookings");
     for (const item of data?.quotes ?? []) bump(item.city, "quotes");
-    for (const item of data?.inquiries ?? []) bump(item.service_type ? null : null, "inquiries");
+    for (const item of data?.careers ?? []) bump(item.city, "inquiries");
+
 
     return [...map.entries()]
       .map(([name, counts]) => ({ name, ...counts, total: counts.bookings + counts.quotes }))
