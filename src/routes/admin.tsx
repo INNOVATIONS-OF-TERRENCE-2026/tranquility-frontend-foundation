@@ -91,6 +91,16 @@ function AdminPage() {
     arrivalWindow: "all",
     reason: "",
   });
+  const [search, setSearch] = useState("");
+  const [cityOpen, setCityOpen] = useState(false);
+  const [city, setCity] = useState({
+    id: "",
+    name: "",
+    latitude: "",
+    longitude: "",
+    isActive: true,
+    sortOrder: "100",
+  });
 
   const refresh = useCallback(async () => {
     try {
