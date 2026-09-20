@@ -21,6 +21,7 @@ import { Route as DeepCleaningRouteImport } from './routes/deep-cleaning'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HouseCleaningBedfordRouteImport } from './routes/house-cleaning-bedford'
 import { Route as HouseCleaningEulessRouteImport } from './routes/house-cleaning-euless'
+import { Route as HouseCleaningHurstRouteImport } from './routes/house-cleaning-hurst'
 import { Route as MoveInMoveOutCleaningRouteImport } from './routes/move-in-move-out-cleaning'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as QuoteRouteImport } from './routes/quote'
@@ -91,6 +92,11 @@ const HouseCleaningEulessRoute = HouseCleaningEulessRouteImport.update({
   path: '/house-cleaning-euless',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HouseCleaningHurstRoute = HouseCleaningHurstRouteImport.update({
+  id: '/house-cleaning-hurst',
+  path: '/house-cleaning-hurst',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MoveInMoveOutCleaningRoute = MoveInMoveOutCleaningRouteImport.update({
   id: '/move-in-move-out-cleaning',
   path: '/move-in-move-out-cleaning',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/house-cleaning-bedford'
     | '/house-cleaning-euless'
+    | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/house-cleaning-bedford'
     | '/house-cleaning-euless'
+    | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/house-cleaning-bedford'
     | '/house-cleaning-euless'
+    | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -292,6 +304,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   HouseCleaningBedfordRoute: typeof HouseCleaningBedfordRoute
   HouseCleaningEulessRoute: typeof HouseCleaningEulessRoute
+  HouseCleaningHurstRoute: typeof HouseCleaningHurstRoute
   MoveInMoveOutCleaningRoute: typeof MoveInMoveOutCleaningRoute
   PrivacyRoute: typeof PrivacyRoute
   QuoteRoute: typeof QuoteRoute
@@ -389,6 +402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HouseCleaningEulessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/house-cleaning-hurst': {
+      id: '/house-cleaning-hurst'
+      path: '/house-cleaning-hurst'
+      fullPath: '/house-cleaning-hurst'
+      preLoaderRoute: typeof HouseCleaningHurstRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/move-in-move-out-cleaning': {
       id: '/move-in-move-out-cleaning'
       path: '/move-in-move-out-cleaning'
@@ -468,6 +488,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   HouseCleaningBedfordRoute: HouseCleaningBedfordRoute,
   HouseCleaningEulessRoute: HouseCleaningEulessRoute,
+  HouseCleaningHurstRoute: HouseCleaningHurstRoute,
   MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
   PrivacyRoute: PrivacyRoute,
   QuoteRoute: QuoteRoute,
