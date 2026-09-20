@@ -1,8 +1,10 @@
+import { useServerFn } from "@tanstack/react-start";
 import { ChevronDown, MapPin, Navigation, Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { serviceCities } from "@/config/business";
+import { listServiceCities } from "@/lib/service-area.functions";
 
 const radiusOptions = [10, 15, 20, 25, 30, 40, 50, 75] as const;
 
