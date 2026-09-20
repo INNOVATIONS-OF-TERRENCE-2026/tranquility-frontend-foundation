@@ -19,6 +19,7 @@ import { Route as CommercialCleaningRouteImport } from './routes/commercial-clea
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DeepCleaningRouteImport } from './routes/deep-cleaning'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as HouseCleaningEulessRouteImport } from './routes/house-cleaning-euless'
 import { Route as MoveInMoveOutCleaningRouteImport } from './routes/move-in-move-out-cleaning'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as QuoteRouteImport } from './routes/quote'
@@ -79,6 +80,11 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HouseCleaningEulessRoute = HouseCleaningEulessRouteImport.update({
+  id: '/house-cleaning-euless',
+  path: '/house-cleaning-euless',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MoveInMoveOutCleaningRoute = MoveInMoveOutCleaningRouteImport.update({
   id: '/move-in-move-out-cleaning',
   path: '/move-in-move-out-cleaning',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/house-cleaning-euless': typeof HouseCleaningEulessRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/house-cleaning-euless': typeof HouseCleaningEulessRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/house-cleaning-euless': typeof HouseCleaningEulessRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/house-cleaning-euless'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/house-cleaning-euless'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/house-cleaning-euless'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DeepCleaningRoute: typeof DeepCleaningRoute
   FaqRoute: typeof FaqRoute
+  HouseCleaningEulessRoute: typeof HouseCleaningEulessRoute
   MoveInMoveOutCleaningRoute: typeof MoveInMoveOutCleaningRoute
   PrivacyRoute: typeof PrivacyRoute
   QuoteRoute: typeof QuoteRoute
@@ -349,6 +362,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/house-cleaning-euless': {
+      id: '/house-cleaning-euless'
+      path: '/house-cleaning-euless'
+      fullPath: '/house-cleaning-euless'
+      preLoaderRoute: typeof HouseCleaningEulessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/move-in-move-out-cleaning': {
       id: '/move-in-move-out-cleaning'
       path: '/move-in-move-out-cleaning'
@@ -426,6 +446,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DeepCleaningRoute: DeepCleaningRoute,
   FaqRoute: FaqRoute,
+  HouseCleaningEulessRoute: HouseCleaningEulessRoute,
   MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
   PrivacyRoute: PrivacyRoute,
   QuoteRoute: QuoteRoute,
