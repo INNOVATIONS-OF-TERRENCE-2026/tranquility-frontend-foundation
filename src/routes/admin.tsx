@@ -262,7 +262,6 @@ function AdminPage() {
     for (const item of data?.quotes ?? []) bump(item.city, "quotes");
     for (const item of data?.careers ?? []) bump(item.city, "inquiries");
 
-
     return [...map.entries()]
       .map(([name, counts]) => ({ name, ...counts, total: counts.bookings + counts.quotes }))
       .sort((a, b) => b.total - a.total);
