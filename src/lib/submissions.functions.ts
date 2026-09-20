@@ -1,5 +1,3 @@
-import { createHmac } from "crypto";
-
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -63,7 +61,8 @@ function referenceFromId(id: string) {
   return `TLC-${id.replace(/-/g, "").slice(0, 8).toUpperCase()}`;
 }
 
-export function quoteUploadToken(quoteId: string) {
+async function quoteUploadToken(quoteId: string) {
+  const { createHmac } = await import("crypto");
   const secret = process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "";
   return createHmac("sha256", secret).update(`quote-media:${quoteId}`).digest("hex");
 }

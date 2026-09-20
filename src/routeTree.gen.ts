@@ -28,6 +28,7 @@ import { Route as ServiceAreaRouteImport } from './routes/service-area'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ApiPublicQuoteMediaUploadRouteImport } from './routes/api/public/quote-media-upload'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -124,6 +125,12 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicQuoteMediaUploadRoute =
+  ApiPublicQuoteMediaUploadRouteImport.update({
+    id: '/api/public/quote-media-upload',
+    path: '/api/public/quote-media-upload',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -166,6 +174,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -188,6 +197,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/api/public/quote-media-upload'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/api/public/quote-media-upload'
   id:
     | '__root__'
     | '/'
@@ -253,6 +265,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/api/public/quote-media-upload'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -275,6 +288,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   StudioRoute: typeof StudioRoute
   TermsRoute: typeof TermsRoute
+  ApiPublicQuoteMediaUploadRoute: typeof ApiPublicQuoteMediaUploadRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -412,6 +426,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/quote-media-upload': {
+      id: '/api/public/quote-media-upload'
+      path: '/api/public/quote-media-upload'
+      fullPath: '/api/public/quote-media-upload'
+      preLoaderRoute: typeof ApiPublicQuoteMediaUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -435,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   StudioRoute: StudioRoute,
   TermsRoute: TermsRoute,
+  ApiPublicQuoteMediaUploadRoute: ApiPublicQuoteMediaUploadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
