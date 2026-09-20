@@ -702,6 +702,83 @@ function AdminPage() {
           </form>
         </DialogContent>
       </Dialog>
+      <Dialog open={Boolean(cityEditing)} onOpenChange={(open) => !open && setCityEditing(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{cityEditing === "new" ? "Add a city" : "Edit city"}</DialogTitle>
+            <DialogDescription>
+              This updates the public service-area map and city list.
+            </DialogDescription>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={saveCitySubmit}>
+            <div>
+              <Label>City name</Label>
+              <Input
+                className="mt-2"
+                required
+                value={cityForm.name}
+                onChange={(event) => setCityForm({ ...cityForm, name: event.target.value })}
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label>Latitude</Label>
+                <Input
+                  className="mt-2"
+                  required
+                  type="number"
+                  step="0.0001"
+                  value={cityForm.latitude}
+                  onChange={(event) => setCityForm({ ...cityForm, latitude: event.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Longitude</Label>
+                <Input
+                  className="mt-2"
+                  required
+                  type="number"
+                  step="0.0001"
+                  value={cityForm.longitude}
+                  onChange={(event) => setCityForm({ ...cityForm, longitude: event.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label>Sort order</Label>
+                <Input
+                  className="mt-2"
+                  required
+                  type="number"
+                  value={cityForm.sortOrder}
+                  onChange={(event) => setCityForm({ ...cityForm, sortOrder: event.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Visibility</Label>
+                <Select
+                  value={cityForm.isActive ? "active" : "hidden"}
+                  onValueChange={(value) =>
+                    setCityForm({ ...cityForm, isActive: value === "active" })
+                  }
+                >
+                  <SelectTrigger className="mt-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Shown on site</SelectItem>
+                    <SelectItem value="hidden">Hidden</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <Button type="submit" className="w-full">
+              Save city
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
       <AlertDialog open={Boolean(deleting)} onOpenChange={(open) => !open && setDeleting(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
