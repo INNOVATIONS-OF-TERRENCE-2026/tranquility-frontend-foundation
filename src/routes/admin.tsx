@@ -479,7 +479,7 @@ function AdminPage() {
                     className="mt-5 rounded-lg border bg-card p-3"
                   >
                     <AdminTable
-                      rows={tables[section]}
+                      rows={filterRows(tables[section])}
                       onEdit={(row) => openEdit(section, row)}
                       onDelete={(row) => setDeleting({ section, row })}
                     />
