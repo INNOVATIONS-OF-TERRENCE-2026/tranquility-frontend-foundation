@@ -22,6 +22,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HouseCleaningBedfordRouteImport } from './routes/house-cleaning-bedford'
 import { Route as HouseCleaningColleyvilleRouteImport } from './routes/house-cleaning-colleyville'
 import { Route as HouseCleaningEulessRouteImport } from './routes/house-cleaning-euless'
+import { Route as HouseCleaningGrapevineRouteImport } from './routes/house-cleaning-grapevine'
 import { Route as HouseCleaningHurstRouteImport } from './routes/house-cleaning-hurst'
 import { Route as MoveInMoveOutCleaningRouteImport } from './routes/move-in-move-out-cleaning'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -99,6 +100,11 @@ const HouseCleaningEulessRoute = HouseCleaningEulessRouteImport.update({
   path: '/house-cleaning-euless',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HouseCleaningGrapevineRoute = HouseCleaningGrapevineRouteImport.update({
+  id: '/house-cleaning-grapevine',
+  path: '/house-cleaning-grapevine',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HouseCleaningHurstRoute = HouseCleaningHurstRouteImport.update({
   id: '/house-cleaning-hurst',
   path: '/house-cleaning-hurst',
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-grapevine': typeof HouseCleaningGrapevineRoute
   '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-grapevine': typeof HouseCleaningGrapevineRoute
   '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-grapevine': typeof HouseCleaningGrapevineRoute
   '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
+    | '/house-cleaning-grapevine'
     | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
+    | '/house-cleaning-grapevine'
     | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
@@ -292,6 +303,7 @@ export interface FileRouteTypes {
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
+    | '/house-cleaning-grapevine'
     | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
@@ -318,6 +330,7 @@ export interface RootRouteChildren {
   HouseCleaningBedfordRoute: typeof HouseCleaningBedfordRoute
   HouseCleaningColleyvilleRoute: typeof HouseCleaningColleyvilleRoute
   HouseCleaningEulessRoute: typeof HouseCleaningEulessRoute
+  HouseCleaningGrapevineRoute: typeof HouseCleaningGrapevineRoute
   HouseCleaningHurstRoute: typeof HouseCleaningHurstRoute
   MoveInMoveOutCleaningRoute: typeof MoveInMoveOutCleaningRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -423,6 +436,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HouseCleaningEulessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/house-cleaning-grapevine': {
+      id: '/house-cleaning-grapevine'
+      path: '/house-cleaning-grapevine'
+      fullPath: '/house-cleaning-grapevine'
+      preLoaderRoute: typeof HouseCleaningGrapevineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/house-cleaning-hurst': {
       id: '/house-cleaning-hurst'
       path: '/house-cleaning-hurst'
@@ -510,6 +530,7 @@ const rootRouteChildren: RootRouteChildren = {
   HouseCleaningBedfordRoute: HouseCleaningBedfordRoute,
   HouseCleaningColleyvilleRoute: HouseCleaningColleyvilleRoute,
   HouseCleaningEulessRoute: HouseCleaningEulessRoute,
+  HouseCleaningGrapevineRoute: HouseCleaningGrapevineRoute,
   HouseCleaningHurstRoute: HouseCleaningHurstRoute,
   MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
   PrivacyRoute: PrivacyRoute,
