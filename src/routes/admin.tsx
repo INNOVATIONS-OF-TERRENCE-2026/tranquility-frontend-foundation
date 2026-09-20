@@ -167,14 +167,18 @@ function AdminPage() {
     if (!data) return null;
     const today = new Date().toISOString().slice(0, 10);
     const weekEnd = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-    const active = data.bookings.filter((item) => !["cancelled", "completed"].includes(item.status));
+    const active = data.bookings.filter(
+      (item) => !["cancelled", "completed"].includes(item.status),
+    );
     const todays = active
       .filter((item) => item.service_date === today)
       .sort((a, b) => a.arrival_window.localeCompare(b.arrival_window));
     const upcoming = active
       .filter((item) => item.service_date > today && item.service_date <= weekEnd)
       .sort((a, b) =>
-        `${a.service_date}${a.arrival_window}`.localeCompare(`${b.service_date}${b.arrival_window}`),
+        `${a.service_date}${a.arrival_window}`.localeCompare(
+          `${b.service_date}${b.arrival_window}`,
+        ),
       );
     const demand = new Map<string, number>();
     for (const item of data.bookings) demand.set(item.city, (demand.get(item.city) ?? 0) + 1);

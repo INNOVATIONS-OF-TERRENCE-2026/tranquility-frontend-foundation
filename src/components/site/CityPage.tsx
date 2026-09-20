@@ -95,7 +95,10 @@ export function CityPage({ city }: { city: CityGuide }) {
             </ul>
             <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-soft">
               <h3 className="font-display text-xl text-ink">
-                {text({ en: "Careful work, clear windows", es: "Trabajo cuidadoso, horarios claros" })}
+                {text({
+                  en: "Careful work, clear windows",
+                  es: "Trabajo cuidadoso, horarios claros",
+                })}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {text({

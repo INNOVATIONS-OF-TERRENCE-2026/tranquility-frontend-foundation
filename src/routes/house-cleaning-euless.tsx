@@ -10,7 +10,14 @@ const city: CityGuide = {
     "Tranquility Level Cleaning is based in the Mid-Cities, and Euless is our home turf. From apartments near Glade Parks to family homes off Harwood Road, we bring a detailed checklist, careful products, and steady weekday arrival windows to every visit.",
   introEs:
     "Tranquility Level Cleaning tiene su base en los Mid-Cities, y Euless es nuestro hogar. Desde apartamentos cerca de Glade Parks hasta casas familiares junto a Harwood Road, llevamos una lista detallada, productos cuidadosos y horarios de llegada puntuales entre semana a cada visita.",
-  neighborhoods: ["Glade Parks", "Bear Creek", "Westdale Hills", "Trinity Oaks", "Midway Park", "Wilkshire"],
+  neighborhoods: [
+    "Glade Parks",
+    "Bear Creek",
+    "Westdale Hills",
+    "Trinity Oaks",
+    "Midway Park",
+    "Wilkshire",
+  ],
   nearby: [
     { to: "/house-cleaning-bedford", name: "Bedford" },
     { to: "/house-cleaning-hurst", name: "Hurst" },

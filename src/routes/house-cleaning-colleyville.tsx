@@ -10,7 +10,13 @@ const city: CityGuide = {
     "Colleyville homes often have larger floor plans and fine finishes, and our checklist reflects that. We tailor each visit room by room, with careful products and a written estimate before any work begins.",
   introEs:
     "Las casas de Colleyville suelen tener planos más amplios y acabados finos, y nuestra lista de limpieza lo refleja. Adaptamos cada visita habitación por habitación, con productos cuidadosos y un estimado por escrito antes de comenzar.",
-  neighborhoods: ["Colleyville Downs", "Woodbriar", "Brook Meadows", "Whittier Heights", "Pleasant Glade"],
+  neighborhoods: [
+    "Colleyville Downs",
+    "Woodbriar",
+    "Brook Meadows",
+    "Whittier Heights",
+    "Pleasant Glade",
+  ],
   nearby: [
     { to: "/house-cleaning-euless", name: "Euless" },
     { to: "/house-cleaning-bedford", name: "Bedford" },
