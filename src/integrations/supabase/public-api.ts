@@ -46,7 +46,30 @@ export async function uploadQuotePhoto(input: {
   const form = new FormData();
   form.set("quoteId", input.quoteId);
   form.set("uploadToken", input.uploadToken);
-  form.set("file", input.file);
+
+  const extension = input.file.name.split(".").pop()?.toLowerCase();
+  const inferredType =
+    extension === "jpg" || extension === "jpeg"
+      ? "image/jpeg"
+      : extension === "png"
+        ? "image/png"
+        : extension === "webp"
+          ? "image/webp"
+          : extension === "heic"
+            ? "image/heic"
+            : extension === "heif"
+              ? "image/heif"
+              : "";
+
+  const uploadFile =
+    input.file.type || !inferredType
+      ? input.file
+      : new File([input.file], input.file.name, {
+          type: inferredType,
+          lastModified: input.file.lastModified,
+        });
+
+  form.set("file", uploadFile);
 
   const response = await fetch(`${SUPABASE_URL}/functions/v1/quote-media-upload`, {
     method: "POST",
