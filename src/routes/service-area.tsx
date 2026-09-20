@@ -7,6 +7,7 @@ import { CTABand } from "@/components/site/CTABand";
 import { PageHero, SectionHeading } from "@/components/site/PageHero";
 import { ServiceAreaExplorer } from "@/components/site/ServiceAreaExplorer";
 import { business, cities } from "@/config/business";
+import { listServiceCities } from "@/lib/service-area.functions";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/service-area")({
