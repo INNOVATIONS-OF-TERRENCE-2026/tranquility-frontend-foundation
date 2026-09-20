@@ -7,35 +7,27 @@ import type { Database } from "@/integrations/supabase/types";
 
 const sectionSchema = z.enum(["bookings", "quotes", "careers", "inquiries"]);
 const statusSchema = z.string().trim().min(2).max(30);
+const OWNER_EMAIL = "tlcllc26@gmail.com";
 
 async function requireAdmin(context: { supabase: SupabaseClient<Database>; userId: string }) {
-  const { data, error } = await context.supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", context.userId)
-    .eq("role", "admin")
-    .maybeSingle();
-  if (error || !data) throw new Error("Forbidden");
+  const { data, error } = await context.supabase.auth.getUser();
+  const user = data.user;
+  if (
+    error ||
+    !user ||
+    user.id !== context.userId ||
+    !user.email_confirmed_at ||
+    user.email?.toLowerCase() !== OWNER_EMAIL
+  ) {
+    throw new Error("Forbidden");
+  }
+  return user;
 }
 
 export const bootstrapAdmin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase.auth.getUser();
-    const user = data.user;
-    if (
-      error ||
-      !user ||
-      !user.email_confirmed_at ||
-      user.email?.toLowerCase() !== "tlcllc26@gmail.com"
-    ) {
-      throw new Error("This verified account is not authorized for administrator access.");
-    }
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error: roleError } = await supabaseAdmin
-      .from("user_roles")
-      .upsert({ user_id: user.id, role: "admin" }, { onConflict: "user_id,role" });
-    if (roleError) throw new Error("Unable to initialize administrator access.");
+    await requireAdmin(context);
     return { ok: true as const };
   });
 
@@ -43,7 +35,7 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await requireAdmin(context);
-    const [bookings, quotes, careers, inquiries, blocks] = await Promise.all([
+    const [bookings, quotes, careers, inquiries, blocks, media] = await Promise.all([
       context.supabase
         .from("booking_holds")
         .select("*")
@@ -69,17 +61,34 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
         .select("*")
         .order("start_date", { ascending: true })
         .limit(200),
+      context.supabase
+        .from("quote_media")
+        .select("*")
+        .order("created_at", { ascending: true })
+        .limit(500),
     ]);
-    const failure = [bookings, quotes, careers, inquiries, blocks].find(
+
+    const failure = [bookings, quotes, careers, inquiries, blocks, media].find(
       (result) => result.error,
     )?.error;
     if (failure) throw new Error("Unable to load administrator records.");
+
+    const quoteMedia = await Promise.all(
+      (media.data ?? []).map(async (item) => {
+        const { data } = await context.supabase.storage
+          .from("quote-media")
+          .createSignedUrl(item.object_path, 15 * 60);
+        return { ...item, signed_url: data?.signedUrl ?? null };
+      }),
+    );
+
     return {
       bookings: bookings.data ?? [],
       quotes: quotes.data ?? [],
       careers: careers.data ?? [],
       inquiries: inquiries.data ?? [],
       blocks: blocks.data ?? [],
+      quoteMedia,
     };
   });
 
@@ -112,11 +121,13 @@ export const updateAdminRecord = createServerFn({ method: "POST" })
         ? ["pending", "confirmed", "completed", "cancelled"]
         : ["new", "reviewing", "contacted", "closed"];
     if (!allowed.includes(data.status)) throw new Error("Invalid status.");
+
     const baseValues = { status: data.status, private_notes: data.privateNotes || null };
     const values =
       data.section === "bookings" && data.serviceDate && data.arrivalWindow
         ? { ...baseValues, service_date: data.serviceDate, arrival_window: data.arrivalWindow }
         : baseValues;
+
     const { error } = await context.supabase.from(table).update(values).eq("id", data.id);
     if (error) throw new Error("Unable to update this record.");
     return { ok: true as const };
@@ -155,7 +166,9 @@ export const createAvailabilityBlock = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
-    if (data.endDate < data.startDate) throw new Error("End date must be on or after start date.");
+    if (data.endDate < data.startDate) {
+      throw new Error("End date must be on or after start date.");
+    }
     const { error } = await context.supabase.from("availability_blocks").insert({
       start_date: data.startDate,
       end_date: data.endDate,
