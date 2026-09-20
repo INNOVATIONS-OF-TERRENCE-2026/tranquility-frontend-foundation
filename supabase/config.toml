@@ -1,1 +1,10 @@
 project_id = "baetmqwuqsmxveglhucg"
+
+[functions.public-submissions]
+verify_jwt = false
+
+[functions.booking-api]
+verify_jwt = false
+
+[functions.quote-media-upload]
+verify_jwt = false
