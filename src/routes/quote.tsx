@@ -619,7 +619,10 @@ function QuotePage() {
               </p>
             )}
             {uploadWarning && (
-              <p className="rounded-lg border border-gold/30 bg-gold/10 p-4 text-sm leading-relaxed text-ink" role="alert">
+              <p
+                className="rounded-lg border border-gold/30 bg-gold/10 p-4 text-sm leading-relaxed text-ink"
+                role="alert"
+              >
                 {uploadWarning}
               </p>
             )}

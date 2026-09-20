@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
     seo({
       title: "Tranquility Level Cleaning | Premium Cleaning in Dallas-Fort Worth",
       description:
-        "Premium residential, deep, move-in, move-out, and commercial cleaning across Dallas-Fort Worth with clear pricing and thoughtful care.",
+        "Premium house cleaning based in Euless and serving Dallas-Fort Worth, including Bedford, Hurst, Colleyville, and Grapevine. Standard, deep, and move-in/move-out cleaning with clear pricing.",
       path: "/",
     }),
   component: Home,

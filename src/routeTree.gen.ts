@@ -19,6 +19,11 @@ import { Route as CommercialCleaningRouteImport } from './routes/commercial-clea
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DeepCleaningRouteImport } from './routes/deep-cleaning'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as HouseCleaningBedfordRouteImport } from './routes/house-cleaning-bedford'
+import { Route as HouseCleaningColleyvilleRouteImport } from './routes/house-cleaning-colleyville'
+import { Route as HouseCleaningEulessRouteImport } from './routes/house-cleaning-euless'
+import { Route as HouseCleaningGrapevineRouteImport } from './routes/house-cleaning-grapevine'
+import { Route as HouseCleaningHurstRouteImport } from './routes/house-cleaning-hurst'
 import { Route as MoveInMoveOutCleaningRouteImport } from './routes/move-in-move-out-cleaning'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as QuoteRouteImport } from './routes/quote'
@@ -28,6 +33,7 @@ import { Route as ServiceAreaRouteImport } from './routes/service-area'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ApiPublicQuoteMediaUploadRouteImport } from './routes/api/public/quote-media-upload'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -79,6 +85,32 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HouseCleaningBedfordRoute = HouseCleaningBedfordRouteImport.update({
+  id: '/house-cleaning-bedford',
+  path: '/house-cleaning-bedford',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HouseCleaningColleyvilleRoute =
+  HouseCleaningColleyvilleRouteImport.update({
+    id: '/house-cleaning-colleyville',
+    path: '/house-cleaning-colleyville',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const HouseCleaningEulessRoute = HouseCleaningEulessRouteImport.update({
+  id: '/house-cleaning-euless',
+  path: '/house-cleaning-euless',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HouseCleaningGrapevineRoute = HouseCleaningGrapevineRouteImport.update({
+  id: '/house-cleaning-grapevine',
+  path: '/house-cleaning-grapevine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HouseCleaningHurstRoute = HouseCleaningHurstRouteImport.update({
+  id: '/house-cleaning-hurst',
+  path: '/house-cleaning-hurst',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MoveInMoveOutCleaningRoute = MoveInMoveOutCleaningRouteImport.update({
   id: '/move-in-move-out-cleaning',
   path: '/move-in-move-out-cleaning',
@@ -124,6 +156,12 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicQuoteMediaUploadRoute =
+  ApiPublicQuoteMediaUploadRouteImport.update({
+    id: '/api/public/quote-media-upload',
+    path: '/api/public/quote-media-upload',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -136,6 +174,11 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
+  '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
+  '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-grapevine': typeof HouseCleaningGrapevineRoute
+  '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -145,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -157,6 +201,11 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
+  '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
+  '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-grapevine': typeof HouseCleaningGrapevineRoute
+  '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -166,6 +215,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -179,6 +229,11 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
+  '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
+  '/house-cleaning-euless': typeof HouseCleaningEulessRoute
+  '/house-cleaning-grapevine': typeof HouseCleaningGrapevineRoute
+  '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
   '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
@@ -188,6 +243,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -202,6 +258,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/house-cleaning-bedford'
+    | '/house-cleaning-colleyville'
+    | '/house-cleaning-euless'
+    | '/house-cleaning-grapevine'
+    | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -211,6 +272,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/api/public/quote-media-upload'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -223,6 +285,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/house-cleaning-bedford'
+    | '/house-cleaning-colleyville'
+    | '/house-cleaning-euless'
+    | '/house-cleaning-grapevine'
+    | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -232,6 +299,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/api/public/quote-media-upload'
   id:
     | '__root__'
     | '/'
@@ -244,6 +312,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/house-cleaning-bedford'
+    | '/house-cleaning-colleyville'
+    | '/house-cleaning-euless'
+    | '/house-cleaning-grapevine'
+    | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
     | '/privacy'
     | '/quote'
@@ -253,6 +326,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/api/public/quote-media-upload'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -266,6 +340,11 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DeepCleaningRoute: typeof DeepCleaningRoute
   FaqRoute: typeof FaqRoute
+  HouseCleaningBedfordRoute: typeof HouseCleaningBedfordRoute
+  HouseCleaningColleyvilleRoute: typeof HouseCleaningColleyvilleRoute
+  HouseCleaningEulessRoute: typeof HouseCleaningEulessRoute
+  HouseCleaningGrapevineRoute: typeof HouseCleaningGrapevineRoute
+  HouseCleaningHurstRoute: typeof HouseCleaningHurstRoute
   MoveInMoveOutCleaningRoute: typeof MoveInMoveOutCleaningRoute
   PrivacyRoute: typeof PrivacyRoute
   QuoteRoute: typeof QuoteRoute
@@ -275,6 +354,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   StudioRoute: typeof StudioRoute
   TermsRoute: typeof TermsRoute
+  ApiPublicQuoteMediaUploadRoute: typeof ApiPublicQuoteMediaUploadRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -349,6 +429,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/house-cleaning-bedford': {
+      id: '/house-cleaning-bedford'
+      path: '/house-cleaning-bedford'
+      fullPath: '/house-cleaning-bedford'
+      preLoaderRoute: typeof HouseCleaningBedfordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/house-cleaning-colleyville': {
+      id: '/house-cleaning-colleyville'
+      path: '/house-cleaning-colleyville'
+      fullPath: '/house-cleaning-colleyville'
+      preLoaderRoute: typeof HouseCleaningColleyvilleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/house-cleaning-euless': {
+      id: '/house-cleaning-euless'
+      path: '/house-cleaning-euless'
+      fullPath: '/house-cleaning-euless'
+      preLoaderRoute: typeof HouseCleaningEulessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/house-cleaning-grapevine': {
+      id: '/house-cleaning-grapevine'
+      path: '/house-cleaning-grapevine'
+      fullPath: '/house-cleaning-grapevine'
+      preLoaderRoute: typeof HouseCleaningGrapevineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/house-cleaning-hurst': {
+      id: '/house-cleaning-hurst'
+      path: '/house-cleaning-hurst'
+      fullPath: '/house-cleaning-hurst'
+      preLoaderRoute: typeof HouseCleaningHurstRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/move-in-move-out-cleaning': {
       id: '/move-in-move-out-cleaning'
       path: '/move-in-move-out-cleaning'
@@ -412,6 +527,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/quote-media-upload': {
+      id: '/api/public/quote-media-upload'
+      path: '/api/public/quote-media-upload'
+      fullPath: '/api/public/quote-media-upload'
+      preLoaderRoute: typeof ApiPublicQuoteMediaUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -426,6 +548,11 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DeepCleaningRoute: DeepCleaningRoute,
   FaqRoute: FaqRoute,
+  HouseCleaningBedfordRoute: HouseCleaningBedfordRoute,
+  HouseCleaningColleyvilleRoute: HouseCleaningColleyvilleRoute,
+  HouseCleaningEulessRoute: HouseCleaningEulessRoute,
+  HouseCleaningGrapevineRoute: HouseCleaningGrapevineRoute,
+  HouseCleaningHurstRoute: HouseCleaningHurstRoute,
   MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
   PrivacyRoute: PrivacyRoute,
   QuoteRoute: QuoteRoute,
@@ -435,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   StudioRoute: StudioRoute,
   TermsRoute: TermsRoute,
+  ApiPublicQuoteMediaUploadRoute: ApiPublicQuoteMediaUploadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

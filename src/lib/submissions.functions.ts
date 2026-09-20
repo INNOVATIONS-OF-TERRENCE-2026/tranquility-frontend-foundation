@@ -1,8 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { invokePublicEdge } from "@/integrations/supabase/public-api";
-
 const languageSchema = z.enum(["en", "es"]);
 const nameSchema = z.string().trim().min(2).max(100);
 const emailSchema = z.string().trim().email().max(255);
@@ -59,29 +57,89 @@ type QuoteSubmissionResponse = BasicSubmissionResponse & {
   uploadToken: string;
 };
 
+function referenceFromId(id: string) {
+  return `TLC-${id.replace(/-/g, "").slice(0, 8).toUpperCase()}`;
+}
+
+async function quoteUploadToken(quoteId: string) {
+  const { createHmac } = await import("crypto");
+  const secret = process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "";
+  return createHmac("sha256", secret).update(`quote-media:${quoteId}`).digest("hex");
+}
+
 export const submitContactInquiry = createServerFn({ method: "POST" })
   .validator((input) => contactSchema.parse(input))
   .handler(async ({ data }) => {
-    return invokePublicEdge<BasicSubmissionResponse>("public-submissions", {
-      kind: "contact",
-      data,
-    });
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("contact_inquiries")
+      .insert({
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        service_type: data.serviceType,
+        preferred_date: data.preferredDate ?? null,
+        notes: data.notes,
+        language: data.language,
+        status: "new",
+      })
+      .select("id")
+      .single();
+    if (error || !row) throw new Error("Unable to save your inquiry.");
+    return { ok: true as const, reference: referenceFromId(row.id) };
   });
 
 export const submitCareerApplication = createServerFn({ method: "POST" })
   .validator((input) => careerSchema.parse(input))
   .handler(async ({ data }) => {
-    return invokePublicEdge<BasicSubmissionResponse>("public-submissions", {
-      kind: "career",
-      data,
-    });
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("career_applications")
+      .insert({
+        full_name: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        city: data.city,
+        reliable_transportation: data.reliableTransportation,
+        experience: data.experience,
+        availability: data.availability,
+        additional_information: data.additionalInformation ?? null,
+        language: data.language,
+        status: "new",
+      })
+      .select("id")
+      .single();
+    if (error || !row) throw new Error("Unable to save your application.");
+    return { ok: true as const, reference: referenceFromId(row.id) };
   });
 
 export const submitQuoteRequest = createServerFn({ method: "POST" })
   .validator((input) => quoteSchema.parse(input))
-  .handler(async ({ data }) => {
-    return invokePublicEdge<QuoteSubmissionResponse>("public-submissions", {
-      kind: "quote",
-      data,
-    });
+  .handler(async ({ data }): Promise<QuoteSubmissionResponse> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("quote_requests")
+      .insert({
+        property_type: data.propertyType,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        city: data.city,
+        approximate_size: data.approximateSize ?? null,
+        scope: data.scope,
+        desired_timing: data.desiredTiming ?? null,
+        contact_preference: data.contactPreference,
+        notes: data.notes ?? null,
+        language: data.language,
+        status: "new",
+      })
+      .select("id")
+      .single();
+    if (error || !row) throw new Error("Unable to save your request.");
+    return {
+      ok: true as const,
+      id: row.id,
+      reference: referenceFromId(row.id),
+      uploadToken: await quoteUploadToken(row.id),
+    };
   });
