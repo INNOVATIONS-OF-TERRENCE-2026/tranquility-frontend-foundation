@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect, useState } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { CTABand } from "@/components/site/CTABand";
 import { PageHero, SectionHeading } from "@/components/site/PageHero";
 import { ServiceAreaExplorer } from "@/components/site/ServiceAreaExplorer";
 import { business, cities } from "@/config/business";
+import { listServiceCities } from "@/lib/service-area.functions";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/service-area")({
@@ -20,6 +23,21 @@ export const Route = createFileRoute("/service-area")({
 
 function ServiceAreaPage() {
   const { text } = useLanguage();
+  const loadCities = useServerFn(listServiceCities);
+  const [cityNames, setCityNames] = useState<string[]>(cities);
+
+  useEffect(() => {
+    let active = true;
+    void loadCities()
+      .then((rows) => {
+        if (active && rows.length > 0) setCityNames(rows.map((row) => row.name));
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [loadCities]);
+
   return (
     <>
       <PageHero
@@ -45,8 +63,8 @@ function ServiceAreaPage() {
           <SectionHeading
             eyebrow={text({ en: "Core communities", es: "Comunidades principales" })}
             title={text({
-              en: `${cities.length} listed DFW cities`,
-              es: `${cities.length} ciudades de DFW incluidas`,
+              en: `${cityNames.length} listed DFW cities`,
+              es: `${cityNames.length} ciudades de DFW incluidas`,
             })}
             intro={text({
               en: "The list includes Euless. Surrounding communities may also be considered after address review.",
@@ -54,12 +72,46 @@ function ServiceAreaPage() {
             })}
           />
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {cities.map((city) => (
+            {cityNames.map((city) => (
               <li
                 key={city}
                 className="rounded-2xl border border-border bg-card px-5 py-4 text-base font-semibold text-ink shadow-soft"
               >
                 {city}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container-page">
+          <SectionHeading
+            eyebrow={text({ en: "City guides", es: "Guías por ciudad" })}
+            title={text({
+              en: "Cleaning near Euless and neighboring cities",
+              es: "Limpieza cerca de Euless y ciudades vecinas",
+            })}
+            intro={text({
+              en: "Each guide covers services, starting prices, and booking for that city.",
+              es: "Cada guía incluye servicios, precios iniciales y reservación para esa ciudad.",
+            })}
+          />
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { label: "House cleaning in Euless", to: "/house-cleaning-euless" },
+              { label: "House cleaning in Bedford", to: "/house-cleaning-bedford" },
+              { label: "House cleaning in Hurst", to: "/house-cleaning-hurst" },
+              { label: "House cleaning in Colleyville", to: "/house-cleaning-colleyville" },
+              { label: "House cleaning in Grapevine", to: "/house-cleaning-grapevine" },
+            ].map((item) => (
+              <li key={item.to}>
+                <a
+                  href={item.to}
+                  className="block rounded-2xl border border-border bg-card px-5 py-4 text-base font-semibold text-ink shadow-soft hover:border-moss"
+                >
+                  {item.label}
+                </a>
               </li>
             ))}
           </ul>

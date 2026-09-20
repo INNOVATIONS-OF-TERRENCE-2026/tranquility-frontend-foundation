@@ -39,8 +39,10 @@ import {
   createAvailabilityBlock,
   deleteAdminRecord,
   deleteAvailabilityBlock,
+  deleteServiceCity,
   getAdminDashboard,
   updateAdminRecord,
+  upsertServiceCity,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
@@ -64,6 +66,13 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Section = "bookings" | "quotes" | "careers" | "inquiries";
+
+function windowLabel(value: string) {
+  if (value === "morning") return "8 to 11 AM";
+  if (value === "midday") return "11 AM to 2 PM";
+  if (value === "afternoon") return "2 to 5 PM";
+  return value;
+}
 type Dashboard = Awaited<ReturnType<ReturnType<typeof useServerFn<typeof getAdminDashboard>>>>;
 
 function AdminPage() {
@@ -73,6 +82,8 @@ function AdminPage() {
   const removeRecord = useServerFn(deleteAdminRecord);
   const addBlock = useServerFn(createAvailabilityBlock);
   const removeBlock = useServerFn(deleteAvailabilityBlock);
+  const saveCityFn = useServerFn(upsertServiceCity);
+  const removeCityFn = useServerFn(deleteServiceCity);
   const [data, setData] = useState<Dashboard | null>(null);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState<{ section: Section; row: AdminRow } | null>(null);
@@ -88,6 +99,16 @@ function AdminPage() {
     serviceType: "all",
     arrivalWindow: "all",
     reason: "",
+  });
+  const [search, setSearch] = useState("");
+  const [cityOpen, setCityOpen] = useState(false);
+  const [city, setCity] = useState({
+    id: "",
+    name: "",
+    latitude: "",
+    longitude: "",
+    isActive: true,
+    sortOrder: "100",
   });
 
   const refresh = useCallback(async () => {
@@ -190,10 +211,61 @@ function AdminPage() {
     setBlockOpen(false);
     await refresh();
   }
+  async function saveCity(event: React.FormEvent) {
+    event.preventDefault();
+    await saveCityFn({
+      data: {
+        id: city.id || undefined,
+        name: city.name,
+        latitude: Number(city.latitude),
+        longitude: Number(city.longitude),
+        isActive: city.isActive,
+        sortOrder: Number(city.sortOrder) || 0,
+      },
+    });
+    setCityOpen(false);
+    await refresh();
+  }
   async function signOut() {
     await supabase.auth.signOut();
     await navigate({ to: "/auth", replace: true });
   }
+
+  const term = search.trim().toLowerCase();
+  const filterRows = (rows: AdminRow[]) =>
+    term
+      ? rows.filter((row) =>
+          `${row.title} ${row.subtitle} ${row.status} ${row.date}`.toLowerCase().includes(term),
+        )
+      : rows;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const weekEnd = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+  const upcoming = (data?.bookings ?? [])
+    .filter(
+      (item) =>
+        item.service_date >= today && item.service_date <= weekEnd && item.status !== "cancelled",
+    )
+    .sort((a, b) => a.service_date.localeCompare(b.service_date));
+  const todays = upcoming.filter((item) => item.service_date === today);
+
+  const demand = (() => {
+    const map = new Map<string, { bookings: number; quotes: number; inquiries: number }>();
+    const bump = (raw: string | null | undefined, key: "bookings" | "quotes" | "inquiries") => {
+      const name = (raw ?? "").trim();
+      if (!name) return;
+      const entry = map.get(name) ?? { bookings: 0, quotes: 0, inquiries: 0 };
+      entry[key] += 1;
+      map.set(name, entry);
+    };
+    for (const item of data?.bookings ?? []) bump(item.city, "bookings");
+    for (const item of data?.quotes ?? []) bump(item.city, "quotes");
+    for (const item of data?.careers ?? []) bump(item.city, "inquiries");
+
+    return [...map.entries()]
+      .map(([name, counts]) => ({ name, ...counts, total: counts.bookings + counts.quotes }))
+      .sort((a, b) => b.total - a.total);
+  })();
 
   return (
     <main className="min-h-screen bg-sand">
@@ -216,9 +288,19 @@ function AdminPage() {
               Manage requests, follow-ups, notes, and schedule availability.
             </p>
           </div>
-          <Button onClick={() => setBlockOpen(true)}>
-            <CalendarOff /> Block availability
-          </Button>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <Input
+              type="search"
+              placeholder="Search name, email, city, status"
+              aria-label="Search records"
+              className="sm:w-72"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <Button onClick={() => setBlockOpen(true)}>
+              <CalendarOff /> Block availability
+            </Button>
+          </div>
         </div>
         {error && (
           <p
@@ -246,14 +328,159 @@ function AdminPage() {
               ))}
             </div>
             {tables && (
-              <Tabs defaultValue="bookings" className="mt-8">
+              <Tabs defaultValue="overview" className="mt-8">
                 <TabsList className="h-auto w-full justify-start overflow-x-auto bg-card p-1">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="bookings">Bookings</TabsTrigger>
                   <TabsTrigger value="quotes">Quotes</TabsTrigger>
                   <TabsTrigger value="careers">Careers</TabsTrigger>
                   <TabsTrigger value="inquiries">Inquiries</TabsTrigger>
                   <TabsTrigger value="availability">Availability</TabsTrigger>
+                  <TabsTrigger value="service-area">Service area</TabsTrigger>
                 </TabsList>
+                <TabsContent value="overview" className="mt-5 space-y-5">
+                  <div className="rounded-lg border bg-card p-5">
+                    <h2 className="text-xl">Today</h2>
+                    {todays.length === 0 ? (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        No appointments scheduled for today.
+                      </p>
+                    ) : (
+                      <ul className="mt-3 space-y-3">
+                        {todays.map((item) => (
+                          <li key={item.id} className="rounded-lg border border-border p-4">
+                            <p className="font-semibold">
+                              {item.customer_name} · {windowLabel(item.arrival_window)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {item.service_type} · {item.frequency} · {item.service_address},{" "}
+                              {item.city} {item.zip}
+                            </p>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Estimate ${(item.estimate_cents / 100).toFixed(2)} · {item.status} ·{" "}
+                              {item.customer_phone}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="rounded-lg border bg-card p-5">
+                    <h2 className="text-xl">Next seven days</h2>
+                    {upcoming.length === 0 ? (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        No upcoming appointments this week.
+                      </p>
+                    ) : (
+                      <ul className="mt-3 space-y-2 text-sm">
+                        {upcoming.map((item) => (
+                          <li
+                            key={item.id}
+                            className="flex flex-col gap-1 border-b border-border pb-2 sm:flex-row sm:items-center sm:justify-between"
+                          >
+                            <span className="font-semibold">
+                              {item.service_date} · {windowLabel(item.arrival_window)}
+                            </span>
+                            <span className="text-muted-foreground">
+                              {item.customer_name} · {item.service_type} · {item.city}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="rounded-lg border bg-card p-5">
+                    <h2 className="text-xl">Demand by city</h2>
+                    {demand.length === 0 ? (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        No city activity recorded yet.
+                      </p>
+                    ) : (
+                      <ul className="mt-3 space-y-2 text-sm">
+                        {demand.map((item) => (
+                          <li
+                            key={item.name}
+                            className="flex items-center justify-between border-b border-border pb-2"
+                          >
+                            <span className="font-semibold">{item.name}</span>
+                            <span className="text-muted-foreground">
+                              {item.bookings} bookings · {item.quotes} quotes · {item.inquiries}{" "}
+                              applicants
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="service-area" className="mt-5 rounded-lg border bg-card p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <h2 className="text-xl">Cities we serve</h2>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setCity({
+                          id: "",
+                          name: "",
+                          latitude: "",
+                          longitude: "",
+                          isActive: true,
+                          sortOrder: "100",
+                        });
+                        setCityOpen(true);
+                      }}
+                    >
+                      <Plus /> Add city
+                    </Button>
+                  </div>
+                  <ul className="mt-4 space-y-2 text-sm">
+                    {data.cities.map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex flex-col gap-2 border-b border-border pb-2 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div>
+                          <p className="font-semibold">
+                            {item.name} {item.is_active ? "" : "(hidden)"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {item.latitude.toFixed(4)}, {item.longitude.toFixed(4)} · order{" "}
+                            {item.sort_order}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setCity({
+                                id: item.id,
+                                name: item.name,
+                                latitude: String(item.latitude),
+                                longitude: String(item.longitude),
+                                isActive: item.is_active,
+                                sortOrder: String(item.sort_order),
+                              });
+                              setCityOpen(true);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={async () => {
+                              await removeCityFn({ data: { id: item.id } });
+                              await refresh();
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </TabsContent>
                 {(["bookings", "quotes", "careers", "inquiries"] as Section[]).map((section) => (
                   <TabsContent
                     key={section}
@@ -261,7 +488,7 @@ function AdminPage() {
                     className="mt-5 rounded-lg border bg-card p-3"
                   >
                     <AdminTable
-                      rows={tables[section]}
+                      rows={filterRows(tables[section])}
                       onEdit={(row) => openEdit(section, row)}
                       onDelete={(row) => setDeleting({ section, row })}
                     />
@@ -368,6 +595,82 @@ function AdminPage() {
             </div>
             <Button type="submit" className="w-full">
               Save changes
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={cityOpen} onOpenChange={setCityOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{city.id ? "Edit city" : "Add city"}</DialogTitle>
+            <DialogDescription>
+              Cities shown here power the public service area map and list.
+            </DialogDescription>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={saveCity}>
+            <div>
+              <Label htmlFor="city-name">City name</Label>
+              <Input
+                id="city-name"
+                className="mt-2"
+                required
+                value={city.name}
+                onChange={(event) => setCity({ ...city, name: event.target.value })}
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="city-lat">Latitude</Label>
+                <Input
+                  id="city-lat"
+                  className="mt-2"
+                  required
+                  inputMode="decimal"
+                  value={city.latitude}
+                  onChange={(event) => setCity({ ...city, latitude: event.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="city-lng">Longitude</Label>
+                <Input
+                  id="city-lng"
+                  className="mt-2"
+                  required
+                  inputMode="decimal"
+                  value={city.longitude}
+                  onChange={(event) => setCity({ ...city, longitude: event.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="city-order">List order</Label>
+                <Input
+                  id="city-order"
+                  className="mt-2"
+                  inputMode="numeric"
+                  value={city.sortOrder}
+                  onChange={(event) => setCity({ ...city, sortOrder: event.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Shown on the website</Label>
+                <Select
+                  value={city.isActive ? "yes" : "no"}
+                  onValueChange={(value) => setCity({ ...city, isActive: value === "yes" })}
+                >
+                  <SelectTrigger className="mt-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Shown</SelectItem>
+                    <SelectItem value="no">Hidden</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <Button type="submit" className="w-full">
+              Save city
             </Button>
           </form>
         </DialogContent>

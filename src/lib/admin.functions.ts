@@ -43,7 +43,7 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await requireAdmin(context);
-    const [bookings, quotes, careers, inquiries, blocks] = await Promise.all([
+    const [bookings, quotes, careers, inquiries, blocks, cities] = await Promise.all([
       context.supabase
         .from("booking_holds")
         .select("*")
@@ -69,8 +69,14 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
         .select("*")
         .order("start_date", { ascending: true })
         .limit(200),
+      context.supabase
+        .from("service_cities")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("name", { ascending: true })
+        .limit(300),
     ]);
-    const failure = [bookings, quotes, careers, inquiries, blocks].find(
+    const failure = [bookings, quotes, careers, inquiries, blocks, cities].find(
       (result) => result.error,
     )?.error;
     if (failure) throw new Error("Unable to load administrator records.");
@@ -80,7 +86,51 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
       careers: careers.data ?? [],
       inquiries: inquiries.data ?? [],
       blocks: blocks.data ?? [],
+      cities: cities.data ?? [],
     };
+  });
+
+const citySchema = z.object({
+  id: z.string().uuid().optional(),
+  name: z.string().trim().min(2).max(80),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  isActive: z.boolean(),
+  sortOrder: z.number().int().min(0).max(9999),
+});
+
+export const upsertServiceCity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input) => citySchema.parse(input))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const slug = data.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    const values = {
+      name: data.name,
+      slug,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      is_active: data.isActive,
+      sort_order: data.sortOrder,
+    };
+    const { error } = data.id
+      ? await context.supabase.from("service_cities").update(values).eq("id", data.id)
+      : await context.supabase.from("service_cities").insert(values);
+    if (error) throw new Error("Unable to save this city.");
+    return { ok: true as const };
+  });
+
+export const deleteServiceCity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const { error } = await context.supabase.from("service_cities").delete().eq("id", data.id);
+    if (error) throw new Error("Unable to remove this city.");
+    return { ok: true as const };
   });
 
 export const updateAdminRecord = createServerFn({ method: "POST" })

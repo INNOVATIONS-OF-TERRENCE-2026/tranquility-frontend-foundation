@@ -14,3 +14,9 @@
 - [x] Add secure owner sign-in and private admin lead management
 - [x] Add owner-managed availability blocks and verify capacity enforcement
 - [x] Refine the full frontend into the approved warm, airy cleaning-service design while preserving every route, feature, theme, palette, language, map, and business rule
+
+## Owner dashboard, coverage list, and Euless local pages (done)
+- Owner dashboard overview: today, next seven days, demand by city, search across all lists
+- Editable coverage list (service_cities) drives the public map and city list
+- City pages for Euless, Bedford, Hurst, Colleyville, Grapevine with unique metadata and sitemap entries
+- Pending: publish to heytlcleaning.com, Google Business Profile setup, real reviews
