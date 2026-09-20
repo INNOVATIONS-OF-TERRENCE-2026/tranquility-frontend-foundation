@@ -140,6 +140,6 @@ export const submitQuoteRequest = createServerFn({ method: "POST" })
       ok: true as const,
       id: row.id,
       reference: referenceFromId(row.id),
-      uploadToken: quoteUploadToken(row.id),
+      uploadToken: await quoteUploadToken(row.id),
     };
   });

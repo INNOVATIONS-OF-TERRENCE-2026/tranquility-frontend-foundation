@@ -157,7 +157,7 @@ export const createBookingRequest = createServerFn({ method: "POST" })
       partialHome: data.partialHome,
     });
 
-    const reference = `TLC-${randomBytes(4).toString("hex").toUpperCase()}`;
+    const reference = newReference();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { error } = await supabaseAdmin.rpc("create_booking_request", {
