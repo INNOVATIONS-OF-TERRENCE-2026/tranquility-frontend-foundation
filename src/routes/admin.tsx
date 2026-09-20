@@ -327,15 +327,110 @@ function AdminPage() {
                 </div>
               ))}
             </div>
+            <div className="mt-6">
+              <Label htmlFor="admin-search">Search every list</Label>
+              <Input
+                id="admin-search"
+                className="mt-2 max-w-md bg-card"
+                placeholder="Name, email, city, status..."
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </div>
             {tables && (
-              <Tabs defaultValue="bookings" className="mt-8">
+              <Tabs defaultValue="overview" className="mt-8">
                 <TabsList className="h-auto w-full justify-start overflow-x-auto bg-card p-1">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="bookings">Bookings</TabsTrigger>
                   <TabsTrigger value="quotes">Quotes</TabsTrigger>
                   <TabsTrigger value="careers">Careers</TabsTrigger>
                   <TabsTrigger value="inquiries">Inquiries</TabsTrigger>
+                  <TabsTrigger value="service-area">Service area</TabsTrigger>
                   <TabsTrigger value="availability">Availability</TabsTrigger>
                 </TabsList>
+                <TabsContent value="overview" className="mt-5 space-y-6">
+                  {overview && (
+                    <>
+                      <div className="grid gap-6 lg:grid-cols-2">
+                        <section className="rounded-lg border bg-card p-5">
+                          <h2 className="font-display text-2xl text-ink">
+                            Today · {overview.today}
+                          </h2>
+                          {overview.todays.length === 0 ? (
+                            <p className="mt-3 text-sm text-muted-foreground">
+                              No appointments scheduled today.
+                            </p>
+                          ) : (
+                            <ul className="mt-3 space-y-3">
+                              {overview.todays.map((item) => (
+                                <li
+                                  key={item.id}
+                                  className="rounded-lg border border-border p-3 text-sm"
+                                >
+                                  <p className="font-semibold text-ink">
+                                    {item.customer_name} · {item.service_type} ·{" "}
+                                    {item.arrival_window}
+                                  </p>
+                                  <p className="text-muted-foreground">
+                                    {item.service_address}, {item.city} {item.zip} ·{" "}
+                                    {item.customer_phone}
+                                  </p>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </section>
+                        <section className="rounded-lg border bg-card p-5">
+                          <h2 className="font-display text-2xl text-ink">Next 7 days</h2>
+                          {overview.upcoming.length === 0 ? (
+                            <p className="mt-3 text-sm text-muted-foreground">
+                              Nothing scheduled in the coming week.
+                            </p>
+                          ) : (
+                            <ul className="mt-3 space-y-3">
+                              {overview.upcoming.map((item) => (
+                                <li
+                                  key={item.id}
+                                  className="rounded-lg border border-border p-3 text-sm"
+                                >
+                                  <p className="font-semibold text-ink">
+                                    {item.service_date} · {item.arrival_window} ·{" "}
+                                    {item.customer_name}
+                                  </p>
+                                  <p className="text-muted-foreground">
+                                    {item.service_type} · {item.city} · {item.status}
+                                  </p>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </section>
+                      </div>
+                      <section className="rounded-lg border bg-card p-5">
+                        <h2 className="font-display text-2xl text-ink">Demand by city</h2>
+                        {overview.demandByCity.length === 0 ? (
+                          <p className="mt-3 text-sm text-muted-foreground">
+                            Demand data appears here as requests arrive.
+                          </p>
+                        ) : (
+                          <ul className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                            {overview.demandByCity.map(([city, count]) => (
+                              <li
+                                key={city}
+                                className="flex items-center justify-between rounded-lg border border-border px-4 py-2 text-sm"
+                              >
+                                <span className="font-semibold text-ink">{city}</span>
+                                <span className="text-muted-foreground">
+                                  {count} {count === 1 ? "request" : "requests"}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </section>
+                    </>
+                  )}
+                </TabsContent>
                 {(["bookings", "quotes", "careers", "inquiries"] as Section[]).map((section) => (
                   <TabsContent
                     key={section}
