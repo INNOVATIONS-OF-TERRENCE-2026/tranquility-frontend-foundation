@@ -8,13 +8,20 @@ import { Button } from "@/components/ui/button";
 import { business } from "@/config/business";
 import { services, servicePrice } from "@/config/pricing";
 
+type CityPath =
+  | "/house-cleaning-euless"
+  | "/house-cleaning-bedford"
+  | "/house-cleaning-hurst"
+  | "/house-cleaning-colleyville"
+  | "/house-cleaning-grapevine";
+
 export type CityGuide = {
   slug: string;
   name: string;
   intro: string;
   introEs: string;
   neighborhoods: string[];
-  nearby: { slug: string; name: string }[];
+  nearby: { to: CityPath; name: string }[];
 };
 
 export function CityPage({ city }: { city: CityGuide }) {
@@ -124,9 +131,9 @@ export function CityPage({ city }: { city: CityGuide }) {
             />
             <ul className="mt-6 flex flex-wrap gap-3">
               {city.nearby.map((item) => (
-                <li key={item.slug}>
+                <li key={item.to}>
                   <Button asChild variant="outline">
-                    <Link to="/house-cleaning-$city" params={{ city: item.slug }}>
+                    <Link to={item.to}>
                       <MapPin /> {item.name}
                     </Link>
                   </Button>
