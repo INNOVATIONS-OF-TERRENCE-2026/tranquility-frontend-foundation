@@ -58,10 +58,7 @@ export const Route = createFileRoute("/api/public/quote-media-upload")({
         }
         const extension = ALLOWED_TYPES[file.type];
         if (!extension) {
-          return Response.json(
-            { ok: false, error: "Unsupported image type." },
-            { status: 400 },
-          );
+          return Response.json({ ok: false, error: "Unsupported image type." }, { status: 400 });
         }
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

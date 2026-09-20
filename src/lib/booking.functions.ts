@@ -6,7 +6,9 @@ import { availableFrequencies, buildEstimate } from "@/config/pricing";
 function newReference() {
   const bytes = new Uint8Array(4);
   globalThis.crypto.getRandomValues(bytes);
-  return `TLC-${Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("").toUpperCase()}`;
+  return `TLC-${Array.from(bytes, (b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
 }
 
 const serviceSchema = z.enum(["standard", "deep", "move"]);
