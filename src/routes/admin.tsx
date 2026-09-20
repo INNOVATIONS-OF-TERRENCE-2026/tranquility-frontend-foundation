@@ -478,6 +478,51 @@ function AdminPage() {
                     </div>
                   )}
                 </TabsContent>
+                <TabsContent value="service-area" className="mt-5 rounded-lg border bg-card p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm text-muted-foreground">
+                      Cities here feed the public map, city list, and radius tool.
+                    </p>
+                    <Button size="sm" onClick={() => openCityDialog("new")}>
+                      <Plus /> Add city
+                    </Button>
+                  </div>
+                  <div className="mt-4 space-y-3">
+                    {data.cities.map((city) => (
+                      <div
+                        key={city.id}
+                        className="flex flex-col gap-3 border-b border-border pb-3 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div>
+                          <p className="font-semibold">
+                            {city.name}
+                            {!city.is_active && (
+                              <span className="ml-2 text-xs text-muted-foreground">(hidden)</span>
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {city.latitude}, {city.longitude} · order {city.sort_order}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" onClick={() => openCityDialog(city)}>
+                            Edit
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={async () => {
+                              await removeCity({ data: { id: city.id } });
+                              await refresh();
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
               </Tabs>
             )}
           </>
