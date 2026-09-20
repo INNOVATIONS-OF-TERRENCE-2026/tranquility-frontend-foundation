@@ -1,8 +1,10 @@
+import { useServerFn } from "@tanstack/react-start";
 import { ChevronDown, MapPin, Navigation, Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
-import { serviceCities } from "@/config/business";
+import { serviceCities as fallbackCities } from "@/config/business";
+import { listServiceCities } from "@/lib/service-area.functions";
 
 const radiusOptions = [10, 15, 20, 25, 30, 40, 50, 75] as const;
 
@@ -26,26 +28,40 @@ function distanceMiles(
 
 export function ServiceAreaExplorer() {
   const { text } = useLanguage();
-  const [selectedName, setSelectedName] = useState("Dallas");
+  const loadCities = useServerFn(listServiceCities);
+  const [liveCities, setLiveCities] = useState(fallbackCities);
+  const [selectedName, setSelectedName] = useState("Euless");
   const [radius, setRadius] = useState<(typeof radiusOptions)[number]>(25);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
 
-  const selected = serviceCities.find((city) => city.name === selectedName) ?? serviceCities[0]!;
+  useEffect(() => {
+    let active = true;
+    void loadCities()
+      .then((rows) => {
+        if (active && rows.length > 0) setLiveCities(rows);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [loadCities]);
+
+  const selected = liveCities.find((city) => city.name === selectedName) ?? liveCities[0]!;
 
   const matchingCities = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return serviceCities;
-    return serviceCities.filter((city) => city.name.toLowerCase().includes(query));
-  }, [search]);
+    if (!query) return liveCities;
+    return liveCities.filter((city) => city.name.toLowerCase().includes(query));
+  }, [search, liveCities]);
 
   const nearbyCities = useMemo(
     () =>
-      serviceCities
+      liveCities
         .map((city) => ({ city, miles: distanceMiles(selected, city) }))
         .filter(({ miles }) => miles <= radius)
         .sort((a, b) => a.miles - b.miles),
-    [radius, selected],
+    [radius, selected, liveCities],
   );
 
   const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${selected.name}, Texas`)}&z=10&output=embed`;
