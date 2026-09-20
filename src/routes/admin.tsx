@@ -204,10 +204,60 @@ function AdminPage() {
     setBlockOpen(false);
     await refresh();
   }
+  async function saveCity(event: React.FormEvent) {
+    event.preventDefault();
+    await saveCityFn({
+      data: {
+        id: city.id || undefined,
+        name: city.name,
+        latitude: Number(city.latitude),
+        longitude: Number(city.longitude),
+        isActive: city.isActive,
+        sortOrder: Number(city.sortOrder) || 0,
+      },
+    });
+    setCityOpen(false);
+    await refresh();
+  }
   async function signOut() {
     await supabase.auth.signOut();
     await navigate({ to: "/auth", replace: true });
   }
+
+  const term = search.trim().toLowerCase();
+  const filterRows = (rows: AdminRow[]) =>
+    term
+      ? rows.filter((row) =>
+          `${row.title} ${row.subtitle} ${row.status} ${row.date}`.toLowerCase().includes(term),
+        )
+      : rows;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const weekEnd = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+  const upcoming = (data?.bookings ?? [])
+    .filter(
+      (item) =>
+        item.service_date >= today && item.service_date <= weekEnd && item.status !== "cancelled",
+    )
+    .sort((a, b) => a.service_date.localeCompare(b.service_date));
+  const todays = upcoming.filter((item) => item.service_date === today);
+
+  const demand = (() => {
+    const map = new Map<string, { bookings: number; quotes: number; inquiries: number }>();
+    const bump = (raw: string | null | undefined, key: "bookings" | "quotes" | "inquiries") => {
+      const name = (raw ?? "").trim();
+      if (!name) return;
+      const entry = map.get(name) ?? { bookings: 0, quotes: 0, inquiries: 0 };
+      entry[key] += 1;
+      map.set(name, entry);
+    };
+    for (const item of data?.bookings ?? []) bump(item.city, "bookings");
+    for (const item of data?.quotes ?? []) bump(item.city, "quotes");
+    for (const item of data?.careers ?? []) void item;
+    return [...map.entries()]
+      .map(([name, counts]) => ({ name, ...counts, total: counts.bookings + counts.quotes }))
+      .sort((a, b) => b.total - a.total);
+  })();
 
   return (
     <main className="min-h-screen bg-sand">
