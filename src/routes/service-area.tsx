@@ -22,6 +22,21 @@ export const Route = createFileRoute("/service-area")({
 
 function ServiceAreaPage() {
   const { text } = useLanguage();
+  const loadCities = useServerFn(listServiceCities);
+  const [cityNames, setCityNames] = useState<string[]>(cities);
+
+  useEffect(() => {
+    let active = true;
+    void loadCities()
+      .then((rows) => {
+        if (active && rows.length > 0) setCityNames(rows.map((row) => row.name));
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [loadCities]);
+
   return (
     <>
       <PageHero
