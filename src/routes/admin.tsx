@@ -39,8 +39,10 @@ import {
   createAvailabilityBlock,
   deleteAdminRecord,
   deleteAvailabilityBlock,
+  deleteServiceCity,
   getAdminDashboard,
   updateAdminRecord,
+  upsertServiceCity,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
@@ -73,8 +75,11 @@ function AdminPage() {
   const removeRecord = useServerFn(deleteAdminRecord);
   const addBlock = useServerFn(createAvailabilityBlock);
   const removeBlock = useServerFn(deleteAvailabilityBlock);
+  const saveCity = useServerFn(upsertServiceCity);
+  const removeCity = useServerFn(deleteServiceCity);
   const [data, setData] = useState<Dashboard | null>(null);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<{ section: Section; row: AdminRow } | null>(null);
   const [deleting, setDeleting] = useState<{ section: Section; row: AdminRow } | null>(null);
   const [status, setStatus] = useState("");
@@ -88,6 +93,14 @@ function AdminPage() {
     serviceType: "all",
     arrivalWindow: "all",
     reason: "",
+  });
+  const [cityEditing, setCityEditing] = useState<Dashboard["cities"][number] | "new" | null>(null);
+  const [cityForm, setCityForm] = useState({
+    name: "",
+    latitude: "32.8371",
+    longitude: "-97.0819",
+    isActive: true,
+    sortOrder: "50",
   });
 
   const refresh = useCallback(async () => {
