@@ -20,6 +20,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DeepCleaningRouteImport } from './routes/deep-cleaning'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HouseCleaningBedfordRouteImport } from './routes/house-cleaning-bedford'
+import { Route as HouseCleaningColleyvilleRouteImport } from './routes/house-cleaning-colleyville'
 import { Route as HouseCleaningEulessRouteImport } from './routes/house-cleaning-euless'
 import { Route as HouseCleaningHurstRouteImport } from './routes/house-cleaning-hurst'
 import { Route as MoveInMoveOutCleaningRouteImport } from './routes/move-in-move-out-cleaning'
@@ -87,6 +88,12 @@ const HouseCleaningBedfordRoute = HouseCleaningBedfordRouteImport.update({
   path: '/house-cleaning-bedford',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HouseCleaningColleyvilleRoute =
+  HouseCleaningColleyvilleRouteImport.update({
+    id: '/house-cleaning-colleyville',
+    path: '/house-cleaning-colleyville',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const HouseCleaningEulessRoute = HouseCleaningEulessRouteImport.update({
   id: '/house-cleaning-euless',
   path: '/house-cleaning-euless',
@@ -155,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
+  '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
   '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
@@ -179,6 +187,7 @@ export interface FileRoutesByTo {
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
+  '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
   '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
@@ -204,6 +213,7 @@ export interface FileRoutesById {
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
+  '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
   '/house-cleaning-hurst': typeof HouseCleaningHurstRoute
   '/move-in-move-out-cleaning': typeof MoveInMoveOutCleaningRoute
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/deep-cleaning'
     | '/faq'
     | '/house-cleaning-bedford'
+    | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
     | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
@@ -254,6 +265,7 @@ export interface FileRouteTypes {
     | '/deep-cleaning'
     | '/faq'
     | '/house-cleaning-bedford'
+    | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
     | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
@@ -278,6 +290,7 @@ export interface FileRouteTypes {
     | '/deep-cleaning'
     | '/faq'
     | '/house-cleaning-bedford'
+    | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
     | '/house-cleaning-hurst'
     | '/move-in-move-out-cleaning'
@@ -303,6 +316,7 @@ export interface RootRouteChildren {
   DeepCleaningRoute: typeof DeepCleaningRoute
   FaqRoute: typeof FaqRoute
   HouseCleaningBedfordRoute: typeof HouseCleaningBedfordRoute
+  HouseCleaningColleyvilleRoute: typeof HouseCleaningColleyvilleRoute
   HouseCleaningEulessRoute: typeof HouseCleaningEulessRoute
   HouseCleaningHurstRoute: typeof HouseCleaningHurstRoute
   MoveInMoveOutCleaningRoute: typeof MoveInMoveOutCleaningRoute
@@ -393,6 +407,13 @@ declare module '@tanstack/react-router' {
       path: '/house-cleaning-bedford'
       fullPath: '/house-cleaning-bedford'
       preLoaderRoute: typeof HouseCleaningBedfordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/house-cleaning-colleyville': {
+      id: '/house-cleaning-colleyville'
+      path: '/house-cleaning-colleyville'
+      fullPath: '/house-cleaning-colleyville'
+      preLoaderRoute: typeof HouseCleaningColleyvilleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/house-cleaning-euless': {
@@ -487,6 +508,7 @@ const rootRouteChildren: RootRouteChildren = {
   DeepCleaningRoute: DeepCleaningRoute,
   FaqRoute: FaqRoute,
   HouseCleaningBedfordRoute: HouseCleaningBedfordRoute,
+  HouseCleaningColleyvilleRoute: HouseCleaningColleyvilleRoute,
   HouseCleaningEulessRoute: HouseCleaningEulessRoute,
   HouseCleaningHurstRoute: HouseCleaningHurstRoute,
   MoveInMoveOutCleaningRoute: MoveInMoveOutCleaningRoute,
