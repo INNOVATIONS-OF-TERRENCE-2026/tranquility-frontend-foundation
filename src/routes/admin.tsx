@@ -242,6 +242,36 @@ function AdminPage() {
     setBlockOpen(false);
     await refresh();
   }
+  async function saveCitySubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!cityEditing) return;
+    await saveCity({
+      data: {
+        id: cityEditing === "new" ? undefined : cityEditing.id,
+        name: cityForm.name,
+        latitude: Number(cityForm.latitude),
+        longitude: Number(cityForm.longitude),
+        isActive: cityForm.isActive,
+        sortOrder: Number(cityForm.sortOrder),
+      },
+    });
+    setCityEditing(null);
+    await refresh();
+  }
+  function openCityDialog(city: Dashboard["cities"][number] | "new") {
+    setCityEditing(city);
+    setCityForm(
+      city === "new"
+        ? { name: "", latitude: "32.8371", longitude: "-97.0819", isActive: true, sortOrder: "50" }
+        : {
+            name: city.name,
+            latitude: String(city.latitude),
+            longitude: String(city.longitude),
+            isActive: city.is_active,
+            sortOrder: String(city.sort_order),
+          },
+    );
+  }
   async function signOut() {
     await supabase.auth.signOut();
     await navigate({ to: "/auth", replace: true });
