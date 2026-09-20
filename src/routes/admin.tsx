@@ -140,6 +140,14 @@ function AdminPage() {
     };
   }, [data]);
 
+  const editingMedia = useMemo(
+    () =>
+      editing?.section === "quotes"
+        ? (data?.quoteMedia ?? []).filter((item) => item.quote_request_id === editing.row.id)
+        : [],
+    [data?.quoteMedia, editing],
+  );
+
   function openEdit(section: Section, row: AdminRow) {
     setEditing({ section, row });
     setStatus(row.status);
@@ -354,6 +362,36 @@ function AdminPage() {
                       <SelectItem value="afternoon">2–5 PM</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+            )}
+            {editing?.section === "quotes" && editingMedia.length > 0 && (
+              <div>
+                <Label>Consultation photos</Label>
+                <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {editingMedia.map((item) => (
+                    <a
+                      key={item.id}
+                      href={item.signed_url ?? undefined}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="overflow-hidden rounded-lg border border-border bg-muted"
+                      aria-label={`Open ${item.file_name}`}
+                    >
+                      {item.signed_url ? (
+                        <img
+                          src={item.signed_url}
+                          alt={item.file_name}
+                          className="aspect-square w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className="flex aspect-square items-center justify-center p-3 text-center text-xs text-muted-foreground">
+                          {item.file_name}
+                        </span>
+                      )}
+                    </a>
+                  ))}
                 </div>
               </div>
             )}
