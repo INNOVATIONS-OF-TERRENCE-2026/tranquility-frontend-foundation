@@ -75,6 +75,8 @@ function AdminPage() {
   const removeRecord = useServerFn(deleteAdminRecord);
   const addBlock = useServerFn(createAvailabilityBlock);
   const removeBlock = useServerFn(deleteAvailabilityBlock);
+  const saveCityFn = useServerFn(upsertServiceCity);
+  const removeCityFn = useServerFn(deleteServiceCity);
   const [data, setData] = useState<Dashboard | null>(null);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState<{ section: Section; row: AdminRow } | null>(null);
