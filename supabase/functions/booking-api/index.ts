@@ -39,6 +39,101 @@ function secretKey() {
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, secretKey(), {
   auth: { persistSession: false, autoRefreshToken: false },
 });
+
+const OWNER_EMAIL = "tlcllc26@gmail.com";
+const FROM_EMAIL = "Tranquility Level Cleaning <notifications@heytlcleaning.com>";
+
+function escapeHtml(value: unknown) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+async function sendBookingEmail(input: {
+  entityId: string;
+  reference: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  serviceAddress: string;
+  city: string;
+  zip: string;
+  service: string;
+  frequency: string;
+  serviceDate: string;
+  arrivalWindow: string;
+  total: number;
+}) {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  const { data: delivery } = await admin.from("notification_deliveries").insert({
+    event_type: "booking_request_created",
+    entity_type: "booking_holds",
+    entity_id: input.entityId,
+    recipient: OWNER_EMAIL,
+    status: apiKey ? "pending" : "skipped",
+    error_message: apiKey ? null : "RESEND_API_KEY is not configured",
+  }).select("id").single();
+
+  if (!apiKey) return;
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: FROM_EMAIL,
+        to: [OWNER_EMAIL],
+        subject: `New Tranquility booking request · ${input.customerName} · ${input.reference}`,
+        reply_to: [input.customerEmail],
+        html: `
+          <div style="font-family:Arial,sans-serif;line-height:1.55;color:#252927">
+            <h2 style="margin:0 0 16px">New cleaning request</h2>
+            <p><strong>Reference:</strong> ${escapeHtml(input.reference)}</p>
+            <p><strong>Customer:</strong> ${escapeHtml(input.customerName)}<br>
+            <strong>Phone:</strong> ${escapeHtml(input.customerPhone)}<br>
+            <strong>Email:</strong> ${escapeHtml(input.customerEmail)}</p>
+            <p><strong>Service:</strong> ${escapeHtml(input.service)}<br>
+            <strong>Frequency:</strong> ${escapeHtml(input.frequency)}<br>
+            <strong>Date:</strong> ${escapeHtml(input.serviceDate)}<br>
+            <strong>Arrival window:</strong> ${escapeHtml(input.arrivalWindow)}</p>
+            <p><strong>Service address:</strong><br>
+            ${escapeHtml(input.serviceAddress)}<br>
+            ${escapeHtml(input.city)}, TX ${escapeHtml(input.zip)}</p>
+            <p><strong>Server-calculated estimate:</strong> ${input.total.toFixed(2)}</p>
+            <p style="color:#626b67">Submitted through heytlcleaning.com</p>
+          </div>`,
+      }),
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(typeof payload?.message === "string" ? payload.message : "Resend rejected the email");
+    }
+
+    if (delivery?.id) {
+      await admin.from("notification_deliveries").update({
+        status: "sent",
+        provider_message_id: typeof payload?.id === "string" ? payload.id : null,
+        sent_at: new Date().toISOString(),
+        error_message: null,
+      }).eq("id", delivery.id);
+    }
+  } catch (error) {
+    if (delivery?.id) {
+      await admin.from("notification_deliveries").update({
+        status: "failed",
+        error_message: error instanceof Error ? error.message.slice(0, 1000) : "Unknown email error",
+      }).eq("id", delivery.id);
+    }
+    console.error("booking owner email failed", error);
+  }
+}
 async function sha256(value: string) {
   const bytes = new TextEncoder().encode(value);
   const hash = await crypto.subtle.digest("SHA-256", bytes);
@@ -249,7 +344,7 @@ Deno.serve(async (req: Request) => {
       serverEstimate: estimate,
     };
 
-    const { error } = await admin.rpc("create_booking_request", {
+    const { data: holdId, error } = await admin.rpc("create_booking_request", {
       p_booking_reference: reference,
       p_service_type: data.service,
       p_frequency: estimate.frequency,
@@ -268,6 +363,25 @@ Deno.serve(async (req: Request) => {
       if (/full|blocked|unavailable/i.test(error.message)) return json(req, { error: "SLOT_UNAVAILABLE" }, 409);
       throw error;
     }
+
+    if (holdId) {
+      await sendBookingEmail({
+        entityId: holdId,
+        reference,
+        customerName,
+        customerEmail,
+        customerPhone,
+        serviceAddress,
+        city,
+        zip,
+        service: data.service,
+        frequency: estimate.frequency,
+        serviceDate,
+        arrivalWindow,
+        total: estimate.total,
+      });
+    }
+
     return json(req, { ok: true, reference, estimate });
   } catch (error) {
     console.error("booking-api", error);
