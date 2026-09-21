@@ -15,7 +15,7 @@ function cors(req: Request) {
   return {
     "Access-Control-Allow-Origin": allowed ? origin : "https://heytlcleaning.com",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Methods": "POST, DELETE, OPTIONS",
     "Vary": "Origin",
   };
 }
@@ -60,11 +60,70 @@ function safeName(name: string) {
 }
 const allowedMime = new Set(["image/jpeg","image/png","image/webp","image/heic","image/heif"]);
 
+async function authorizeQuote(quoteId: string, token: string) {
+  if (!/^[0-9a-f-]{36}$/i.test(quoteId) || token.length < 40) {
+    return { ok: false as const, status: 400, error: "Invalid upload request" };
+  }
+
+  const { data: quote, error: quoteError } = await admin
+    .from("quote_requests")
+    .select("id, upload_token_hash, upload_token_expires_at")
+    .eq("id", quoteId)
+    .single();
+
+  if (quoteError || !quote) {
+    return { ok: false as const, status: 404, error: "Quote request not found" };
+  }
+  if (!quote.upload_token_expires_at || new Date(quote.upload_token_expires_at).getTime() < Date.now()) {
+    return { ok: false as const, status: 403, error: "Upload authorization expired" };
+  }
+
+  const actualHash = await sha256(token);
+  const storedHash = String(quote.upload_token_hash ?? "").replace(/^\\x/i, "");
+  if (!storedHash || storedHash.toLowerCase() !== actualHash.toLowerCase()) {
+    return { ok: false as const, status: 403, error: "Invalid upload authorization" };
+  }
+
+  return { ok: true as const };
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors(req) });
-  if (req.method !== "POST") return json(req, { error: "Method not allowed" }, 405);
+  if (!["POST", "DELETE"].includes(req.method)) return json(req, { error: "Method not allowed" }, 405);
 
   try {
+    if (req.method === "DELETE") {
+      if (!(await rateLimit(req))) return json(req, { error: "Too many requests. Please wait and try again." }, 429);
+
+      const body = await req.json().catch(() => ({}));
+      const quoteId = String(body?.quoteId ?? "");
+      const token = String(body?.uploadToken ?? "");
+      const mediaId = String(body?.mediaId ?? "");
+
+      if (!/^[0-9a-f-]{36}$/i.test(mediaId)) {
+        return json(req, { error: "Invalid media id" }, 400);
+      }
+
+      const auth = await authorizeQuote(quoteId, token);
+      if (!auth.ok) return json(req, { error: auth.error }, auth.status);
+
+      const { data: media, error: mediaError } = await admin
+        .from("quote_media")
+        .select("id, quote_request_id, object_path")
+        .eq("id", mediaId)
+        .eq("quote_request_id", quoteId)
+        .single();
+
+      if (mediaError || !media) return json(req, { error: "Photo not found" }, 404);
+
+      const { error: removeError } = await admin.storage.from("quote-media").remove([media.object_path]);
+      if (removeError) throw removeError;
+
+      const { error: deleteError } = await admin.from("quote_media").delete().eq("id", mediaId);
+      if (deleteError) throw deleteError;
+
+      return json(req, { ok: true });
+    }
     if (!(await rateLimit(req))) return json(req, { error: "Too many uploads. Please wait and try again." }, 429);
 
     const form = await req.formData();
@@ -82,21 +141,8 @@ Deno.serve(async (req: Request) => {
       return json(req, { error: "Unsupported image type" }, 400);
     }
 
-    const { data: quote, error: quoteError } = await admin
-      .from("quote_requests")
-      .select("id, upload_token_hash, upload_token_expires_at")
-      .eq("id", quoteId)
-      .single();
-    if (quoteError || !quote) return json(req, { error: "Quote request not found" }, 404);
-    if (!quote.upload_token_expires_at || new Date(quote.upload_token_expires_at).getTime() < Date.now()) {
-      return json(req, { error: "Upload authorization expired" }, 403);
-    }
-
-    const actualHash = await sha256(token);
-    const storedHash = String(quote.upload_token_hash ?? "").replace(/^\\x/i, "");
-    if (!storedHash || storedHash.toLowerCase() !== actualHash.toLowerCase()) {
-      return json(req, { error: "Invalid upload authorization" }, 403);
-    }
+    const auth = await authorizeQuote(quoteId, token);
+    if (!auth.ok) return json(req, { error: auth.error }, auth.status);
 
     const { data: existing, error: existingError } = await admin
       .from("quote_media")
