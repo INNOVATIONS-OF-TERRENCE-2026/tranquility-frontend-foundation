@@ -192,11 +192,11 @@ export function Header() {
         <div
           ref={menuRef}
           id="mobile-menu"
-          className="fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto bg-background"
+          className="absolute inset-x-0 top-full z-40 h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain border-t border-border bg-background shadow-lift"
         >
           <nav
             aria-label={text({ en: "Mobile navigation", es: "Navegación móvil" })}
-            className="container-page flex min-h-full flex-col py-5"
+            className="container-page flex min-h-full flex-col py-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
           >
             <div className="rounded-3xl border border-border bg-card p-2 shadow-lift">
               {nav.map((item, index) => (
@@ -236,7 +236,7 @@ export function Header() {
               </div>
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
+            <div className="mt-5 flex flex-col gap-3">
               <Button asChild size="lg">
                 <Link to="/booking">
                   {text({ en: "Book Your Clean", es: "Reserva tu limpieza" })}
