@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import {
-  frequencies,
+  availableFrequencies,
   money,
   services,
   servicePrice,
@@ -70,8 +70,12 @@ export function PricingGrid({ highlight }: { highlight?: ServiceId }) {
               </p>
 
               <dl className="mt-7 space-y-3 border-t border-border pt-5 text-sm">
-                {frequencies
-                  .filter((frequency) => frequency.id !== "onetime")
+                {availableFrequencies(service.id)
+                  .filter((frequency) =>
+                    service.id === "standard"
+                      ? frequency.id !== "onetime"
+                      : frequency.id === "onetime",
+                  )
                   .map((frequency) => (
                     <div key={frequency.id} className="flex items-baseline justify-between gap-3">
                       <dt className="text-muted-foreground">
