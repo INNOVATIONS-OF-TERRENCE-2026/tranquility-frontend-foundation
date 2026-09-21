@@ -385,6 +385,12 @@ Deno.serve(async (req: Request) => {
     return json(req, { ok: true, reference, estimate });
   } catch (error) {
     console.error("booking-api", error);
+    const message = error instanceof Error ? error.message : "";
+    if (
+      ["Invalid service", "Invalid frequency", "Invalid quantity", "Invalid add-on"].includes(message)
+    ) {
+      return json(req, { error: message }, 400);
+    }
     return json(req, { error: "Unable to process booking request" }, 500);
   }
 });
