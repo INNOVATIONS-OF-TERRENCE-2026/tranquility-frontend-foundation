@@ -105,7 +105,7 @@ function Home() {
               })}
             </p>
 
-            <h1 className="mt-5 max-w-[12ch] font-display text-5xl font-medium leading-[1.02] text-ink sm:text-6xl lg:text-7xl">
+            <h1 className="mt-5 max-w-[14ch] font-sans text-[clamp(2.75rem,6.5vw,5.1rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-ink">
               {text({
                 en: "Come home to a cleaner, calmer space.",
                 es: "Vuelve a un hogar más limpio y tranquilo.",
