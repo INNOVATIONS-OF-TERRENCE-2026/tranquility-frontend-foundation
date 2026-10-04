@@ -112,7 +112,23 @@ const arrivalWindows = [
   { id: "afternoon", en: "2–5 PM", es: "2–5 PM" },
 ] as const;
 
-export function BookingFlow({ initialService }: { initialService?: ServiceId }) {
+export interface BookingPrefill {
+  service?: ServiceId;
+  frequency?: FrequencyId;
+  bedrooms?: number;
+  fullBaths?: number;
+  halfBaths?: number;
+  sqft?: number;
+  extras?: string[];
+}
+
+export function BookingFlow({
+  initialService,
+  prefill,
+}: {
+  initialService?: ServiceId;
+  prefill?: BookingPrefill;
+}) {
   const { language, text } = useLanguage();
   const steps = [
     text({ en: "Cleaning type", es: "Tipo de limpieza" }),
@@ -123,18 +139,38 @@ export function BookingFlow({ initialService }: { initialService?: ServiceId }) 
     text({ en: "Review", es: "Revisión" }),
   ];
 
+  const prefilledService = prefill?.service ?? initialService ?? "standard";
+  const prefilledFrequency =
+    prefilledService === "standard" &&
+    prefill?.frequency &&
+    availableFrequencies(prefilledService).some((item) => item.id === prefill.frequency)
+      ? prefill.frequency
+      : "onetime";
+  const prefilledScope: ScopeCounts = {
+    ...defaultScope,
+    bedrooms: prefill?.bedrooms ?? defaultScope.bedrooms,
+    fullBaths: prefill?.fullBaths ?? defaultScope.fullBaths,
+    halfBaths: prefill?.halfBaths ?? defaultScope.halfBaths,
+  };
+  const approvedPrefillExtras = new Set(selectableAddOns.map((item) => item.id));
+  const prefilledExtras = Object.fromEntries(
+    (prefill?.extras ?? [])
+      .filter((id) => approvedPrefillExtras.has(id))
+      .map((id) => [id, 1]),
+  );
+
   const [step, setStep] = useState(0);
-  const [service, setService] = useState<ServiceId>(initialService ?? "standard");
-  const [frequency, setFrequency] = useState<FrequencyId>("onetime");
-  const [scope, setScope] = useState<ScopeCounts>({ ...defaultScope });
-  const [sqft, setSqft] = useState("");
+  const [service, setService] = useState<ServiceId>(prefilledService);
+  const [frequency, setFrequency] = useState<FrequencyId>(prefilledFrequency);
+  const [scope, setScope] = useState<ScopeCounts>(prefilledScope);
+  const [sqft, setSqft] = useState(prefill?.sqft ? String(prefill.sqft) : "");
   const [partialHome, setPartialHome] = useState(false);
   const [pets, setPets] = useState<"yes" | "no">("no");
   const [petDetails, setPetDetails] = useState("");
   const [petError, setPetError] = useState("");
   const [otherSpaces, setOtherSpaces] = useState("");
   const [notes, setNotes] = useState("");
-  const [extras, setExtras] = useState<Record<string, number>>({});
+  const [extras, setExtras] = useState<Record<string, number>>(prefilledExtras);
   const [contact, setContact] = useState<ContactValues>({
     name: "",
     email: "",
