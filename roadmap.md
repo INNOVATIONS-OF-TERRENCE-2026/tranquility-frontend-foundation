@@ -20,3 +20,17 @@
 - Move capacity 5 into an editable setting
 - Restrict direct sign-ups at the provider level once owner account exists
 - ColorStudio navy token does not adapt to warm palette; about page has two dark regions in light mode
+
+
+## Lucy Intelligence
+- Sitewide Lucy Intelligence concierge mounted at the application root for all public routes, with the auth page excluded
+- Route-aware English and Spanish prompt suggestions, premium mobile bottom-sheet UX, desktop floating concierge, keyboard support, session-only conversation continuity, reset controls, and graceful failure states
+- Tool-first pricing intelligence uses the existing `buildEstimate()` engine so Lucy never invents prices or discounts
+- Live service-area checks use `service_cities` when available and fall back to verified project configuration during temporary database outages
+- Lucy can compare services, generate verified estimates, route users to booking or custom quote flows, and safely prefill approved booking fields through validated query parameters
+- Public Lucy cannot access customer records, owner notes, admin data, credentials, or service-role capabilities
+- Owner Operations mode is protected by existing Supabase authentication plus the approved owner email and sends only aggregate operational summaries to the optional AI provider
+- Public and owner conversations use separate `sessionStorage` scopes and are not written to Supabase by default
+- Free-form intelligence uses the server-only `OPENAI_API_KEY` environment secret when configured. `LUCY_OPENAI_MODEL` is optional and defaults to `gpt-6-luna`
+- If the AI provider is unavailable or not configured, deterministic pricing, service comparison, booking, quote, service-area, and owner-summary intelligence continue working
+- No AI credential may be stored in `VITE_` variables or committed to source control
