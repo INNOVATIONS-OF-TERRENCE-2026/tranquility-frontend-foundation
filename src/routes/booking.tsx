@@ -1,13 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-import { BookingFlow } from "@/components/booking/BookingFlow";
+import {
+  BookingFlow,
+  type BookingPrefill,
+} from "@/components/booking/BookingFlow";
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { PageHero } from "@/components/site/PageHero";
+import { selectableAddOns } from "@/config/pricing";
 import { seo } from "@/lib/seo";
+
+const frequencySchema = z.enum(["onetime", "weekly", "biweekly", "monthly"]);
+const safeCount = z.coerce.number().int().min(0).max(20).optional();
+const safePositiveCount = z.coerce.number().int().min(1).max(20).optional();
 
 const searchSchema = z.object({
   service: z.enum(["standard", "deep", "move"]).optional(),
+  frequency: frequencySchema.optional(),
+  bedrooms: safePositiveCount,
+  fullBaths: safePositiveCount,
+  halfBaths: safeCount,
+  sqft: z.coerce.number().int().min(100).max(25000).optional(),
+  extras: z.string().trim().max(300).optional(),
 });
 
 export const Route = createFileRoute("/booking")({
@@ -26,6 +40,23 @@ function BookingPage() {
   const search = Route.useSearch();
   const { text } = useLanguage();
 
+  const approvedExtraIds = new Set(selectableAddOns.map((item) => item.id));
+  const extras = (search.extras ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item && approvedExtraIds.has(item))
+    .slice(0, 12);
+
+  const prefill: BookingPrefill = {
+    ...(search.service ? { service: search.service } : {}),
+    ...(search.frequency ? { frequency: search.frequency } : {}),
+    ...(search.bedrooms ? { bedrooms: search.bedrooms } : {}),
+    ...(search.fullBaths ? { fullBaths: search.fullBaths } : {}),
+    ...(search.halfBaths !== undefined ? { halfBaths: search.halfBaths } : {}),
+    ...(search.sqft ? { sqft: search.sqft } : {}),
+    ...(extras.length ? { extras } : {}),
+  };
+
   return (
     <>
       <PageHero
@@ -42,7 +73,7 @@ function BookingPage() {
       <section className="bg-background py-12 md:py-16 lg:py-20">
         <div className="container-page">
           <div className="luxury-panel rounded-3xl p-4 md:p-6 lg:p-8">
-            <BookingFlow {...(search.service ? { initialService: search.service } : {})} />
+            <BookingFlow prefill={prefill} />
           </div>
         </div>
       </section>
