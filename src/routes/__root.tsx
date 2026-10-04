@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { LanguageProvider, useLanguage } from "@/components/language/LanguageProvider";
+import { LucyIntelligenceWidget } from "@/components/lucy/LucyIntelligenceWidget";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ThemeProvider, themeBootstrapScript } from "@/components/theme/ThemeProvider";
@@ -228,6 +229,7 @@ function AppShell() {
         <Outlet />
       </main>
       <Footer />
+      <LucyIntelligenceWidget />
     </div>
   );
 }
