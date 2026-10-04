@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 
-import { business } from "@/config/business";
+import { business, cities as configuredCities } from "@/config/business";
 import {
   addOns,
   availableFrequencies,
@@ -516,16 +516,23 @@ function publicFallback(language: LucyLanguage): LucyReply {
 }
 
 async function loadActiveCities() {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
-    .from("service_cities")
-    .select("name")
-    .eq("is_active", true)
-    .order("sort_order", { ascending: true })
-    .order("name", { ascending: true });
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
+      .from("service_cities")
+      .select("name")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true });
 
-  if (error) throw new Error("Unable to load service-area information.");
-  return (data ?? []).map((item) => item.name);
+    if (!error && data?.length) {
+      return { cities: data.map((item) => item.name), live: true };
+    }
+  } catch {
+    // Fall through to verified project configuration so Lucy remains useful.
+  }
+
+  return { cities: configuredCities, live: false };
 }
 
 export const askLucyPublic = createServerFn({ method: "POST" })
@@ -545,11 +552,11 @@ export const askLucyPublic = createServerFn({ method: "POST" })
       } satisfies LucyReply;
     }
 
-    const activeCities = await loadActiveCities();
+    const serviceArea = await loadActiveCities();
     const deterministic =
       estimateReply(data.question, data.language) ??
       comparisonReply(data.question, data.language) ??
-      serviceAreaReply(data.question, data.language, activeCities) ??
+      serviceAreaReply(data.question, data.language, serviceArea.cities) ??
       directReply(data.question, data.language);
 
     if (deterministic) return sanitizeReply(deterministic);
@@ -560,7 +567,10 @@ export const askLucyPublic = createServerFn({ method: "POST" })
       pathname: data.pathname,
       question: data.question,
       history: data.history,
-      knowledge: publicKnowledgeSnapshot(activeCities),
+      knowledge: {
+        ...publicKnowledgeSnapshot(serviceArea.cities),
+        serviceAreaSource: serviceArea.live ? "live database" : "verified project configuration",
+      },
     });
 
     return sanitizeReply(modelReply ?? publicFallback(data.language));
