@@ -53,6 +53,20 @@ function TermsPage() {
       }),
     },
     {
+      title: text({ en: "Monthly giveaway", es: "Sorteo mensual" }),
+      body: text({
+        en: "The monthly complimentary cleaning giveaway requires no purchase. Entries are limited to one per email address or phone number per monthly drawing. Entries received by the 3rd are associated with that month's drawing; entries received after that deadline are associated with the next monthly drawing. Eligible entries are selected at random. A written description is collected to understand the circumstance but is not used to increase selection odds. Service area, safety, property condition, access, scope, and scheduling restrictions apply. Heavily cluttered spaces may be limited to one room or defined area rather than the entire home. Selection does not create a guaranteed right to service until eligibility, scope, permission, and scheduling are confirmed. Void where prohibited.",
+        es: "El sorteo mensual de limpieza de cortesía no requiere compra. Se permite una participación por correo electrónico o número de teléfono en cada sorteo mensual. Las participaciones recibidas a más tardar el día 3 se asocian con el sorteo de ese mes; las recibidas después de esa fecha se asocian con el siguiente sorteo mensual. Las participaciones elegibles se seleccionan al azar. Se solicita una descripción escrita para comprender la situación, pero no se utiliza para aumentar las probabilidades de selección. Se aplican restricciones de área de servicio, seguridad, condición de la propiedad, acceso, alcance y programación. Los espacios con mucho desorden pueden limitarse a una habitación o área definida en lugar de toda la vivienda. La selección no crea un derecho garantizado al servicio hasta que se confirmen la elegibilidad, el alcance, los permisos y la programación. Nulo donde esté prohibido.",
+      }),
+    },
+    {
+      title: text({ en: "Marketing consent", es: "Consentimiento de marketing" }),
+      body: text({
+        en: "Marketing email and text-message consent is optional and is not a condition of entering the giveaway or purchasing services. Promotional text-message frequency may vary and message or data rates may apply. A person may opt out of promotional text messages by replying STOP once messaging is active, and may unsubscribe from promotional email using the unsubscribe method provided with those messages.",
+        es: "El consentimiento para marketing por correo electrónico y mensajes de texto es opcional y no es condición para participar en el sorteo ni para comprar servicios. La frecuencia de mensajes de texto promocionales puede variar y pueden aplicarse tarifas de mensajes o datos. Una persona puede cancelar los mensajes promocionales respondiendo STOP cuando la mensajería esté activa y puede cancelar la suscripción de correos promocionales mediante el método incluido en esos mensajes.",
+      }),
+    },
+    {
       title: text({ en: "Payments", es: "Pagos" }),
       body: text({
         en: "The current website does not collect payment-card information. Any future payment process must be separately presented and authorized before it is used.",
