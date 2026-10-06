@@ -288,9 +288,14 @@ function AdminPage() {
           <Link to="/">
             <Logo compact />
           </Link>
-          <Button type="button" variant="ghost" onClick={signOut}>
-            <LogOut /> Sign out
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline">
+              <Link to="/admin/giveaway">Giveaway</Link>
+            </Button>
+            <Button type="button" variant="ghost" onClick={signOut}>
+              <LogOut /> Sign out
+            </Button>
+          </div>
         </div>
       </header>
       <div className="container-page py-10">
