@@ -494,8 +494,8 @@ function GiveawayPage() {
                     />
                     <Label htmlFor="giveaway-sms-optin" className="text-xs font-normal leading-relaxed text-muted-foreground">
                       {text({
-                        en: "I agree to receive recurring promotional text messages from Tranquility Level Cleaning at the number provided. Consent is optional and is not required to enter or purchase services. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.",
-                        es: "Acepto recibir mensajes de texto promocionales recurrentes de Tranquility Level Cleaning en el número proporcionado. El consentimiento es opcional y no es necesario para participar ni comprar servicios. La frecuencia de mensajes varía. Pueden aplicarse tarifas de mensajes y datos. Responde STOP para cancelar o HELP para obtener ayuda.",
+                        en: "I confirm I am the subscriber or authorized user of the number provided and agree to receive recurring promotional text messages from Tranquility Level Cleaning at that number. Consent is optional and is not required to enter or purchase services. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.",
+                        es: "Confirmo que soy el suscriptor o usuario autorizado del número proporcionado y acepto recibir mensajes de texto promocionales recurrentes de Tranquility Level Cleaning en ese número. El consentimiento es opcional y no es necesario para participar ni comprar servicios. La frecuencia de mensajes varía. Pueden aplicarse tarifas de mensajes y datos. Responde STOP para cancelar o HELP para obtener ayuda.",
                       })}
                     </Label>
                   </div>
