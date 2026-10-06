@@ -27,6 +27,12 @@ const SAFE_PUBLIC_ROUTES = [
   "/residential-cleaning",
   "/deep-cleaning",
   "/move-in-move-out-cleaning",
+  "/commercial-cleaning",
+  "/house-cleaning-euless",
+  "/house-cleaning-bedford",
+  "/house-cleaning-hurst",
+  "/house-cleaning-colleyville",
+  "/house-cleaning-grapevine",
   "/service-area",
   "/booking",
   "/quote",
@@ -34,6 +40,9 @@ const SAFE_PUBLIC_ROUTES = [
   "/faq",
   "/about",
   "/careers",
+  "/studio",
+  "/privacy",
+  "/terms",
 ];
 
 type RateBucket = { count: number; resetAt: number };
