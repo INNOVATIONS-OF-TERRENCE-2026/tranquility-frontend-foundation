@@ -22,7 +22,7 @@ import {
   updateGiveawayEntry,
 } from "@/lib/giveaway-admin.functions";
 
-export const Route = createFileRoute("/admin/giveaway")({
+export const Route = createFileRoute("/admin_/giveaway")({
   ssr: false,
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
