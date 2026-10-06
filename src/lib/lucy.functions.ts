@@ -247,7 +247,8 @@ function mergeState(prev: LucyState | undefined, question: string, cities: strin
   if (explicit) {
     if (explicit !== state.service) changedScope = true;
     state.service = explicit;
-    if (explicit === "move") recommendation = hasAny(text, ["empty", "vacant", "vac"]) ? "move" : null;
+    if (explicit === "move")
+      recommendation = hasAny(text, ["empty", "vacant", "vac"]) ? "move" : null;
   } else {
     const rec = recommendService(text);
     if (rec && !state.service) {
@@ -265,14 +266,42 @@ function mergeState(prev: LucyState | undefined, question: string, cities: strin
 
   const slash = text.match(/(\d{1,2})\s*(?:br|bd|bed)?\s*\/\s*(\d{1,2})\s*(?:ba|bath)?\b/);
   const bedrooms =
-    numberBefore(text, ["bedrooms?", "beds?", "br\\b", "bd\\b", "dormitorios?", "habitaciones?", "recámaras?", "recamaras?", "cuartos?"]) ??
-    (slash ? Number(slash[1]) : null);
-  const halfBaths = numberBefore(text, ["half[\\s-]*baths?", "half[\\s-]*bathrooms?", "medios? baños?"]);
+    numberBefore(text, [
+      "bedrooms?",
+      "beds?",
+      "br\\b",
+      "bd\\b",
+      "dormitorios?",
+      "habitaciones?",
+      "recámaras?",
+      "recamaras?",
+      "cuartos?",
+    ]) ?? (slash ? Number(slash[1]) : null);
+  const halfBaths = numberBefore(text, [
+    "half[\\s-]*baths?",
+    "half[\\s-]*bathrooms?",
+    "medios? baños?",
+  ]);
   const noHalf = text.replace(/\d{1,2}\s*(?:half[\s-]*bath\w*|medios? baños?)/g, " ");
   const fullBaths =
-    numberBefore(noHalf, ["full[\\s-]*baths?", "full[\\s-]*bathrooms?", "bathrooms?", "baths?", "ba\\b", "baños completos?", "baños?", "banos?"]) ??
-    (slash ? Number(slash[2]) : null);
-  const sqft = numberBefore(text, ["sq\\.?\\s*ft", "sqft", "square\\s*f(?:ee|oo)t", "sf\\b", "pies\\s*cuadrados", "pies"]);
+    numberBefore(noHalf, [
+      "full[\\s-]*baths?",
+      "full[\\s-]*bathrooms?",
+      "bathrooms?",
+      "baths?",
+      "ba\\b",
+      "baños completos?",
+      "baños?",
+      "banos?",
+    ]) ?? (slash ? Number(slash[2]) : null);
+  const sqft = numberBefore(text, [
+    "sq\\.?\\s*ft",
+    "sqft",
+    "square\\s*f(?:ee|oo)t",
+    "sf\\b",
+    "pies\\s*cuadrados",
+    "pies",
+  ]);
 
   const next = {
     bedrooms: clampInt(bedrooms, 1, 20),
@@ -280,7 +309,9 @@ function mergeState(prev: LucyState | undefined, question: string, cities: strin
     halfBaths: clampInt(halfBaths, 0, 10),
     sqft: clampInt(sqft, 100, 25000),
   };
-  for (const [key, value] of Object.entries(next) as Array<[keyof typeof next, number | undefined]>) {
+  for (const [key, value] of Object.entries(next) as Array<
+    [keyof typeof next, number | undefined]
+  >) {
     if (value !== undefined && value !== state[key]) {
       state[key] = value;
       changedScope = true;
@@ -289,7 +320,15 @@ function mergeState(prev: LucyState | undefined, question: string, cities: strin
 
   const extras = detectExtras(text);
   if (extras.length) {
-    const removing = hasAny(text, ["remove", "without", "drop", "take off", "no ", "quita", "sin "]);
+    const removing = hasAny(text, [
+      "remove",
+      "without",
+      "drop",
+      "take off",
+      "no ",
+      "quita",
+      "sin ",
+    ]);
     const set = new Set(state.extras);
     for (const id of extras) {
       if (removing) set.delete(id);
@@ -315,7 +354,9 @@ function buildBookingHref(state: LucyState) {
   params.set("fullBaths", String(state.fullBaths ?? 1));
   if (state.halfBaths) params.set("halfBaths", String(state.halfBaths));
   if (state.sqft) params.set("sqft", String(state.sqft));
-  const extras = state.extras.filter((id) => addOns.some((item) => item.id === id && !item.derived));
+  const extras = state.extras.filter((id) =>
+    addOns.some((item) => item.id === id && !item.derived),
+  );
   if (extras.length) params.set("extras", extras.join(","));
   return "/booking?" + params.toString();
 }
@@ -366,18 +407,34 @@ function stateReply(
   const asksEstimate = hasAny(text, ESTIMATE_WORDS);
   const asksBook = hasAny(text, BOOK_WORDS);
   const hasScope = state.bedrooms !== undefined || state.fullBaths !== undefined;
-  const asksRecommend = hasAny(text, ["recommend", "which", "should i", "need", "recomiend", "cuál", "necesito"]);
+  const asksRecommend = hasAny(text, [
+    "recommend",
+    "which",
+    "should i",
+    "need",
+    "recomiend",
+    "cuál",
+    "necesito",
+  ]);
 
   // Booking handoff: carry every known valid field into the existing validated prefill.
   if (asksBook && state.service && (state.estimated || hasScope)) {
     return {
       answer: es
-        ? "Listo. Abriré la reserva con tu " + serviceName(state.service, language) + " y los detalles que ya me diste. Solo eliges fecha, ventana de llegada y tus datos de contacto."
-        : "Ready. I will open booking with your " + serviceName(state.service, language) + " and the details you already gave me. You just choose a date, arrival window, and contact details.",
+        ? "Listo. Abriré la reserva con tu " +
+          serviceName(state.service, language) +
+          " y los detalles que ya me diste. Solo eliges fecha, ventana de llegada y tus datos de contacto."
+        : "Ready. I will open booking with your " +
+          serviceName(state.service, language) +
+          " and the details you already gave me. You just choose a date, arrival window, and contact details.",
       intent: "booking",
       confidence: "high",
       actions: [
-        { type: "start_booking", label: es ? "Continuar a la reserva" : "Continue to booking", href: buildBookingHref(state) },
+        {
+          type: "start_booking",
+          label: es ? "Continuar a la reserva" : "Continue to booking",
+          href: buildBookingHref(state),
+        },
       ],
       followUps: [],
       factSources: ["Tranquility booking workflow"],
@@ -393,7 +450,13 @@ function stateReply(
           : "I can price that right away. Is this routine upkeep (Standard), a thorough reset because it has been a while (Deep), or an empty home for a move (Move-In / Move-Out)?",
         intent: "service_recommendation",
         confidence: "medium",
-        actions: [{ type: "navigate", label: es ? "Comparar servicios" : "Compare services", href: "/services" }],
+        actions: [
+          {
+            type: "navigate",
+            label: es ? "Comparar servicios" : "Compare services",
+            href: "/services",
+          },
+        ],
         followUps: es
           ? ["Standard Clean", "Deep Clean", "Move-In / Move-Out"]
           : ["Standard Clean", "Deep Clean", "Move-In / Move-Out"],
@@ -416,12 +479,20 @@ function stateReply(
       answer:
         lead +
         (es
-          ? serviceName(service.id, language) + " comienza en " + money(service.basePrice) + " para 1 dormitorio y 1 baño. ¿Cuántos dormitorios y baños completos tiene tu hogar? Los pies cuadrados ayudan si los sabes."
-          : serviceName(service.id, language) + " starts at " + money(service.basePrice) + " for 1 bedroom and 1 bath. How many bedrooms and full bathrooms does your home have? Square footage helps if you know it."),
+          ? serviceName(service.id, language) +
+            " comienza en " +
+            money(service.basePrice) +
+            " para 1 dormitorio y 1 baño. ¿Cuántos dormitorios y baños completos tiene tu hogar? Los pies cuadrados ayudan si los sabes."
+          : serviceName(service.id, language) +
+            " starts at " +
+            money(service.basePrice) +
+            " for 1 bedroom and 1 bath. How many bedrooms and full bathrooms does your home have? Square footage helps if you know it."),
       intent: "price_estimate",
       confidence: "high",
       actions: [],
-      followUps: es ? ["3 dormitorios, 2 baños", "2 dormitorios, 1 baño"] : ["3 bed, 2 bath", "2 bed, 1 bath"],
+      followUps: es
+        ? ["3 dormitorios, 2 baños", "2 dormitorios, 1 baño"]
+        : ["3 bed, 2 bath", "2 bed, 1 bath"],
       factSources: ["Tranquility pricing engine"],
       state,
     };
@@ -445,32 +516,75 @@ function stateReply(
     extras: Object.fromEntries(state.extras.map((id) => [id, 1])),
     sqft: state.sqft ?? null,
   });
-  const freqName = availableFrequencies(state.service).find((item) => item.id === frequency)?.name ?? "One-time";
-  const customReview = estimate.reviewFlags.some((flag) => !flag.toLowerCase().includes("starting"));
+  const freqName =
+    availableFrequencies(state.service).find((item) => item.id === frequency)?.name ?? "One-time";
+  const customReview = estimate.reviewFlags.some(
+    (flag) => !flag.toLowerCase().includes("starting"),
+  );
 
   const parts: string[] = [];
   if (recommendation) parts.push(recommendationText(recommendation, language));
   if (state.city) {
     const covered = activeCities.some((city) => city.toLowerCase() === state.city!.toLowerCase());
     if (covered && cityMentioned) {
-      parts.push(es ? state.city + " está dentro de nuestra área de servicio." : state.city + " is in our service area.");
+      parts.push(
+        es
+          ? state.city + " está dentro de nuestra área de servicio."
+          : state.city + " is in our service area.",
+      );
     }
   }
   const scopeText = es
-    ? bedrooms + " dormitorio(s), " + fullBaths + " baño(s)" + (state.halfBaths ? ", " + state.halfBaths + " medio(s) baño(s)" : "")
-    : bedrooms + " bed, " + fullBaths + " bath" + (state.halfBaths ? ", " + state.halfBaths + " half bath" : "");
+    ? bedrooms +
+      " dormitorio(s), " +
+      fullBaths +
+      " baño(s)" +
+      (state.halfBaths ? ", " + state.halfBaths + " medio(s) baño(s)" : "")
+    : bedrooms +
+      " bed, " +
+      fullBaths +
+      " bath" +
+      (state.halfBaths ? ", " + state.halfBaths + " half bath" : "");
   parts.push(
     es
-      ? "Tu " + serviceName(state.service, language) + " (" + scopeText + ", " + freqName.toLowerCase() + ") se estima en " + money(estimate.total) + "."
-      : "Your " + serviceName(state.service, language) + " (" + scopeText + ", " + freqName.toLowerCase() + ") is estimated at " + money(estimate.total) + ".",
+      ? "Tu " +
+          serviceName(state.service, language) +
+          " (" +
+          scopeText +
+          ", " +
+          freqName.toLowerCase() +
+          ") se estima en " +
+          money(estimate.total) +
+          "."
+      : "Your " +
+          serviceName(state.service, language) +
+          " (" +
+          scopeText +
+          ", " +
+          freqName.toLowerCase() +
+          ") is estimated at " +
+          money(estimate.total) +
+          ".",
   );
   if (estimate.discountAmount > 0) {
-    parts.push(es ? "Incluye " + money(estimate.discountAmount) + " de ahorro recurrente." : "That includes " + money(estimate.discountAmount) + " in recurring savings.");
+    parts.push(
+      es
+        ? "Incluye " + money(estimate.discountAmount) + " de ahorro recurrente."
+        : "That includes " + money(estimate.discountAmount) + " in recurring savings.",
+    );
   }
   if (customReview) {
-    parts.push(es ? "Por el tamaño o alcance, Tranquility revisará los detalles antes de confirmar." : "Because of the size or scope, Tranquility will review the details before confirming.");
+    parts.push(
+      es
+        ? "Por el tamaño o alcance, Tranquility revisará los detalles antes de confirmar."
+        : "Because of the size or scope, Tranquility will review the details before confirming.",
+    );
   } else {
-    parts.push(es ? "Los detalles finales se confirman antes de la limpieza." : "Final details are confirmed before cleaning.");
+    parts.push(
+      es
+        ? "Los detalles finales se confirman antes de la limpieza."
+        : "Final details are confirmed before cleaning.",
+    );
   }
 
   const nextState: LucyState = { ...state, frequency, estimated: true, customReview };
@@ -608,9 +722,7 @@ function serviceAreaReply(
           ? "Sí. " +
             matched +
             " aparece actualmente como una ciudad activa en el área de servicio de Tranquility."
-          : "Yes. " +
-            matched +
-            " is currently listed as an active Tranquility service city.",
+          : "Yes. " + matched + " is currently listed as an active Tranquility service city.",
       intent: "service_area",
       confidence: "high",
       actions: [
@@ -630,16 +742,7 @@ function serviceAreaReply(
     };
   }
 
-  if (
-    hasAny(text, [
-      "where",
-      "which cities",
-      "list",
-      "dónde",
-      "que ciudades",
-      "qué ciudades",
-    ])
-  ) {
+  if (hasAny(text, ["where", "which cities", "list", "dónde", "que ciudades", "qué ciudades"])) {
     return {
       answer:
         language === "es"
@@ -675,7 +778,14 @@ function directReply(question: string, language: LucyLanguage): LucyReply | null
   const text = question.toLowerCase();
   const es = language === "es";
   if (
-    hasAny(text, ["commercial", "office building", "my business", "storefront", "comercial", "negocio"]) &&
+    hasAny(text, [
+      "commercial",
+      "office building",
+      "my business",
+      "storefront",
+      "comercial",
+      "negocio",
+    ]) &&
     !text.includes("home office")
   ) {
     return {
@@ -685,8 +795,16 @@ function directReply(question: string, language: LucyLanguage): LucyReply | null
       intent: "commercial_inquiry",
       confidence: "high",
       actions: [
-        { type: "start_quote", label: es ? "Solicitar cotización comercial" : "Request a commercial quote", href: "/quote" },
-        { type: "navigate", label: es ? "Ver limpieza comercial" : "View commercial cleaning", href: "/commercial-cleaning" },
+        {
+          type: "start_quote",
+          label: es ? "Solicitar cotización comercial" : "Request a commercial quote",
+          href: "/quote",
+        },
+        {
+          type: "navigate",
+          label: es ? "Ver limpieza comercial" : "View commercial cleaning",
+          href: "/commercial-cleaning",
+        },
       ],
       followUps: [],
       factSources: ["Tranquility commercial workflow"],
@@ -700,7 +818,11 @@ function directReply(question: string, language: LucyLanguage): LucyReply | null
       intent: "rescheduling",
       confidence: "high",
       actions: [
-        { type: "call", label: es ? "Llamar a Tranquility" : "Call Tranquility", href: business.phoneHref },
+        {
+          type: "call",
+          label: es ? "Llamar a Tranquility" : "Call Tranquility",
+          href: business.phoneHref,
+        },
         { type: "contact", label: es ? "Enviar mensaje" : "Send a message", href: "/contact" },
       ],
       followUps: [],
@@ -755,9 +877,7 @@ function sanitizeAction(action: LucyAction): LucyAction | null {
   if (action.type === "contact") return { ...action, href: "/contact" };
   if (action.type === "start_quote") return { ...action, href: "/quote" };
   if (action.type === "start_booking") {
-    return action.href?.startsWith("/booking")
-      ? action
-      : { ...action, href: "/booking" };
+    return action.href?.startsWith("/booking") ? action : { ...action, href: "/booking" };
   }
   if (!action.href) return action;
   if (
@@ -989,15 +1109,7 @@ export const askLucyOwner = createServerFn({ method: "POST" })
     const topCity = summary.demandByCity[0];
     let answer: string;
 
-    if (
-      hasAny(question, [
-        "next 7",
-        "next week",
-        "próximos 7",
-        "proximos 7",
-        "semana",
-      ])
-    ) {
+    if (hasAny(question, ["next 7", "next week", "próximos 7", "proximos 7", "semana"])) {
       answer =
         data.language === "es"
           ? "Tienes " +
@@ -1010,12 +1122,22 @@ export const askLucyOwner = createServerFn({ method: "POST" })
             " active booking(s) scheduled between today and the next 7 days. " +
             summary.bookings.today +
             " are scheduled for today.";
-    } else if (hasAny(question, ["most booked", "popular", "which service", "más reservado", "servicio"])) {
+    } else if (
+      hasAny(question, ["most booked", "popular", "which service", "más reservado", "servicio"])
+    ) {
       const top = Object.entries(summary.bookings.byService).sort((a, b) => b[1] - a[1])[0];
       answer = top
         ? data.language === "es"
-          ? "El servicio más reservado es " + serviceName(top[0] as ServiceId, "es") + " con " + top[1] + " reserva(s)."
-          : "The most booked service is " + serviceName(top[0] as ServiceId, "en") + " with " + top[1] + " booking(s)."
+          ? "El servicio más reservado es " +
+            (services.find((item) => item.id === top[0])?.name ?? top[0]) +
+            " con " +
+            top[1] +
+            " reserva(s)."
+          : "The most booked service is " +
+            (services.find((item) => item.id === top[0])?.name ?? top[0]) +
+            " with " +
+            top[1] +
+            " booking(s)."
         : data.language === "es"
           ? "Aún no hay reservas para comparar."
           : "There are no bookings to compare yet.";
@@ -1032,10 +1154,7 @@ export const askLucyOwner = createServerFn({ method: "POST" })
             " quote request(s) in total. Current statuses are " +
             JSON.stringify(summary.quotes.byStatus) +
             ".";
-    } else if (
-      hasAny(question, ["demand", "city", "demanda", "ciudad"]) &&
-      topCity
-    ) {
+    } else if (hasAny(question, ["demand", "city", "demanda", "ciudad"]) && topCity) {
       answer =
         data.language === "es"
           ? topCity.city +
@@ -1076,10 +1195,7 @@ export const askLucyOwner = createServerFn({ method: "POST" })
       actions: [],
       followUps:
         data.language === "es"
-          ? [
-              "¿Cómo se ven mis próximos 7 días?",
-              "¿Dónde es más fuerte la demanda?",
-            ]
+          ? ["¿Cómo se ven mis próximos 7 días?", "¿Dónde es más fuerte la demanda?"]
           : ["How does my next 7 days look?", "Where is demand strongest?"],
       factSources: ["Authenticated aggregate owner data"],
     } satisfies LucyReply;

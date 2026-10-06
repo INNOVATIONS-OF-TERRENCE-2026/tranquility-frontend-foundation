@@ -1,33 +1,15 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import {
-  ArrowUpRight,
-  LoaderCircle,
-  RotateCcw,
-  Send,
-  ShieldCheck,
-  Sparkles,
-  X,
-} from "lucide-react";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-  type KeyboardEvent,
-} from "react";
+import { ArrowUpRight, LoaderCircle, RotateCcw, Send, ShieldCheck, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 
 import { useLanguage } from "@/components/language/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { brandAssets } from "@/config/brand";
 import { askLucyOwner, askLucyPublic } from "@/lib/lucy.functions";
 import { lucyPromptSet, lucyRouteContext } from "@/lib/lucy.knowledge";
-import type {
-  LucyChatMessage,
-  LucyReply,
-} from "@/lib/lucy.types";
+import type { LucyChatMessage, LucyReply, LucyState } from "@/lib/lucy.types";
 import { cn } from "@/lib/utils";
 
 type LocalMessage = LucyChatMessage & {
@@ -47,6 +29,7 @@ function storageKeys(ownerMode: boolean) {
   return {
     messages: "tlc-lucy-" + scope + "-messages-v1",
     session: "tlc-lucy-" + scope + "-session-v1",
+    state: "tlc-lucy-" + scope + "-state-v1",
   };
 }
 
@@ -65,6 +48,17 @@ function loadMessages(key: string): LocalMessage[] {
       .slice(-20);
   } catch {
     return [];
+  }
+}
+
+function loadState(key: string): LucyState | undefined {
+  try {
+    const parsed = JSON.parse(window.sessionStorage.getItem(key) || "null");
+    return parsed && typeof parsed === "object" && Array.isArray(parsed.extras)
+      ? parsed
+      : undefined;
+  } catch {
+    return undefined;
   }
 }
 
@@ -94,10 +88,7 @@ function EstimateCard({ reply }: { reply: LucyReply }) {
       </div>
       <div className="space-y-2 px-4 py-3">
         {reply.estimate.lines.map((line, index) => (
-          <div
-            key={line.label + index}
-            className="flex items-center justify-between gap-4 text-xs"
-          >
+          <div key={line.label + index} className="flex items-center justify-between gap-4 text-xs">
             <span className="text-muted-foreground">
               {line.label}
               {line.quantity > 1 ? " × " + line.quantity : ""}
@@ -193,8 +184,13 @@ export function LucyIntelligenceWidget() {
               pathname,
               question: clean,
               history,
+              state: loadState(keys.state),
             },
           });
+
+      if (!ownerMode && reply.state) {
+        window.sessionStorage.setItem(keys.state, JSON.stringify(reply.state));
+      }
 
       setMessages((current) => [
         ...current,
@@ -236,6 +232,7 @@ export function LucyIntelligenceWidget() {
     if (typeof window !== "undefined") {
       window.sessionStorage.removeItem(keys.messages);
       window.sessionStorage.removeItem(keys.session);
+      window.sessionStorage.removeItem(keys.state);
     }
   }
 
@@ -247,7 +244,7 @@ export function LucyIntelligenceWidget() {
         <button
           type="button"
           className={cn(
-            "group fixed bottom-5 right-4 z-[80] flex min-h-14 items-center gap-3 rounded-full border border-gold/35 bg-card/95 px-3 py-2 shadow-[0_20px_60px_-20px_hsl(var(--foreground)/0.35)] backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-gold/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:right-5",
+            "group fixed bottom-[max(1.25rem,calc(env(safe-area-inset-bottom)+0.75rem))] right-4 z-[80] flex min-h-14 items-center gap-3 rounded-full border border-gold/35 bg-card/95 px-3 py-2 shadow-[0_20px_60px_-20px_hsl(var(--foreground)/0.35)] backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-gold/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:right-5",
             open && "pointer-events-none opacity-0",
           )}
           aria-label={text({
@@ -282,7 +279,7 @@ export function LucyIntelligenceWidget() {
         <DialogPrimitive.Overlay className="fixed inset-0 z-[90] bg-foreground/20 backdrop-blur-[1px] data-[state=closed]:animate-out data-[state=open]:animate-in sm:bg-transparent sm:backdrop-blur-none" />
 
         <DialogPrimitive.Content
-          className="fixed inset-x-0 bottom-0 z-[100] flex h-[min(84dvh,48rem)] flex-col overflow-hidden rounded-t-[2rem] border border-border bg-card shadow-2xl outline-none data-[state=closed]:animate-out data-[state=open]:animate-in sm:bottom-5 sm:left-auto sm:right-5 sm:h-[min(78vh,46rem)] sm:w-[27rem] sm:rounded-[1.75rem]"
+          className="fixed inset-x-0 bottom-0 z-[100] flex h-[min(86svh,48rem)] max-h-[calc(100svh-env(safe-area-inset-top)-0.5rem)] flex-col data-[state=open]:slide-in-from-bottom-8 sm:data-[state=open]:slide-in-from-bottom-4 overflow-hidden rounded-t-[2rem] border border-border bg-card shadow-2xl outline-none data-[state=closed]:animate-out data-[state=open]:animate-in sm:bottom-5 sm:left-auto sm:right-5 sm:h-[min(78vh,46rem)] sm:w-[27rem] sm:rounded-[1.75rem]"
           onOpenAutoFocus={(event) => {
             event.preventDefault();
             inputRef.current?.focus();
@@ -305,7 +302,7 @@ export function LucyIntelligenceWidget() {
                   Lucy Intelligence
                 </DialogPrimitive.Title>
                 <DialogPrimitive.Description className="mt-1.5 flex items-center gap-2 text-xs text-primary-foreground/75">
-                  <Sparkles className="size-3.5 text-gold" aria-hidden="true" />
+                  <span className="size-2 rounded-full bg-gold" aria-hidden="true" />
                   <span>
                     {ownerMode
                       ? text({ en: "Owner Operations", es: "Operaciones de propietaria" })
@@ -397,10 +394,7 @@ export function LucyIntelligenceWidget() {
                     >
                       <span className="flex items-center justify-between gap-3">
                         <span>{prompt}</span>
-                        <ArrowUpRight
-                          className="size-3.5 shrink-0 text-gold"
-                          aria-hidden="true"
-                        />
+                        <ArrowUpRight className="size-3.5 shrink-0 text-gold" aria-hidden="true" />
                       </span>
                     </button>
                   ))}
@@ -412,10 +406,7 @@ export function LucyIntelligenceWidget() {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={cn(
-                    "flex",
-                    message.role === "user" ? "justify-end" : "justify-start",
-                  )}
+                  className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}
                 >
                   <div
                     className={cn(
@@ -441,10 +432,7 @@ export function LucyIntelligenceWidget() {
                                   className="inline-flex min-h-10 items-center justify-between gap-3 rounded-xl border border-gold/30 bg-accent/35 px-3 py-2 text-xs font-semibold text-foreground transition hover:border-gold/55 hover:bg-accent/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                 >
                                   <span>{action.label}</span>
-                                  <ArrowUpRight
-                                    className="size-3.5 shrink-0"
-                                    aria-hidden="true"
-                                  />
+                                  <ArrowUpRight className="size-3.5 shrink-0" aria-hidden="true" />
                                 </a>
                               ) : null,
                             )}
@@ -474,11 +462,15 @@ export function LucyIntelligenceWidget() {
               {sending && (
                 <div className="flex justify-start">
                   <div className="flex items-center gap-2 rounded-2xl rounded-bl-md border border-border bg-card px-4 py-3 text-xs text-muted-foreground shadow-sm">
-                    <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+                    <span className="flex gap-1" aria-hidden="true">
+                      <span className="size-1.5 animate-bounce rounded-full bg-gold [animation-delay:-0.3s]" />
+                      <span className="size-1.5 animate-bounce rounded-full bg-gold [animation-delay:-0.15s]" />
+                      <span className="size-1.5 animate-bounce rounded-full bg-gold" />
+                    </span>
                     <span>
                       {text({
-                        en: "Lucy is checking Tranquility intelligence...",
-                        es: "Lucy está consultando la inteligencia de Tranquility...",
+                        en: "Lucy is thinking",
+                        es: "Lucy está pensando",
                       })}
                     </span>
                   </div>

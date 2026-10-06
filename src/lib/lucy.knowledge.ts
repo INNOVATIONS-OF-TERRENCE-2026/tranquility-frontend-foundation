@@ -162,10 +162,7 @@ export function lucyRouteContext(pathname: string, language: LucyLanguage): stri
       /^\/house-cleaning-colleyville/,
       { en: "Colleyville Cleaning", es: "Limpieza en Colleyville" },
     ],
-    [
-      /^\/house-cleaning-grapevine/,
-      { en: "Grapevine Cleaning", es: "Limpieza en Grapevine" },
-    ],
+    [/^\/house-cleaning-grapevine/, { en: "Grapevine Cleaning", es: "Limpieza en Grapevine" }],
     [/^\/service-area/, { en: "Service Area", es: "Área de servicio" }],
     [/^\/booking/, { en: "Booking", es: "Reserva" }],
     [/^\/quote/, { en: "Custom Quote", es: "Cotización personalizada" }],
