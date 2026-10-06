@@ -233,8 +233,8 @@ function GiveawayPage() {
                   icon: Sparkles,
                   title: text({ en: "Cluttered spaces", es: "Espacios con mucho desorden" }),
                   body: text({
-                    en: "For heavily cluttered spaces, the complimentary service may be limited to one room or one defined area rather than the entire home.",
-                    es: "En espacios con mucho desorden, el servicio de cortesía puede limitarse a una habitación o área definida en lugar de toda la vivienda.",
+                    en: "For heavily cluttered spaces, the complimentary service is scoped to one room or one defined area rather than the entire home.",
+                    es: "En espacios con mucho desorden, el servicio de cortesía se limita a una habitación o área definida en lugar de toda la vivienda.",
                   }),
                 },
                 {
