@@ -336,7 +336,7 @@ function GiveawayPage() {
                     <Label htmlFor="giveaway-entry-for">{text({ en: "Who are you entering for?", es: "¿Para quién estás participando?" })}</Label>
                     <Select
                       value={form.entryFor}
-                      onValueChange={(value: EntryFor) => setForm({ ...form, entryFor: value })}
+                      onValueChange={(value) => setForm({ ...form, entryFor: value as EntryFor })}
                     >
                       <SelectTrigger id="giveaway-entry-for" className="mt-2">
                         <SelectValue />
@@ -404,7 +404,7 @@ function GiveawayPage() {
                   <Label htmlFor="giveaway-category">{text({ en: "What best describes the situation?", es: "¿Qué describe mejor la situación?" })}</Label>
                   <Select
                     value={form.needCategory}
-                    onValueChange={(value: NeedCategory) => setForm({ ...form, needCategory: value })}
+                    onValueChange={(value) => setForm({ ...form, needCategory: value as NeedCategory })}
                   >
                     <SelectTrigger id="giveaway-category" className="mt-2">
                       <SelectValue />
