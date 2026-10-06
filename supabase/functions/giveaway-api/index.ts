@@ -6,7 +6,7 @@ type Language = "en" | "es";
 const OWNER_EMAIL = "tlcllc26@gmail.com";
 const FROM_EMAIL = "Tranquility Level Cleaning <notifications@heytlcleaning.com>";
 const SOURCE_URL = "https://heytlcleaning.com/giveaway";
-const CONSENT_VERSION = "giveaway-2026-10-v1";
+const CONSENT_VERSION = "giveaway-2026-10-v2";
 
 const allowedOrigins = [
   "https://heytlcleaning.com",
@@ -130,8 +130,8 @@ const emailConsent = {
 };
 
 const smsConsent = {
-  en: "I agree to receive recurring promotional text messages from Tranquility Level Cleaning at the number provided. Consent is optional and is not required to enter or purchase services. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.",
-  es: "Acepto recibir mensajes de texto promocionales recurrentes de Tranquility Level Cleaning en el número proporcionado. El consentimiento es opcional y no es necesario para participar ni comprar servicios. La frecuencia de mensajes varía. Pueden aplicarse tarifas de mensajes y datos. Responde STOP para cancelar o HELP para obtener ayuda.",
+  en: "I confirm I am the subscriber or authorized user of the number provided and agree to receive recurring promotional text messages from Tranquility Level Cleaning at that number. Consent is optional and is not required to enter or purchase services. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.",
+  es: "Confirmo que soy el suscriptor o usuario autorizado del número proporcionado y acepto recibir mensajes de texto promocionales recurrentes de Tranquility Level Cleaning en ese número. El consentimiento es opcional y no es necesario para participar ni comprar servicios. La frecuencia de mensajes varía. Pueden aplicarse tarifas de mensajes y datos. Responde STOP para cancelar o HELP para obtener ayuda.",
 };
 
 async function sendOwnerEmail(input: {
