@@ -19,6 +19,8 @@ import { Route as CommercialCleaningRouteImport } from './routes/commercial-clea
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DeepCleaningRouteImport } from './routes/deep-cleaning'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as GiveawayRouteImport } from './routes/giveaway'
+import { Route as AdminGiveawayRouteImport } from './routes/admin_.giveaway'
 import { Route as HouseCleaningBedfordRouteImport } from './routes/house-cleaning-bedford'
 import { Route as HouseCleaningColleyvilleRouteImport } from './routes/house-cleaning-colleyville'
 import { Route as HouseCleaningEulessRouteImport } from './routes/house-cleaning-euless'
@@ -83,6 +85,16 @@ const DeepCleaningRoute = DeepCleaningRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GiveawayRoute = GiveawayRouteImport.update({
+  id: '/giveaway',
+  path: '/giveaway',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminGiveawayRoute = AdminGiveawayRouteImport.update({
+  id: '/admin/giveaway',
+  path: '/admin/giveaway',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HouseCleaningBedfordRoute = HouseCleaningBedfordRouteImport.update({
@@ -174,6 +186,8 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/giveaway': typeof GiveawayRoute
+  '/admin/giveaway': typeof AdminGiveawayRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
@@ -201,6 +215,8 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/giveaway': typeof GiveawayRoute
+  '/admin/giveaway': typeof AdminGiveawayRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
@@ -229,6 +245,8 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
+  '/giveaway': typeof GiveawayRoute
+  '/admin/giveaway': typeof AdminGiveawayRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
@@ -258,6 +276,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/giveaway'
+    | '/admin/giveaway'
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
@@ -285,6 +305,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/giveaway'
+    | '/admin/giveaway'
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
@@ -312,6 +334,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/deep-cleaning'
     | '/faq'
+    | '/giveaway'
+    | '/admin/giveaway'
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
@@ -340,6 +364,8 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DeepCleaningRoute: typeof DeepCleaningRoute
   FaqRoute: typeof FaqRoute
+  GiveawayRoute: typeof GiveawayRoute
+  AdminGiveawayRoute: typeof AdminGiveawayRoute
   HouseCleaningBedfordRoute: typeof HouseCleaningBedfordRoute
   HouseCleaningColleyvilleRoute: typeof HouseCleaningColleyvilleRoute
   HouseCleaningEulessRoute: typeof HouseCleaningEulessRoute
@@ -427,6 +453,20 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/giveaway': {
+      id: '/giveaway'
+      path: '/giveaway'
+      fullPath: '/giveaway'
+      preLoaderRoute: typeof GiveawayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/giveaway': {
+      id: '/admin/giveaway'
+      path: '/admin/giveaway'
+      fullPath: '/admin/giveaway'
+      preLoaderRoute: typeof AdminGiveawayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/house-cleaning-bedford': {
@@ -548,6 +588,8 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DeepCleaningRoute: DeepCleaningRoute,
   FaqRoute: FaqRoute,
+  GiveawayRoute: GiveawayRoute,
+  AdminGiveawayRoute: AdminGiveawayRoute,
   HouseCleaningBedfordRoute: HouseCleaningBedfordRoute,
   HouseCleaningColleyvilleRoute: HouseCleaningColleyvilleRoute,
   HouseCleaningEulessRoute: HouseCleaningEulessRoute,
