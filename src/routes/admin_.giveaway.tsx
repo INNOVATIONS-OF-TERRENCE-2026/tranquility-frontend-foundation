@@ -78,6 +78,35 @@ function GiveawayAdminPage() {
     return (data?.consents ?? []).filter((consent) => consent.source_entity_id && ids.has(consent.source_entity_id)).length;
   }, [data, entries]);
 
+  function exportMarketingConsents() {
+    const rows = data?.consents ?? [];
+    if (!rows.length) return;
+
+    const csvCell = (value: unknown) =>
+      `"${String(value ?? "").replaceAll('"', '""')}"`;
+    const csv = [
+      ["channel", "contact", "consent_version", "consented_at"],
+      ...rows.map((row) => [
+        row.channel,
+        row.contact_value,
+        row.consent_version,
+        row.created_at,
+      ]),
+    ]
+      .map((row) => row.map(csvCell).join(","))
+      .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `tranquility-giveaway-marketing-opt-ins-${month || "all"}.csv`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }
+
   async function selectWinner() {
     if (!month) return;
     setError("");
@@ -133,9 +162,18 @@ function GiveawayAdminPage() {
               at random for a drawing month.
             </p>
           </div>
-          <Button onClick={selectWinner} disabled={!month || entries.length === 0}>
-            <Shuffle className="size-4" /> Select random winner
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              onClick={exportMarketingConsents}
+              disabled={(data?.consents.length ?? 0) === 0}
+            >
+              Export marketing opt-ins
+            </Button>
+            <Button onClick={selectWinner} disabled={!month || entries.length === 0}>
+              <Shuffle className="size-4" /> Select random winner
+            </Button>
+          </div>
         </div>
 
         {error && (
@@ -186,6 +224,44 @@ function GiveawayAdminPage() {
                 this drawing.
               </p>
             </div>
+
+            {(data?.consents.length ?? 0) > 0 && (
+              <section className="mt-8 rounded-2xl border border-border bg-card p-6">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="eyebrow">Marketing consent ledger</p>
+                    <h2 className="mt-2 text-2xl text-ink">Documented opt-ins</h2>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      These records reflect affirmative choices captured through the giveaway form.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-5 overflow-x-auto">
+                  <table className="w-full min-w-[34rem] text-left text-sm">
+                    <thead className="border-b border-border text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                      <tr>
+                        <th className="px-2 py-3">Channel</th>
+                        <th className="px-2 py-3">Contact</th>
+                        <th className="px-2 py-3">Consent version</th>
+                        <th className="px-2 py-3">Recorded</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(data?.consents ?? []).map((consent) => (
+                        <tr key={consent.id} className="border-b border-border/70 last:border-0">
+                          <td className="px-2 py-3 font-semibold text-ink">{consent.channel}</td>
+                          <td className="px-2 py-3 text-muted-foreground">{consent.contact_value}</td>
+                          <td className="px-2 py-3 text-muted-foreground">{consent.consent_version}</td>
+                          <td className="px-2 py-3 text-muted-foreground">
+                            {new Date(consent.created_at).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
 
             {entries.length === 0 ? (
               <div className="mt-10 rounded-2xl border border-border bg-card p-8 text-center">
