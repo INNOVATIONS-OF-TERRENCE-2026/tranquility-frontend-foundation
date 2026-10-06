@@ -150,7 +150,22 @@ export function lucyRouteContext(pathname: string, language: LucyLanguage): stri
     [/^\/services/, { en: "Services", es: "Servicios" }],
     [/^\/residential-cleaning/, { en: "Standard Clean", es: "Limpieza estándar" }],
     [/^\/deep-cleaning/, { en: "Deep Clean", es: "Limpieza profunda" }],
-    [/^\/move-in-move-out-cleaning/, { en: "Move-In / Move-Out Clean", es: "Limpieza de entrada / salida" }],
+    [
+      /^\/move-in-move-out-cleaning/,
+      { en: "Move-In / Move-Out Clean", es: "Limpieza de entrada / salida" },
+    ],
+    [/^\/commercial-cleaning/, { en: "Commercial Cleaning", es: "Limpieza comercial" }],
+    [/^\/house-cleaning-euless/, { en: "Euless Cleaning", es: "Limpieza en Euless" }],
+    [/^\/house-cleaning-bedford/, { en: "Bedford Cleaning", es: "Limpieza en Bedford" }],
+    [/^\/house-cleaning-hurst/, { en: "Hurst Cleaning", es: "Limpieza en Hurst" }],
+    [
+      /^\/house-cleaning-colleyville/,
+      { en: "Colleyville Cleaning", es: "Limpieza en Colleyville" },
+    ],
+    [
+      /^\/house-cleaning-grapevine/,
+      { en: "Grapevine Cleaning", es: "Limpieza en Grapevine" },
+    ],
     [/^\/service-area/, { en: "Service Area", es: "Área de servicio" }],
     [/^\/booking/, { en: "Booking", es: "Reserva" }],
     [/^\/quote/, { en: "Custom Quote", es: "Cotización personalizada" }],
@@ -158,6 +173,9 @@ export function lucyRouteContext(pathname: string, language: LucyLanguage): stri
     [/^\/about/, { en: "About", es: "Acerca de" }],
     [/^\/contact/, { en: "Contact", es: "Contacto" }],
     [/^\/careers/, { en: "Careers", es: "Empleo" }],
+    [/^\/studio/, { en: "Tranquility Studio", es: "Tranquility Studio" }],
+    [/^\/privacy/, { en: "Privacy", es: "Privacidad" }],
+    [/^\/terms/, { en: "Terms", es: "Términos" }],
     [/^\/admin/, { en: "Owner Workspace", es: "Espacio de propietaria" }],
   ];
   const label = labels.find(([pattern]) => pattern.test(pathname))?.[1];
@@ -206,6 +224,9 @@ export function publicKnowledgeSnapshot(activeCities: string[]) {
       faq: "/faq",
       about: "/about",
       careers: "/careers",
+      studio: "/studio",
+      privacy: "/privacy",
+      terms: "/terms",
     },
   };
 }
