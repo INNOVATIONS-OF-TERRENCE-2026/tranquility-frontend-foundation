@@ -9,6 +9,7 @@
 - Full QA: 22 routes 200, forms end-to-end with references, ES + dark + mobile, zero console errors
 
 ## Blocked on you
+- Lucy free-form AI: add the server-only `OPENAI_API_KEY` secret to the production environment. Deterministic Lucy pricing, coverage, service comparison, booking prefill, and owner summaries work without it.
 - Google OAuth: add client ID/secret in Lovable Cloud Auth settings, then owner sign-in with Google works
 - Email delivery to tlcllc26@gmail.com: set up the email domain; until then submissions are stored privately with references, no email is sent
 - Stripe payments: not authorized; no payment collected anywhere
