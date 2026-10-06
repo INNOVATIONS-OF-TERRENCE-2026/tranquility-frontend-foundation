@@ -87,6 +87,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/giveaway" className="transition-colors hover:text-moss">
+                  {text({ en: "Monthly Giveaway", es: "Sorteo mensual" })}
+                </Link>
+              </li>
+              <li>
                 <Link to="/careers" className="transition-colors hover:text-moss">
                   {text({ en: "Careers", es: "Empleo" })}
                 </Link>
