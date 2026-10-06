@@ -46,6 +46,21 @@ export const lucyEstimateSchema = z.object({
 });
 export type LucyEstimate = z.infer<typeof lucyEstimateSchema>;
 
+export const lucyStateSchema = z.object({
+  service: z.enum(["standard", "deep", "move"]).optional(),
+  frequency: z.enum(["onetime", "weekly", "biweekly", "monthly"]).optional(),
+  bedrooms: z.number().int().min(1).max(20).optional(),
+  fullBaths: z.number().int().min(1).max(20).optional(),
+  halfBaths: z.number().int().min(0).max(10).optional(),
+  sqft: z.number().int().min(100).max(25000).optional(),
+  extras: z.array(z.string().trim().min(1).max(40)).max(16).default([]),
+  city: z.string().trim().max(80).optional(),
+  goal: z.string().trim().max(40).optional(),
+  estimated: z.boolean().optional(),
+  customReview: z.boolean().optional(),
+});
+export type LucyState = z.infer<typeof lucyStateSchema>;
+
 export const lucyReplySchema = z.object({
   answer: z.string().trim().min(1).max(2400),
   intent: z.string().trim().min(1).max(80),
@@ -54,6 +69,7 @@ export const lucyReplySchema = z.object({
   followUps: z.array(z.string().trim().min(1).max(120)).max(4),
   factSources: z.array(z.string().trim().min(1).max(120)).max(6),
   estimate: lucyEstimateSchema.optional(),
+  state: lucyStateSchema.optional(),
 });
 export type LucyReply = z.infer<typeof lucyReplySchema>;
 
@@ -63,6 +79,7 @@ export const lucyPublicRequestSchema = z.object({
   pathname: z.string().trim().min(1).max(240),
   question: z.string().trim().min(1).max(700),
   history: z.array(lucyChatMessageSchema).max(10),
+  state: lucyStateSchema.optional(),
 });
 export type LucyPublicRequest = z.infer<typeof lucyPublicRequestSchema>;
 
