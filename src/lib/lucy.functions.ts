@@ -21,6 +21,20 @@ import {
 } from "@/lib/lucy.types";
 
 const OWNER_EMAIL = "tlcllc26@gmail.com";
+const SAFE_PUBLIC_ROUTES = [
+  "/",
+  "/services",
+  "/residential-cleaning",
+  "/deep-cleaning",
+  "/move-in-move-out-cleaning",
+  "/service-area",
+  "/booking",
+  "/quote",
+  "/contact",
+  "/faq",
+  "/about",
+  "/careers",
+];
 
 type RateBucket = { count: number; resetAt: number };
 const rateBuckets = new Map<string, RateBucket>();
@@ -471,7 +485,13 @@ function sanitizeAction(action: LucyAction): LucyAction | null {
   if (
     action.href.startsWith("/") &&
     !action.href.startsWith("//") &&
-    !action.href.includes("://")
+    !action.href.includes("://") &&
+    SAFE_PUBLIC_ROUTES.some(
+      (route) =>
+        action.href === route ||
+        action.href.startsWith(route + "?") ||
+        (route === "/service-area" && action.href.startsWith("/service-area/")),
+    )
   ) {
     return action;
   }
