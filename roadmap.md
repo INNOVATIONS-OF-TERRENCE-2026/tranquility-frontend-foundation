@@ -31,6 +31,6 @@
 - Public Lucy cannot access customer records, owner notes, admin data, credentials, or service-role capabilities
 - Owner Operations mode is protected by existing Supabase authentication plus the approved owner email and sends only aggregate operational summaries to the optional AI provider
 - Public and owner conversations use separate `sessionStorage` scopes and are not written to Supabase by default
-- Free-form intelligence uses the server-only `OPENAI_API_KEY` environment secret when configured. `LUCY_OPENAI_MODEL` is optional and defaults to `gpt-6-luna`
+- Free-form intelligence uses the server-only `OPENAI_API_KEY` environment secret when configured. Public Lucy defaults to `gpt-6-luna`; Owner Operations defaults to `gpt-6-sol`. Both can be overridden with `LUCY_OPENAI_MODEL` and `LUCY_OWNER_MODEL`.
 - If the AI provider is unavailable or not configured, deterministic pricing, service comparison, booking, quote, service-area, and owner-summary intelligence continue working
 - No AI credential may be stored in `VITE_` variables or committed to source control
