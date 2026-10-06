@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.quote-media-upload]
 verify_jwt = false
+
+[functions.giveaway-api]
+verify_jwt = false
