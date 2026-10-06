@@ -33,6 +33,7 @@ export function Header() {
     { to: "/services" as const, label: text({ en: "Services", es: "Servicios" }) },
     { to: "/service-area" as const, label: text({ en: "Service Area", es: "Área de servicio" }) },
     { to: "/about" as const, label: text({ en: "About", es: "Nosotros" }) },
+    { to: "/giveaway" as const, label: text({ en: "Giveaway", es: "Sorteo" }) },
     { to: "/contact" as const, label: text({ en: "Contact", es: "Contacto" }) },
   ];
 
