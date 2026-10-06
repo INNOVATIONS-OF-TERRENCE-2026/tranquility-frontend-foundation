@@ -73,13 +73,17 @@ function GiveawayAdminPage() {
     [data, month],
   );
 
-  const consentCount = useMemo(() => {
+  const visibleConsents = useMemo(() => {
     const ids = new Set(entries.map((entry) => entry.id));
-    return (data?.consents ?? []).filter((consent) => consent.source_entity_id && ids.has(consent.source_entity_id)).length;
+    return (data?.consents ?? []).filter(
+      (consent) => consent.source_entity_id && ids.has(consent.source_entity_id),
+    );
   }, [data, entries]);
 
+  const consentCount = visibleConsents.length;
+
   function exportMarketingConsents() {
-    const rows = data?.consents ?? [];
+    const rows = visibleConsents;
     if (!rows.length) return;
 
     const csvCell = (value: unknown) =>
@@ -166,7 +170,7 @@ function GiveawayAdminPage() {
             <Button
               variant="outline"
               onClick={exportMarketingConsents}
-              disabled={(data?.consents.length ?? 0) === 0}
+              disabled={visibleConsents.length === 0}
             >
               Export marketing opt-ins
             </Button>
@@ -225,7 +229,7 @@ function GiveawayAdminPage() {
               </p>
             </div>
 
-            {(data?.consents.length ?? 0) > 0 && (
+            {visibleConsents.length > 0 && (
               <section className="mt-8 rounded-2xl border border-border bg-card p-6">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                   <div>
@@ -247,7 +251,7 @@ function GiveawayAdminPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {(data?.consents ?? []).map((consent) => (
+                      {visibleConsents.map((consent) => (
                         <tr key={consent.id} className="border-b border-border/70 last:border-0">
                           <td className="px-2 py-3 font-semibold text-ink">{consent.channel}</td>
                           <td className="px-2 py-3 text-muted-foreground">{consent.contact_value}</td>
