@@ -93,7 +93,7 @@ const GiveawayRoute = GiveawayRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminGiveawayRoute = AdminGiveawayRouteImport.update({
-  id: '/admin/giveaway',
+  id: '/admin_/giveaway',
   path: '/admin/giveaway',
   getParentRoute: () => rootRouteImport,
 } as any)
@@ -246,7 +246,7 @@ export interface FileRoutesById {
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
-  '/admin/giveaway': typeof AdminGiveawayRoute
+  '/admin_/giveaway': typeof AdminGiveawayRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
@@ -335,7 +335,7 @@ export interface FileRouteTypes {
     | '/deep-cleaning'
     | '/faq'
     | '/giveaway'
-    | '/admin/giveaway'
+    | '/admin_/giveaway'
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
@@ -462,8 +462,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GiveawayRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/giveaway': {
-      id: '/admin/giveaway'
+    '/admin_/giveaway': {
+      id: '/admin_/giveaway'
       path: '/admin/giveaway'
       fullPath: '/admin/giveaway'
       preLoaderRoute: typeof AdminGiveawayRouteImport
