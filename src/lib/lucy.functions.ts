@@ -139,24 +139,24 @@ function buildBookingHref(input: {
 function estimateReply(question: string, language: LucyLanguage): LucyReply | null {
   const text = question.toLowerCase();
   const service = detectService(text);
-  if (
-    !service ||
-    !hasAny(text, [
-      "how much",
-      "price",
-      "cost",
-      "estimate",
-      "quote",
-      "cuánto",
-      "cuanto",
-      "precio",
-      "costo",
-      "calcula",
-      "estimado",
-    ])
-  ) {
-    return null;
-  }
+  const asksEstimate = hasAny(text, [
+    "how much",
+    "price",
+    "cost",
+    "estimate",
+    "quote",
+    "cuánto",
+    "cuanto",
+    "precio",
+    "costo",
+    "calcula",
+    "estimado",
+  ]);
+  const describesHome =
+    /\d{1,2}\s*(?:bed|bedroom|bath|bathroom|dormitorio|habitaci[oó]n|ba[ñn]o)/i.test(text) ||
+    hasAny(text, ["i need", "i want", "necesito", "quiero"]);
+
+  if (!service || (!asksEstimate && !describesHome)) return null;
 
   const bedrooms =
     numberBefore(text, ["bedrooms?", "beds?", "br", "dormitorios?", "habitaciones?"]) ?? 1;
@@ -221,27 +221,56 @@ function estimateReply(question: string, language: LucyLanguage): LucyReply | nu
     answer,
     intent: "price_estimate",
     confidence: "high",
-    actions: [
-      {
-        type: "start_booking",
-        label: language === "es" ? "Configurar esta limpieza" : "Configure this cleaning",
-        href: buildBookingHref({
-          service,
-          frequency,
-          bedrooms,
-          fullBaths,
-          halfBaths,
-          sqft,
-          extras: extrasList,
-        }),
-      },
-      {
-        type: "start_quote",
-        label:
-          language === "es" ? "Pedir cotización personalizada" : "Request a custom quote",
-        href: "/quote",
-      },
-    ],
+    actions:
+      estimate.reviewFlags.length > 0
+        ? [
+            {
+              type: "start_quote",
+              label:
+                language === "es"
+                  ? "Revisar alcance personalizado"
+                  : "Review custom scope",
+              href: "/quote",
+            },
+            {
+              type: "start_booking",
+              label:
+                language === "es" ? "Ver configuración de reserva" : "View booking setup",
+              href: buildBookingHref({
+                service,
+                frequency,
+                bedrooms,
+                fullBaths,
+                halfBaths,
+                sqft,
+                extras: extrasList,
+              }),
+            },
+          ]
+        : [
+            {
+              type: "start_booking",
+              label:
+                language === "es" ? "Configurar esta limpieza" : "Configure this cleaning",
+              href: buildBookingHref({
+                service,
+                frequency,
+                bedrooms,
+                fullBaths,
+                halfBaths,
+                sqft,
+                extras: extrasList,
+              }),
+            },
+            {
+              type: "start_quote",
+              label:
+                language === "es"
+                  ? "Pedir cotización personalizada"
+                  : "Request a custom quote",
+              href: "/quote",
+            },
+          ],
     followUps:
       language === "es"
         ? ["¿Qué incluye este servicio?", "¿Qué adicionales están disponibles?"]
