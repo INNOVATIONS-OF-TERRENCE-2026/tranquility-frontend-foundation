@@ -95,13 +95,13 @@ export const getBookingAvailability = createServerFn({ method: "GET" })
         .lte("start_date", data.endDate)
         .gte("end_date", data.startDate)
         .or(`service_type.is.null,service_type.eq.${data.service}`),
-      supabaseAdmin
+      (import.meta.env.VITE_STRIPE_CHECKOUT_ENABLED === "true" ? supabaseAdmin
         .from("checkout_reservations")
         .select("service_date, arrival_window")
         .eq("service_type", data.service)
         .gte("service_date", data.startDate)
         .lte("service_date", data.endDate)
-        .in("status", ["creating", "awaiting_payment", "processing", "payment_exception"]),
+        .in("status", ["creating", "awaiting_payment", "processing", "payment_exception"]) : Promise.resolve({ data: [], error: null })),
     ]);
 
     if (holds.error || paid.error || blocks.error || checkout.error) {
