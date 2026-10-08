@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, ArrowRight, Check, Info } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { BookingCalendar } from "@/components/booking/BookingCalendar";
 import { useLanguage } from "@/components/language/LanguageProvider";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { business } from "@/config/business";
+import { supabase } from "@/integrations/supabase/client";
 import { createBookingRequest } from "@/lib/booking.functions";
 import {
   BASE_BEDROOMS,
@@ -183,6 +184,8 @@ export function BookingFlow({
   });
   const [errors, setErrors] = useState<Partial<Record<ContactKey, string>>>({});
   const submitBooking = useServerFn(createBookingRequest);
+  const checkoutEnabled = import.meta.env.VITE_STRIPE_CHECKOUT_ENABLED === "true";
+  const checkoutAttempt = useRef<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [reference, setReference] = useState("");
@@ -297,8 +300,7 @@ export function BookingFlow({
     setSubmitting(true);
     setSubmitError("");
     try {
-      const result = await submitBooking({
-        data: {
+      const bookingData = {
           service,
           frequency,
           serviceDate: contact.date,
@@ -314,8 +316,19 @@ export function BookingFlow({
           notes,
           language,
           website: "",
-        },
-      });
+      } as const;
+      if (checkoutEnabled && reviewItems.length === 0) {
+        checkoutAttempt.current ??= crypto.randomUUID();
+        const { data: checkout, error } = await supabase.functions.invoke("stripe-checkout", {
+          body: { action: "create", idempotencyKey: checkoutAttempt.current, data: bookingData },
+        });
+        if (error || !checkout?.ok || typeof checkout.checkoutUrl !== "string") {
+          throw new Error(checkout?.error ?? "CHECKOUT_UNAVAILABLE");
+        }
+        window.location.assign(checkout.checkoutUrl);
+        return;
+      }
+      const result = await submitBooking({ data: bookingData });
       setReference(result.reference);
     } catch (error) {
       setSubmitError(
