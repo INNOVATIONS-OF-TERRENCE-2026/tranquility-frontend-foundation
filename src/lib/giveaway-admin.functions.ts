@@ -76,7 +76,7 @@ export const updateGiveawayEntry = createServerFn({ method: "POST" })
       .update({
         status: data.status,
         private_notes: data.privateNotes || null,
-        selected_at: data.status === "selected" ? new Date().toISOString() : undefined,
+        selected_at: data.status === "selected" ? new Date().toISOString() : null,
       })
       .eq("id", data.id);
 
