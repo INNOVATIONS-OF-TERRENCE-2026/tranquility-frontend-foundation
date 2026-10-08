@@ -289,6 +289,123 @@ export type Database = {
         }
         Relationships: []
       }
+      giveaway_entries: {
+        Row: {
+          city: string
+          consent_version: string
+          created_at: string
+          entrant_email: string
+          entrant_name: string
+          entrant_phone: string
+          entry_for: string
+          giveaway_month: string
+          id: string
+          language: string
+          marketing_email_opt_in: boolean
+          marketing_sms_opt_in: boolean
+          need_category: string
+          nominee_name: string | null
+          nominee_relationship: string | null
+          private_notes: string | null
+          selected_at: string | null
+          status: string
+          story: string
+          updated_at: string
+          zip: string
+        }
+        Insert: {
+          city: string
+          consent_version: string
+          created_at?: string
+          entrant_email: string
+          entrant_name: string
+          entrant_phone: string
+          entry_for: string
+          giveaway_month: string
+          id?: string
+          language?: string
+          marketing_email_opt_in?: boolean
+          marketing_sms_opt_in?: boolean
+          need_category: string
+          nominee_name?: string | null
+          nominee_relationship?: string | null
+          private_notes?: string | null
+          selected_at?: string | null
+          status?: string
+          story: string
+          updated_at?: string
+          zip: string
+        }
+        Update: {
+          city?: string
+          consent_version?: string
+          created_at?: string
+          entrant_email?: string
+          entrant_name?: string
+          entrant_phone?: string
+          entry_for?: string
+          giveaway_month?: string
+          id?: string
+          language?: string
+          marketing_email_opt_in?: boolean
+          marketing_sms_opt_in?: boolean
+          need_category?: string
+          nominee_name?: string | null
+          nominee_relationship?: string | null
+          private_notes?: string | null
+          selected_at?: string | null
+          status?: string
+          story?: string
+          updated_at?: string
+          zip?: string
+        }
+        Relationships: []
+      }
+      marketing_consents: {
+        Row: {
+          action: string
+          channel: string
+          consent_text: string
+          consent_version: string
+          contact_value: string
+          created_at: string
+          id: string
+          ip_hash: string | null
+          source_entity_id: string | null
+          source_type: string
+          source_url: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action?: string
+          channel: string
+          consent_text: string
+          consent_version: string
+          contact_value: string
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          source_entity_id?: string | null
+          source_type: string
+          source_url?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          channel?: string
+          consent_text?: string
+          consent_version?: string
+          contact_value?: string
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          source_entity_id?: string | null
+          source_type?: string
+          source_url?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       quote_media: {
         Row: {
           content_type: string
@@ -464,6 +581,7 @@ export type Database = {
         }
         Returns: string
       }
+      pick_giveaway_winner: { Args: { p_month: string }; Returns: string }
       reserve_booking_hold: {
         Args: {
           p_arrival_window: string
