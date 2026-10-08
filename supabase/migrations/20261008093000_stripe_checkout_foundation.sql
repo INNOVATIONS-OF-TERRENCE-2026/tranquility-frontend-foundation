@@ -109,8 +109,7 @@ BEGIN
       AND payment_status='paid')
     + (SELECT count(*) FROM public.checkout_reservations
       WHERE service_date=p_date AND service_type=p_service_type AND arrival_window=p_window
-      AND status IN ('creating','awaiting_payment','processing')
-      AND expires_at > now())
+      AND status IN ('creating','awaiting_payment','processing','payment_exception'))
     INTO v_count;
   IF v_count >= 5 THEN RAISE EXCEPTION 'SLOT_UNAVAILABLE'; END IF;
 
