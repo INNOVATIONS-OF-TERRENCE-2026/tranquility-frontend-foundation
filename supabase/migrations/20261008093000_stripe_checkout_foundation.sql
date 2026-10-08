@@ -49,10 +49,10 @@ GRANT ALL ON public.checkout_reservations TO service_role;
 GRANT ALL ON public.stripe_webhook_events TO service_role;
 CREATE POLICY "Administrators can inspect checkout reservations"
   ON public.checkout_reservations FOR SELECT TO authenticated
-  USING (public.has_role(auth.uid(), 'admin'));
+  USING ((SELECT private.is_owner()));
 CREATE POLICY "Administrators can inspect Stripe event ledger"
   ON public.stripe_webhook_events FOR SELECT TO authenticated
-  USING (public.has_role(auth.uid(), 'admin'));
+  USING ((SELECT private.is_owner()));
 
 CREATE OR REPLACE FUNCTION public.reserve_stripe_checkout(
   p_idempotency_key uuid, p_reference text, p_service_type text,
