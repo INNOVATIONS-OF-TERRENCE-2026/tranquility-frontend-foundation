@@ -12,7 +12,10 @@ const entrySchema = z.object({
   nomineeName: z.string().trim().max(100).optional(),
   nomineeRelationship: z.string().trim().max(100).optional(),
   city: z.string().trim().min(2).max(100),
-  zip: z.string().trim().regex(/^\d{5}$/),
+  zip: z
+    .string()
+    .trim()
+    .regex(/^\d{5}$/),
   needCategory: z.enum([
     "postpartum",
     "mental_health_clutter",
