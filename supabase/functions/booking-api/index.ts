@@ -268,7 +268,7 @@ Deno.serve(async (req: Request) => {
       const dates = dateRange(startDate, endDate);
       if (!dates.length) return json(req, { error: "Invalid date range" }, 400);
 
-      const [holds, bookings, blocks] = await Promise.all([
+      const [holds, bookings, blocks, checkout] = await Promise.all([
         admin.from("booking_holds").select("service_date, arrival_window")
           .eq("service_type", service).in("status", ["pending","confirmed"])
           .gte("service_date", startDate).lte("service_date", endDate),
@@ -278,8 +278,11 @@ Deno.serve(async (req: Request) => {
         admin.from("availability_blocks").select("start_date, end_date, service_type, arrival_window")
           .lte("start_date", endDate).gte("end_date", startDate)
           .or(`service_type.is.null,service_type.eq.${service}`),
+        admin.from("checkout_reservations").select("service_date, arrival_window")
+          .eq("service_type", service).in("status", ["creating", "awaiting_payment", "processing", "payment_exception"])
+          .gte("service_date", startDate).lte("service_date", endDate),
       ]);
-      if (holds.error || bookings.error || blocks.error) throw holds.error ?? bookings.error ?? blocks.error;
+      if (holds.error || bookings.error || blocks.error || checkout.error) throw holds.error ?? bookings.error ?? blocks.error ?? checkout.error;
 
       const result: Record<string, Record<ArrivalWindow, number>> = {};
       for (const date of dates) {
@@ -287,7 +290,7 @@ Deno.serve(async (req: Request) => {
         const day = new Date(`${date}T12:00:00Z`).getUTCDay();
         if (day === 0 || day === 6) result[date] = { morning: 0, midday: 0, afternoon: 0 };
       }
-      for (const row of [...(holds.data ?? []), ...(bookings.data ?? [])]) {
+      for (const row of [...(holds.data ?? []), ...(bookings.data ?? []), ...(checkout.data ?? [])]) {
         const day = result[row.service_date];
         const window = row.arrival_window as ArrivalWindow;
         if (day && window in day) day[window] = Math.max(0, day[window] - 1);
