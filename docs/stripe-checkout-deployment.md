@@ -29,6 +29,23 @@ The GitHub integration is prepared and the additive Supabase checkout schema and
 Never commit a secret Stripe key or webhook signing secret into GitHub, Vite configuration, or the browser. The supplied `pk_live_...` key is a public client-side key and cannot create server-side Checkout Sessions.
 
 
+## Live webhook: REGISTERED, SIGNING SECRET STORED
+
+- Merchant Stripe account: `acct_1UO83aK5fdqZqrwT`, livemode.
+- Webhook endpoint: `we_1UOEtxK5fdqZqrwTfPqa17P7`, Stripe reports `enabled`.
+- URL: `https://baetmqwuqsmxveglhucg.supabase.co/functions/v1/stripe-webhook`.
+- Subscribed events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired`, `charge.refunded`, `charge.dispute.created`.
+- Stripe webhook signing secret stored in Supabase encrypted Vault under `tlc_stripe_webhook_live`. **Never paste/commit the secret.** Only `service_role` can call `public.read_tlc_stripe_webhook_secret()`; `anon` and `authenticated` cannot.
+- Active Supabase Edge Function `stripe-webhook` v2 prefers `STRIPE_WEBHOOK_SECRET` env and falls back to the encrypted Vault secret. HMAC signature and timestamp are checked before any database mutation.
+- A verified Stripe session without an integration reservation marker is acknowledged and ignored so old Payment Links do not create false bookings.
+- No customer charges or end-to-end live event deliveries were executed as part of creating this webhook. Signing/fulfillment should be smoke-tested in Stripe and observed in Supabase before enabling live checkout.
+
+## GitHub Actions: RUNNER EXECUTION BLOCKED
+
+The quality workflow fails even on the pre-existing `main` branch. Failed runs have 0 job steps, no runner assignment, GitHub reporting 0 ms billable runner time, and no usable log archive (GitHub API returns `BlobNotFound`). The Stripe PR diagnostics workflow shows the same behavior. Rerunning failed jobs reproduced the problem. This is not a verified formatter, lint, TypeScript, or build result: commands never ran.
+
+**Repository owner action required:** inspect the check-run annotations and organization/repository Actions permissions, runner policy, and GitHub billing at `https://github.com/INNOVATIONS-OF-TERRENCE-2026/tranquility-frontend-foundation/actions/runs/37766067915`. Once GitHub allocates runners, rerun `Frontend Quality` and fix any genuine code issues reported by `format:check`, `lint`, `typecheck` or `build`. Do not merge while these checks remain unexecuted.
+
 ## Supabase Edge Function secrets
 
 Set these in the Supabase Dashboard, Edge Functions -> Secrets:
@@ -36,7 +53,7 @@ Set these in the Supabase Dashboard, Edge Functions -> Secrets:
 | Secret | Purpose |
 | --- | --- |
 | `STRIPE_SECRET_KEY` | `sk_test_...` while validating; `sk_live_...` only after final live release |
-| `STRIPE_WEBHOOK_SECRET` | Signing secret for the matching test or live webhook endpoint |
+| `STRIPE_WEBHOOK_SECRET` | Optional Edge secret override. For the live endpoint, encrypted Vault key `tlc_stripe_webhook_live` is already installed with service-role-only access. |
 | `STRIPE_PRODUCT_STANDARD` | Correct environment's verified Standard Cleaning product ID |
 | `STRIPE_PRODUCT_DEEP` | Correct environment's verified Deep Cleaning product ID |
 | `STRIPE_PRODUCT_MOVE` | Correct environment's verified Move-In / Move-Out product ID |
