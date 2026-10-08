@@ -65,6 +65,7 @@ function calculate(input: any) {
   let addOnCents=0;
   for (const [field,id,minimum] of fields) {
     const qty=int(scope[field],minimum,20)-minimum;
+    if (id==="extra-full-bath" && qty>0) fail("CUSTOM_QUOTE_REQUIRED",422);
     addOnCents+=qty*(VARIABLE[id]?.[service] ?? FIXED[id]);
   }
   const extras = input.extras ?? {};
