@@ -80,7 +80,8 @@ function calculate(input: any) {
     fail("CUSTOM_QUOTE_REQUIRED",422);
   }
   if (input.sqft != null && (!Number.isFinite(Number(input.sqft)) || Number(input.sqft)<0 || Number(input.sqft)>100000)) fail("INVALID_SCOPE");
-  const baseCents=Math.round(BASE[service]*(100-FREQUENCY[frequency])/100);
+  // Match the website's approved whole-dollar discounted service price.
+  const baseCents=Math.round((BASE[service]/100)*(100-FREQUENCY[frequency])/100)*100;
   const totalCents=baseCents+addOnCents;
   if (!Number.isSafeInteger(totalCents) || totalCents<=0) fail("INVALID_PRICE");
   return { service,frequency,totalCents,baseCents,addOnCents };
