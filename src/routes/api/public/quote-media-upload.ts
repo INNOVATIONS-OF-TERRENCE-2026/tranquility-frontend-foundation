@@ -100,7 +100,7 @@ export const Route = createFileRoute("/api/public/quote-media-upload")({
             quote_request_id: quoteId,
             object_path: objectPath,
             file_name: file.name.slice(0, 200),
-            content_type: file.type,
+            mime_type: file.type,
             size_bytes: file.size,
           })
           .select("id")
