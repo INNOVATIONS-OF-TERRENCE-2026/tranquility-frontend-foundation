@@ -1,17 +1,21 @@
 # Stripe Checkout deployment and safety gates
 
-## STOP: actual app Supabase project mismatch
+## Database migration: COMPLETED AND VERIFIED (2026-10-08)
 
-The production `main` branch remains configured for project `qffnzhlxmuggzbndyjce`. The feature branch `.env` was updated to the owner-supplied canonical project `baetmqwuqsmxveglhucg` and its matching publishable key. This is NOT yet the live deployment.
+**Owner-authorized source → destination reconciliation completed.** Source/current deployed app: project `qffnzhlxmuggzbndyjce`. Target: `baetmqwuqsmxveglhucg`.
 
-The currently connected Supabase account only exposes `baetmqwuqsmxveglhucg`. The latter has received the additive SQL migration and new Edge Functions, but **it is NOT the application's currently configured environment**.
+| Table | Source before | Target after | Row ID/slug parity | Full normalized row checksum |
+| --- | ---: | ---: | --- | --- |
+| `booking_holds` | 4 | 4 | Pass | Pass |
+| `contact_inquiries` | 4 | 4 | Pass | Pass |
+| `quote_requests` | 1 | 1 | Pass | Pass |
+| `service_cities` | 19 | 19 | Pass | Pass |
 
-Do not enable the frontend Stripe feature flag or merge this PR until the owner connects `qffnzhlxmuggzbndyjce` and the migration/functions are deployed and verified there, or authorizes an explicit full-data migration and app reconfiguration. Never switch the app's Supabase URL without backing up and reconciling existing bookings/auth/data.
+Migration preserved source IDs, booking references, timestamps, status, private notes and submitted JSON payloads for customer records. Existing destination city IDs were retained, with missing source cities added and ordering/metadata reconciled by slug. The source rows were not deleted. The operation was a single SQL transaction with mismatch checks and post-commit read-only comparison, and has been independently verified with row-count, ID/slug-set, and normalized-content checksums.
 
-Verified read-only counts: the Lovable project's database contains four `booking_holds` requests; the connected `baetmqwuqsmxveglhucg` database contains zero. An audited customer-record migration or explicit environment reconciliation is required BEFORE promoting the feature branch. Preserve original IDs and references, with no duplicate requests, and separately verify auth roles, service-area entries and storage attachments.
+Source `quote_media`, `availability_blocks`, `career_applications`, `bookings` and `user_roles` had zero rows at audit time. Source Storage objects query returned no files. Destination has private `quote-media` bucket. There are no attached quote media records to migrate at this time.
 
-No live payment has been executed. Existing app records were not changed by the additive `baet...` staging deployment.
-
+**Cutover is NOT completed.** Production `main` still uses `qffnzhlxmuggzbndyjce`; only Stripe feature branch `.env` points to `baetmqwuqsmxveglhucg`. The original app can accept new submissions between this snapshot and release. Immediately before cutover, freeze intake or coordinate a short maintenance window, recopy any new or modified submissions from the source, rerun normalized row comparisons, verify auth/redirects/Edge Functions/RLS/quote uploads, run frontend regression tests, and then change the actual deployed environment. Merely changing a GitHub file does not verify hosted env overrides. Keep a rollback configuration. No Stripe live charge was activated.
 
 Merchant: Tranquility Level Cleaning LLC
 Merchant account: `acct_1UO83aK5fdqZqrwT`
@@ -24,19 +28,6 @@ The GitHub integration is prepared and the additive Supabase checkout schema and
 
 Never commit a secret Stripe key or webhook signing secret into GitHub, Vite configuration, or the browser. The supplied `pk_live_...` key is a public client-side key and cannot create server-side Checkout Sessions.
 
-
-### Current cross-environment inventory (read-only)
-
-| Entity | Current Lovable app database | Owner's Supabase target |
-| --- | ---: | ---: |
-| Booking requests | 4 | 0 |
-| Contact inquiries | 4 | 0 |
-| Quotes | 1 | 0 |
-| Service cities | 19 | 15 |
-| Completed bookings | 0 | 0 |
-| Admin role records | 0 | 0 |
-
-The 19 vs. 15 service-city difference requires name/slug reconciliation, not a blind replacement. A migration needs explicit approval and an audited copy of relevant records, storage objects and account access before any published app switches environment.
 
 ## Supabase Edge Function secrets
 
