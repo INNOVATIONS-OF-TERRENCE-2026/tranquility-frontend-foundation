@@ -44,8 +44,19 @@ function json(body:unknown,status=200) {
 }
 Deno.serve(async(req:Request)=>{
   if(req.method!=="POST") return json({error:"method_not_allowed"},405);
-  const secret=Deno.env.get("STRIPE_WEBHOOK_SECRET");
-  if(!secret) return json({error:"not_configured"},503);
+  // Prefer a Supabase Edge secret. Encrypted Vault provides an auditable
+  // fallback when runtime secret-management APIs are unavailable.
+  let secret=Deno.env.get("STRIPE_WEBHOOK_SECRET")??"";
+  if(!secret) {
+    try {
+      const {data,error}=await client().rpc("read_tlc_stripe_webhook_secret");
+      if(error || typeof data!=="string" || !data.startsWith("whsec_"))
+        throw new Error("Signing secret unavailable");
+      secret=data;
+    }catch {
+      return json({error:"not_configured"},503);
+    }
+  }
   const raw=await req.text();
   if(raw.length>500000) return json({error:"payload_too_large"},413);
   if(!(await verify(raw,req.headers.get("stripe-signature")??"",secret)))
@@ -59,8 +70,12 @@ Deno.serve(async(req:Request)=>{
   try{
     if(event.type.startsWith("checkout.session.")) {
       const reservationId=object.metadata?.reservation_id??object.client_reference_id;
-      if(!/^[0-9a-f]{8}-[0-9a-f-]{27,36}$/i.test(reservationId??""))
-        throw new Error("missing reservation id");
+      // Existing Stripe Payment Links are not associated with this booking flow.
+      // A verified event without our reservation marker must be acknowledged,
+      // not retried forever or allowed to create a booking.
+      if(!reservationId) return json({received:true,ignored:"external_checkout_session"});
+      if(!/^[0-9a-f]{8}-[0-9a-f-]{27,36}$/i.test(reservationId))
+        throw new Error("invalid reservation id");
       if(!String(object.id).startsWith("cs_")) throw new Error("wrong Stripe resource");
       const success=event.type==="checkout.session.async_payment_succeeded" ||
         (event.type==="checkout.session.completed" && object.payment_status==="paid");
@@ -86,7 +101,9 @@ Deno.serve(async(req:Request)=>{
     const {data:reservation,error:lookupError}=await admin.from("checkout_reservations")
       .select("id,status,paid_cents,refunded_cents")
       .eq("stripe_payment_intent_id",intent).single();
-    if(lookupError || !reservation) throw new Error("payment not yet reconciled");
+    if(lookupError?.code==="PGRST116" || !reservation)
+      return json({received:true,ignored:"external_payment"});
+    if(lookupError) throw lookupError;
     const {data:existing}=await admin.from("stripe_webhook_events")
       .select("stripe_event_id").eq("stripe_event_id",event.id).maybeSingle();
     if(existing) return json({received:true,result:"already_processed"});
