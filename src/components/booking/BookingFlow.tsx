@@ -819,8 +819,12 @@ export function BookingFlow({
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {text({
-                en: "Confirm the information below, then send your booking request. No payment is collected and the appointment still requires Tranquility's confirmation.",
-                es: "Confirma la información y envía tu solicitud. No se cobra ningún pago y la cita aún requiere confirmación de Tranquility.",
+                en: checkoutEnabled && reviewItems.length === 0
+                  ? "Review your booking, then continue to secure Stripe Checkout. Applicable tax is calculated at checkout. The appointment still requires Tranquility confirmation."
+                  : "Confirm the information below, then send your booking request. No payment is collected and the appointment still requires Tranquility's confirmation.",
+                es: checkoutEnabled && reviewItems.length === 0
+                  ? "Revisa tu reserva y continúa al pago seguro de Stripe. Los impuestos se calculan al pagar. La cita aún requiere confirmación."
+                  : "Confirma la información y envía tu solicitud. No se cobra ningún pago y la cita aún requiere confirmación de Tranquility.",
               })}
             </p>
 
@@ -871,8 +875,10 @@ export function BookingFlow({
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button type="button" size="lg" disabled={submitting} onClick={handleSubmit}>
                 {submitting
-                  ? text({ en: "Sending request…", es: "Enviando solicitud…" })
-                  : text({ en: "Send booking request", es: "Enviar solicitud de reserva" })}
+                  ? text({ en: checkoutEnabled && reviewItems.length === 0 ? "Preparing payment…" : "Sending request…", es: checkoutEnabled && reviewItems.length === 0 ? "Preparando pago…" : "Enviando solicitud…" })
+                  : checkoutEnabled && reviewItems.length === 0
+                    ? text({ en: "Continue to secure payment", es: "Continuar al pago seguro" })
+                    : text({ en: "Send booking request", es: "Enviar solicitud de reserva" })}
               </Button>
               <Button asChild size="lg" variant="outline">
                 <a href={business.phoneHref}>
