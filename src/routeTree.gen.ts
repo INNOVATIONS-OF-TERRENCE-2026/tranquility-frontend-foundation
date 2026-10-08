@@ -20,7 +20,6 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DeepCleaningRouteImport } from './routes/deep-cleaning'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GiveawayRouteImport } from './routes/giveaway'
-import { Route as AdminGiveawayRouteImport } from './routes/admin_.giveaway'
 import { Route as HouseCleaningBedfordRouteImport } from './routes/house-cleaning-bedford'
 import { Route as HouseCleaningColleyvilleRouteImport } from './routes/house-cleaning-colleyville'
 import { Route as HouseCleaningEulessRouteImport } from './routes/house-cleaning-euless'
@@ -35,6 +34,7 @@ import { Route as ServiceAreaRouteImport } from './routes/service-area'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AdminGiveawayRouteImport } from './routes/admin_.giveaway'
 import { Route as ApiPublicQuoteMediaUploadRouteImport } from './routes/api/public/quote-media-upload'
 
 const IndexRoute = IndexRouteImport.update({
@@ -90,11 +90,6 @@ const FaqRoute = FaqRouteImport.update({
 const GiveawayRoute = GiveawayRouteImport.update({
   id: '/giveaway',
   path: '/giveaway',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminGiveawayRoute = AdminGiveawayRouteImport.update({
-  id: '/admin_/giveaway',
-  path: '/admin/giveaway',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HouseCleaningBedfordRoute = HouseCleaningBedfordRouteImport.update({
@@ -168,6 +163,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminGiveawayRoute = AdminGiveawayRouteImport.update({
+  id: '/admin_/giveaway',
+  path: '/admin/giveaway',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicQuoteMediaUploadRoute =
   ApiPublicQuoteMediaUploadRouteImport.update({
     id: '/api/public/quote-media-upload',
@@ -187,7 +187,6 @@ export interface FileRoutesByFullPath {
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
-  '/admin/giveaway': typeof AdminGiveawayRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
@@ -202,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/admin/giveaway': typeof AdminGiveawayRoute
   '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRoutesByTo {
@@ -216,7 +216,6 @@ export interface FileRoutesByTo {
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
-  '/admin/giveaway': typeof AdminGiveawayRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
@@ -231,6 +230,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/admin/giveaway': typeof AdminGiveawayRoute
   '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRoutesById {
@@ -246,7 +246,6 @@ export interface FileRoutesById {
   '/deep-cleaning': typeof DeepCleaningRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
-  '/admin_/giveaway': typeof AdminGiveawayRoute
   '/house-cleaning-bedford': typeof HouseCleaningBedfordRoute
   '/house-cleaning-colleyville': typeof HouseCleaningColleyvilleRoute
   '/house-cleaning-euless': typeof HouseCleaningEulessRoute
@@ -261,6 +260,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/admin_/giveaway': typeof AdminGiveawayRoute
   '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
 }
 export interface FileRouteTypes {
@@ -277,7 +277,6 @@ export interface FileRouteTypes {
     | '/deep-cleaning'
     | '/faq'
     | '/giveaway'
-    | '/admin/giveaway'
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
@@ -292,6 +291,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/admin/giveaway'
     | '/api/public/quote-media-upload'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -306,7 +306,6 @@ export interface FileRouteTypes {
     | '/deep-cleaning'
     | '/faq'
     | '/giveaway'
-    | '/admin/giveaway'
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
@@ -321,6 +320,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/admin/giveaway'
     | '/api/public/quote-media-upload'
   id:
     | '__root__'
@@ -335,7 +335,6 @@ export interface FileRouteTypes {
     | '/deep-cleaning'
     | '/faq'
     | '/giveaway'
-    | '/admin_/giveaway'
     | '/house-cleaning-bedford'
     | '/house-cleaning-colleyville'
     | '/house-cleaning-euless'
@@ -350,6 +349,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/studio'
     | '/terms'
+    | '/admin_/giveaway'
     | '/api/public/quote-media-upload'
   fileRoutesById: FileRoutesById
 }
@@ -365,7 +365,6 @@ export interface RootRouteChildren {
   DeepCleaningRoute: typeof DeepCleaningRoute
   FaqRoute: typeof FaqRoute
   GiveawayRoute: typeof GiveawayRoute
-  AdminGiveawayRoute: typeof AdminGiveawayRoute
   HouseCleaningBedfordRoute: typeof HouseCleaningBedfordRoute
   HouseCleaningColleyvilleRoute: typeof HouseCleaningColleyvilleRoute
   HouseCleaningEulessRoute: typeof HouseCleaningEulessRoute
@@ -380,6 +379,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   StudioRoute: typeof StudioRoute
   TermsRoute: typeof TermsRoute
+  AdminGiveawayRoute: typeof AdminGiveawayRoute
   ApiPublicQuoteMediaUploadRoute: typeof ApiPublicQuoteMediaUploadRoute
 }
 
@@ -460,13 +460,6 @@ declare module '@tanstack/react-router' {
       path: '/giveaway'
       fullPath: '/giveaway'
       preLoaderRoute: typeof GiveawayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin_/giveaway': {
-      id: '/admin_/giveaway'
-      path: '/admin/giveaway'
-      fullPath: '/admin/giveaway'
-      preLoaderRoute: typeof AdminGiveawayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/house-cleaning-bedford': {
@@ -567,6 +560,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/giveaway': {
+      id: '/admin_/giveaway'
+      path: '/admin/giveaway'
+      fullPath: '/admin/giveaway'
+      preLoaderRoute: typeof AdminGiveawayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/quote-media-upload': {
       id: '/api/public/quote-media-upload'
       path: '/api/public/quote-media-upload'
@@ -589,7 +589,6 @@ const rootRouteChildren: RootRouteChildren = {
   DeepCleaningRoute: DeepCleaningRoute,
   FaqRoute: FaqRoute,
   GiveawayRoute: GiveawayRoute,
-  AdminGiveawayRoute: AdminGiveawayRoute,
   HouseCleaningBedfordRoute: HouseCleaningBedfordRoute,
   HouseCleaningColleyvilleRoute: HouseCleaningColleyvilleRoute,
   HouseCleaningEulessRoute: HouseCleaningEulessRoute,
@@ -604,6 +603,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   StudioRoute: StudioRoute,
   TermsRoute: TermsRoute,
+  AdminGiveawayRoute: AdminGiveawayRoute,
   ApiPublicQuoteMediaUploadRoute: ApiPublicQuoteMediaUploadRoute,
 }
 export const routeTree = rootRouteImport

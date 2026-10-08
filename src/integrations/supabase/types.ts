@@ -14,39 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      audit_logs: {
-        Row: {
-          action: string
-          actor_user_id: string | null
-          created_at: string
-          entity_id: string | null
-          entity_type: string
-          id: number
-          new_values: Json | null
-          old_values: Json | null
-        }
-        Insert: {
-          action: string
-          actor_user_id?: string | null
-          created_at?: string
-          entity_id?: string | null
-          entity_type: string
-          id?: number
-          new_values?: Json | null
-          old_values?: Json | null
-        }
-        Update: {
-          action?: string
-          actor_user_id?: string | null
-          created_at?: string
-          entity_id?: string | null
-          entity_type?: string
-          id?: number
-          new_values?: Json | null
-          old_values?: Json | null
-        }
-        Relationships: []
-      }
       availability_blocks: {
         Row: {
           arrival_window: string | null
@@ -348,12 +315,12 @@ export type Database = {
         }
         Insert: {
           city: string
-          consent_version?: string
+          consent_version: string
           created_at?: string
           entrant_email: string
           entrant_name: string
           entrant_phone: string
-          entry_for?: string
+          entry_for: string
           giveaway_month: string
           id?: string
           language?: string
@@ -406,7 +373,7 @@ export type Database = {
           ip_hash: string | null
           source_entity_id: string | null
           source_type: string
-          source_url: string
+          source_url: string | null
           user_agent: string | null
         }
         Insert: {
@@ -420,7 +387,7 @@ export type Database = {
           ip_hash?: string | null
           source_entity_id?: string | null
           source_type: string
-          source_url: string
+          source_url?: string | null
           user_agent?: string | null
         }
         Update: {
@@ -434,80 +401,35 @@ export type Database = {
           ip_hash?: string | null
           source_entity_id?: string | null
           source_type?: string
-          source_url?: string
+          source_url?: string | null
           user_agent?: string | null
-        }
-        Relationships: []
-      }
-      notification_deliveries: {
-        Row: {
-          channel: string
-          created_at: string
-          entity_id: string | null
-          entity_type: string
-          error_message: string | null
-          event_type: string
-          id: string
-          provider: string
-          provider_message_id: string | null
-          recipient: string
-          sent_at: string | null
-          status: string
-        }
-        Insert: {
-          channel?: string
-          created_at?: string
-          entity_id?: string | null
-          entity_type: string
-          error_message?: string | null
-          event_type: string
-          id?: string
-          provider?: string
-          provider_message_id?: string | null
-          recipient: string
-          sent_at?: string | null
-          status?: string
-        }
-        Update: {
-          channel?: string
-          created_at?: string
-          entity_id?: string | null
-          entity_type?: string
-          error_message?: string | null
-          event_type?: string
-          id?: string
-          provider?: string
-          provider_message_id?: string | null
-          recipient?: string
-          sent_at?: string | null
-          status?: string
         }
         Relationships: []
       }
       quote_media: {
         Row: {
+          content_type: string
           created_at: string
           file_name: string
           id: string
-          mime_type: string
           object_path: string
           quote_request_id: string
           size_bytes: number
         }
         Insert: {
+          content_type: string
           created_at?: string
           file_name: string
           id?: string
-          mime_type: string
           object_path: string
           quote_request_id: string
           size_bytes: number
         }
         Update: {
+          content_type?: string
           created_at?: string
           file_name?: string
           id?: string
-          mime_type?: string
           object_path?: string
           quote_request_id?: string
           size_bytes?: number
@@ -540,8 +462,6 @@ export type Database = {
           scope: string
           status: string
           updated_at: string
-          upload_token_expires_at: string | null
-          upload_token_hash: string | null
         }
         Insert: {
           approximate_size?: string | null
@@ -560,8 +480,6 @@ export type Database = {
           scope: string
           status?: string
           updated_at?: string
-          upload_token_expires_at?: string | null
-          upload_token_hash?: string | null
         }
         Update: {
           approximate_size?: string | null
@@ -580,8 +498,6 @@ export type Database = {
           scope?: string
           status?: string
           updated_at?: string
-          upload_token_expires_at?: string | null
-          upload_token_hash?: string | null
         }
         Relationships: []
       }
@@ -621,27 +537,6 @@ export type Database = {
         }
         Relationships: []
       }
-      submission_attempts: {
-        Row: {
-          created_at: string
-          fingerprint_hash: string
-          id: number
-          kind: string
-        }
-        Insert: {
-          created_at?: string
-          fingerprint_hash: string
-          id?: number
-          kind: string
-        }
-        Update: {
-          created_at?: string
-          fingerprint_hash?: string
-          id?: number
-          kind?: string
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           created_at: string
@@ -668,15 +563,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      consume_submission_attempt: {
-        Args: {
-          p_fingerprint_hash: string
-          p_kind: string
-          p_limit?: number
-          p_window?: string
-        }
-        Returns: boolean
-      }
       create_booking_request: {
         Args: {
           p_arrival_window: string

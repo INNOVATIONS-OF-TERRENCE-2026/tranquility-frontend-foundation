@@ -880,15 +880,16 @@ function sanitizeAction(action: LucyAction): LucyAction | null {
     return action.href?.startsWith("/booking") ? action : { ...action, href: "/booking" };
   }
   if (!action.href) return action;
+  const href = action.href;
   if (
-    action.href.startsWith("/") &&
-    !action.href.startsWith("//") &&
-    !action.href.includes("://") &&
+    href.startsWith("/") &&
+    !href.startsWith("//") &&
+    !href.includes("://") &&
     SAFE_PUBLIC_ROUTES.some(
       (route) =>
-        action.href === route ||
-        action.href.startsWith(route + "?") ||
-        (route === "/service-area" && action.href.startsWith("/service-area/")),
+        href === route ||
+        href.startsWith(route + "?") ||
+        (route === "/service-area" && href.startsWith("/service-area/")),
     )
   ) {
     return action;
