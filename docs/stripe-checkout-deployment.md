@@ -1,5 +1,18 @@
 # Stripe Checkout deployment and safety gates
 
+## STOP: actual app Supabase project mismatch
+
+The GitHub application's checked-in `.env` uses project `qffnzhlxmuggzbndyjce` for `SUPABASE_PROJECT_ID`, `VITE_SUPABASE_PROJECT_ID`, and both Supabase URLs.
+
+The currently connected Supabase account only exposes `baetmqwuqsmxveglhucg`. The latter has received the additive SQL migration and new Edge Functions, but **it is NOT the application's currently configured environment**.
+
+Do not enable the frontend Stripe feature flag or merge this PR until the owner connects `qffnzhlxmuggzbndyjce` and the migration/functions are deployed and verified there, or authorizes an explicit full-data migration and app reconfiguration. Never switch the app's Supabase URL without backing up and reconciling existing bookings/auth/data.
+
+An inspection via the Lovable project showed four pending requests while the accessible `baet...` database has zero requests. This confirms the environments diverge.
+
+No live payment has been executed. Existing app records were not changed by the additive `baet...` staging deployment.
+
+
 Merchant: Tranquility Level Cleaning LLC
 Merchant account: `acct_1UO83aK5fdqZqrwT`
 Supabase project: `baetmqwuqsmxveglhucg`
