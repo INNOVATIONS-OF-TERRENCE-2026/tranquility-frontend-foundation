@@ -271,7 +271,7 @@ Deno.serve(async (req: Request) => {
       const [holds, bookings, blocks, checkout] = await Promise.all([
         admin.from("booking_holds").select("service_date, arrival_window")
           .eq("service_type", service).in("status", ["pending","confirmed"])
-          .gte("service_date", startDate).lte("service_date", endDate) : Promise.resolve({ data: [], error: null })),
+          .gte("service_date", startDate).lte("service_date", endDate),
         admin.from("bookings").select("service_date, arrival_window")
           .eq("service_type", service).eq("payment_status", "paid")
           .gte("service_date", startDate).lte("service_date", endDate),
@@ -280,7 +280,7 @@ Deno.serve(async (req: Request) => {
           .or(`service_type.is.null,service_type.eq.${service}`),
         (Deno.env.get("STRIPE_CHECKOUT_ENABLED") === "true" ? admin.from("checkout_reservations").select("service_date, arrival_window")
           .eq("service_type", service).in("status", ["creating", "awaiting_payment", "processing", "payment_exception"])
-          .gte("service_date", startDate).lte("service_date", endDate),
+          .gte("service_date", startDate).lte("service_date", endDate) : Promise.resolve({ data: [], error: null })),
       ]);
       if (holds.error || bookings.error || blocks.error || checkout.error) throw holds.error ?? bookings.error ?? blocks.error ?? checkout.error;
 
