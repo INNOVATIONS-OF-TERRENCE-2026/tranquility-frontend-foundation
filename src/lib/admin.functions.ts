@@ -71,11 +71,11 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
         .select("*")
         .order("sort_order", { ascending: true })
         .order("name", { ascending: true }),
-      context.supabase
+      (import.meta.env.VITE_STRIPE_CHECKOUT_ENABLED === "true" ? context.supabase
         .from("checkout_reservations")
         .select("id,booking_reference,service_type,customer_name,customer_email,service_date,arrival_window,estimate_cents,paid_cents,tax_cents,refunded_cents,status,stripe_session_id,stripe_payment_intent_id,created_at")
         .order("created_at", { ascending: false })
-        .limit(200),
+        .limit(200) : Promise.resolve({ data: [], error: null })),
     ]);
 
     const failure = [bookings, quotes, careers, inquiries, blocks, media, cities, payments].find(
