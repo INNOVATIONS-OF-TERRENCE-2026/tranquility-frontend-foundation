@@ -24,6 +24,20 @@ The GitHub integration is prepared and the additive Supabase checkout schema and
 
 Never commit a secret Stripe key or webhook signing secret into GitHub, Vite configuration, or the browser. The supplied `pk_live_...` key is a public client-side key and cannot create server-side Checkout Sessions.
 
+
+### Current cross-environment inventory (read-only)
+
+| Entity | Current Lovable app database | Owner's Supabase target |
+| --- | ---: | ---: |
+| Booking requests | 4 | 0 |
+| Contact inquiries | 4 | 0 |
+| Quotes | 1 | 0 |
+| Service cities | 19 | 15 |
+| Completed bookings | 0 | 0 |
+| Admin role records | 0 | 0 |
+
+The 19 vs. 15 service-city difference requires name/slug reconciliation, not a blind replacement. A migration needs explicit approval and an audited copy of relevant records, storage objects and account access before any published app switches environment.
+
 ## Supabase Edge Function secrets
 
 Set these in the Supabase Dashboard, Edge Functions -> Secrets:
