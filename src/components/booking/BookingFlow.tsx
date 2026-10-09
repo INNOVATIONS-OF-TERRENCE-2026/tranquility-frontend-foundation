@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, ArrowRight, Check, Info } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { BookingCalendar } from "@/components/booking/BookingCalendar";
 import { useLanguage } from "@/components/language/LanguageProvider";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { business } from "@/config/business";
+import { supabase } from "@/integrations/supabase/client";
 import { createBookingRequest } from "@/lib/booking.functions";
 import {
   BASE_BEDROOMS,
@@ -183,6 +184,8 @@ export function BookingFlow({
   });
   const [errors, setErrors] = useState<Partial<Record<ContactKey, string>>>({});
   const submitBooking = useServerFn(createBookingRequest);
+  const checkoutEnabled = import.meta.env.VITE_STRIPE_CHECKOUT_ENABLED === "true";
+  const checkoutAttempt = useRef<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [reference, setReference] = useState("");
@@ -297,8 +300,7 @@ export function BookingFlow({
     setSubmitting(true);
     setSubmitError("");
     try {
-      const result = await submitBooking({
-        data: {
+      const bookingData = {
           service,
           frequency,
           serviceDate: contact.date,
@@ -314,8 +316,19 @@ export function BookingFlow({
           notes,
           language,
           website: "",
-        },
-      });
+      } as const;
+      if (checkoutEnabled && reviewItems.length === 0) {
+        checkoutAttempt.current ??= crypto.randomUUID();
+        const { data: checkout, error } = await supabase.functions.invoke("stripe-checkout", {
+          body: { action: "create", idempotencyKey: checkoutAttempt.current, data: bookingData },
+        });
+        if (error || !checkout?.ok || typeof checkout.checkoutUrl !== "string") {
+          throw new Error(checkout?.error ?? "CHECKOUT_UNAVAILABLE");
+        }
+        window.location.assign(checkout.checkoutUrl);
+        return;
+      }
+      const result = await submitBooking({ data: bookingData });
       setReference(result.reference);
     } catch (error) {
       setSubmitError(
@@ -806,8 +819,12 @@ export function BookingFlow({
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {text({
-                en: "Confirm the information below, then send your booking request. No payment is collected and the appointment still requires Tranquility's confirmation.",
-                es: "Confirma la información y envía tu solicitud. No se cobra ningún pago y la cita aún requiere confirmación de Tranquility.",
+                en: checkoutEnabled && reviewItems.length === 0
+                  ? "Review your booking, then continue to secure Stripe Checkout. Applicable tax is calculated at checkout. The appointment still requires Tranquility confirmation."
+                  : "Confirm the information below, then send your booking request. No payment is collected and the appointment still requires Tranquility's confirmation.",
+                es: checkoutEnabled && reviewItems.length === 0
+                  ? "Revisa tu reserva y continúa al pago seguro de Stripe. Los impuestos se calculan al pagar. La cita aún requiere confirmación."
+                  : "Confirma la información y envía tu solicitud. No se cobra ningún pago y la cita aún requiere confirmación de Tranquility.",
               })}
             </p>
 
@@ -858,8 +875,10 @@ export function BookingFlow({
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button type="button" size="lg" disabled={submitting} onClick={handleSubmit}>
                 {submitting
-                  ? text({ en: "Sending request…", es: "Enviando solicitud…" })
-                  : text({ en: "Send booking request", es: "Enviar solicitud de reserva" })}
+                  ? text({ en: checkoutEnabled && reviewItems.length === 0 ? "Preparing payment…" : "Sending request…", es: checkoutEnabled && reviewItems.length === 0 ? "Preparando pago…" : "Enviando solicitud…" })
+                  : checkoutEnabled && reviewItems.length === 0
+                    ? text({ en: "Continue to secure payment", es: "Continuar al pago seguro" })
+                    : text({ en: "Send booking request", es: "Enviar solicitud de reserva" })}
               </Button>
               <Button asChild size="lg" variant="outline">
                 <a href={business.phoneHref}>
