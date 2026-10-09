@@ -11,3 +11,11 @@ verify_jwt = false
 
 [functions.giveaway-api]
 verify_jwt = false
+
+# Public customer checkout uses explicit validation, origin controls and rate limiting.
+[functions.stripe-checkout]
+verify_jwt = false
+
+# Stripe signs webhook payloads; it does not send a Supabase JWT.
+[functions.stripe-webhook]
+verify_jwt = false
