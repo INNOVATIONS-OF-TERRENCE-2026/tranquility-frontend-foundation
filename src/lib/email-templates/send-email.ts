@@ -28,8 +28,8 @@ export async function sendTemplateEmail(
       subject: entry.subject,
       html,
       text,
-      idempotency_key: options.idempotencyKey,
+      ...(options.idempotencyKey ? { idempotency_key: options.idempotencyKey } : {}),
     },
-    { apiKey: process.env.LOVABLE_API_KEY! },
+    { apiKey: process.env["LOVABLE_API_KEY"]! },
   );
 }

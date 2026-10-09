@@ -24,8 +24,8 @@ export const createBookingCheckout = createServerFn({ method: "POST" })
     if (error || !hold) throw new Error("Booking request not found.");
     if (hold.status !== "pending") throw new Error("This booking has already been paid.");
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: "2025-08-27.basil",
+    const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
+      apiVersion: "2026-09-30.endive",
     });
 
     // Reuse an open checkout session if the customer retries.
@@ -67,8 +67,8 @@ export const verifyBookingPayment = createServerFn({ method: "GET" })
   .validator((input) => z.object({ sessionId: z.string().trim().min(8).max(120) }).parse(input))
   .handler(async ({ data }) => {
     const { default: Stripe } = await import("stripe");
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: "2025-08-27.basil",
+    const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
+      apiVersion: "2026-09-30.endive",
     });
 
     const session = await stripe.checkout.sessions.retrieve(data.sessionId);
@@ -76,7 +76,7 @@ export const verifyBookingPayment = createServerFn({ method: "GET" })
       return { status: "pending" as const };
     }
 
-    const holdId = session.metadata?.hold_id;
+    const holdId = session.metadata?.["hold_id"];
     if (!holdId) throw new Error("Payment is missing its booking reference.");
 
     const { finalizePaidBooking } = await import("@/lib/booking-finalize.server");
