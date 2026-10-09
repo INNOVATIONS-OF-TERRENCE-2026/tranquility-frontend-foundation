@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: number
+          new_values: Json | null
+          old_values: Json | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: number
+          new_values?: Json | null
+          old_values?: Json | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: number
+          new_values?: Json | null
+          old_values?: Json | null
+        }
+        Relationships: []
+      }
       availability_blocks: {
         Row: {
           arrival_window: string | null
@@ -70,7 +103,6 @@ export type Database = {
           service_date: string
           service_type: string
           status: string
-          stripe_session_id: string | null
           updated_at: string
           zip: string
         }
@@ -93,7 +125,6 @@ export type Database = {
           service_date: string
           service_type: string
           status?: string
-          stripe_session_id?: string | null
           updated_at?: string
           zip: string
         }
@@ -116,7 +147,6 @@ export type Database = {
           service_date?: string
           service_type?: string
           status?: string
-          stripe_session_id?: string | null
           updated_at?: string
           zip?: string
         }
@@ -247,6 +277,93 @@ export type Database = {
         }
         Relationships: []
       }
+      checkout_reservations: {
+        Row: {
+          arrival_window: string
+          booking_reference: string
+          checkout_url: string | null
+          city: string
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          estimate_cents: number
+          expires_at: string
+          frequency: string
+          id: string
+          idempotency_key: string
+          paid_cents: number | null
+          refunded_cents: number
+          request_payload: Json
+          service_address: string
+          service_date: string
+          service_type: string
+          status: string
+          stripe_livemode: boolean | null
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          tax_cents: number | null
+          updated_at: string
+          zip: string
+        }
+        Insert: {
+          arrival_window: string
+          booking_reference: string
+          checkout_url?: string | null
+          city: string
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          estimate_cents: number
+          expires_at: string
+          frequency: string
+          id?: string
+          idempotency_key: string
+          paid_cents?: number | null
+          refunded_cents?: number
+          request_payload: Json
+          service_address: string
+          service_date: string
+          service_type: string
+          status?: string
+          stripe_livemode?: boolean | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          tax_cents?: number | null
+          updated_at?: string
+          zip: string
+        }
+        Update: {
+          arrival_window?: string
+          booking_reference?: string
+          checkout_url?: string | null
+          city?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          estimate_cents?: number
+          expires_at?: string
+          frequency?: string
+          id?: string
+          idempotency_key?: string
+          paid_cents?: number | null
+          refunded_cents?: number
+          request_payload?: Json
+          service_address?: string
+          service_date?: string
+          service_type?: string
+          status?: string
+          stripe_livemode?: boolean | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          tax_cents?: number | null
+          updated_at?: string
+          zip?: string
+        }
+        Relationships: []
+      }
       contact_inquiries: {
         Row: {
           created_at: string
@@ -318,12 +435,12 @@ export type Database = {
         }
         Insert: {
           city: string
-          consent_version: string
+          consent_version?: string
           created_at?: string
           entrant_email: string
           entrant_name: string
           entrant_phone: string
-          entry_for: string
+          entry_for?: string
           giveaway_month: string
           id?: string
           language?: string
@@ -376,7 +493,7 @@ export type Database = {
           ip_hash: string | null
           source_entity_id: string | null
           source_type: string
-          source_url: string | null
+          source_url: string
           user_agent: string | null
         }
         Insert: {
@@ -390,7 +507,7 @@ export type Database = {
           ip_hash?: string | null
           source_entity_id?: string | null
           source_type: string
-          source_url?: string | null
+          source_url: string
           user_agent?: string | null
         }
         Update: {
@@ -404,35 +521,80 @@ export type Database = {
           ip_hash?: string | null
           source_entity_id?: string | null
           source_type?: string
-          source_url?: string | null
+          source_url?: string
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      notification_deliveries: {
+        Row: {
+          channel: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          error_message: string | null
+          event_type: string
+          id: string
+          provider: string
+          provider_message_id: string | null
+          recipient: string
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          error_message?: string | null
+          event_type: string
+          id?: string
+          provider?: string
+          provider_message_id?: string | null
+          recipient: string
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          provider?: string
+          provider_message_id?: string | null
+          recipient?: string
+          sent_at?: string | null
+          status?: string
         }
         Relationships: []
       }
       quote_media: {
         Row: {
-          content_type: string
           created_at: string
           file_name: string
           id: string
+          mime_type: string
           object_path: string
           quote_request_id: string
           size_bytes: number
         }
         Insert: {
-          content_type: string
           created_at?: string
           file_name: string
           id?: string
+          mime_type: string
           object_path: string
           quote_request_id: string
           size_bytes: number
         }
         Update: {
-          content_type?: string
           created_at?: string
           file_name?: string
           id?: string
+          mime_type?: string
           object_path?: string
           quote_request_id?: string
           size_bytes?: number
@@ -465,6 +627,8 @@ export type Database = {
           scope: string
           status: string
           updated_at: string
+          upload_token_expires_at: string | null
+          upload_token_hash: string | null
         }
         Insert: {
           approximate_size?: string | null
@@ -483,6 +647,8 @@ export type Database = {
           scope: string
           status?: string
           updated_at?: string
+          upload_token_expires_at?: string | null
+          upload_token_hash?: string | null
         }
         Update: {
           approximate_size?: string | null
@@ -501,6 +667,8 @@ export type Database = {
           scope?: string
           status?: string
           updated_at?: string
+          upload_token_expires_at?: string | null
+          upload_token_hash?: string | null
         }
         Relationships: []
       }
@@ -540,6 +708,59 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_webhook_events: {
+        Row: {
+          event_type: string
+          processed_at: string
+          received_at: string
+          reservation_id: string | null
+          stripe_event_id: string
+        }
+        Insert: {
+          event_type: string
+          processed_at?: string
+          received_at?: string
+          reservation_id?: string | null
+          stripe_event_id: string
+        }
+        Update: {
+          event_type?: string
+          processed_at?: string
+          received_at?: string
+          reservation_id?: string | null
+          stripe_event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stripe_webhook_events_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "checkout_reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submission_attempts: {
+        Row: {
+          created_at: string
+          fingerprint_hash: string
+          id: number
+          kind: string
+        }
+        Insert: {
+          created_at?: string
+          fingerprint_hash: string
+          id?: number
+          kind: string
+        }
+        Update: {
+          created_at?: string
+          fingerprint_hash?: string
+          id?: number
+          kind?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -566,6 +787,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_stripe_checkout_event: {
+        Args: {
+          p_currency: string
+          p_event_id: string
+          p_livemode: boolean
+          p_payment_intent: string
+          p_reservation_id: string
+          p_session_id: string
+          p_subtotal_cents: number
+          p_tax_cents: number
+          p_total_cents: number
+          p_type: string
+        }
+        Returns: string
+      }
+      consume_submission_attempt: {
+        Args: {
+          p_fingerprint_hash: string
+          p_kind: string
+          p_limit?: number
+          p_window?: string
+        }
+        Returns: boolean
+      }
       create_booking_request: {
         Args: {
           p_arrival_window: string
@@ -585,6 +830,7 @@ export type Database = {
         Returns: string
       }
       pick_giveaway_winner: { Args: { p_month: string }; Returns: string }
+      read_tlc_stripe_webhook_secret: { Args: never; Returns: string }
       reserve_booking_hold: {
         Args: {
           p_arrival_window: string
@@ -599,6 +845,25 @@ export type Database = {
           p_service_address: string
           p_service_date: string
           p_service_type: string
+          p_zip: string
+        }
+        Returns: string
+      }
+      reserve_stripe_checkout: {
+        Args: {
+          p_address: string
+          p_city: string
+          p_date: string
+          p_email: string
+          p_estimate_cents: number
+          p_frequency: string
+          p_idempotency_key: string
+          p_name: string
+          p_payload: Json
+          p_phone: string
+          p_reference: string
+          p_service_type: string
+          p_window: string
           p_zip: string
         }
         Returns: string
