@@ -14,6 +14,8 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BookingRouteImport } from './routes/booking'
+import { Route as BookingCancelledRouteImport } from './routes/booking_.cancelled'
+import { Route as BookingSuccessRouteImport } from './routes/booking_.success'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as CommercialCleaningRouteImport } from './routes/commercial-cleaning'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -61,6 +63,16 @@ const AuthRoute = AuthRouteImport.update({
 const BookingRoute = BookingRouteImport.update({
   id: '/booking',
   path: '/booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingCancelledRoute = BookingCancelledRouteImport.update({
+  id: '/booking_/cancelled',
+  path: '/booking/cancelled',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingSuccessRoute = BookingSuccessRouteImport.update({
+  id: '/booking_/success',
+  path: '/booking/success',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersRoute = CareersRouteImport.update({
@@ -186,6 +198,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/booking/cancelled': typeof BookingCancelledRoute
+  '/booking/success': typeof BookingSuccessRoute
   '/booking': typeof BookingRoute
   '/careers': typeof CareersRoute
   '/commercial-cleaning': typeof CommercialCleaningRoute
@@ -216,6 +230,8 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/booking/cancelled': typeof BookingCancelledRoute
+  '/booking/success': typeof BookingSuccessRoute
   '/booking': typeof BookingRoute
   '/careers': typeof CareersRoute
   '/commercial-cleaning': typeof CommercialCleaningRoute
@@ -247,6 +263,8 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/booking_/cancelled': typeof BookingCancelledRoute
+  '/booking_/success': typeof BookingSuccessRoute
   '/booking': typeof BookingRoute
   '/careers': typeof CareersRoute
   '/commercial-cleaning': typeof CommercialCleaningRoute
@@ -280,6 +298,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/booking'
+    | '/booking/success'
+    | '/booking/cancelled'
     | '/careers'
     | '/commercial-cleaning'
     | '/contact'
@@ -310,6 +330,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/booking'
+    | '/booking/success'
+    | '/booking/cancelled'
     | '/careers'
     | '/commercial-cleaning'
     | '/contact'
@@ -340,6 +362,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/booking'
+    | '/booking_/success'
+    | '/booking_/cancelled'
     | '/careers'
     | '/commercial-cleaning'
     | '/contact'
@@ -370,6 +394,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  BookingCancelledRoute: typeof BookingCancelledRoute
+  BookingSuccessRoute: typeof BookingSuccessRoute
   BookingRoute: typeof BookingRoute
   CareersRoute: typeof CareersRoute
   CommercialCleaningRoute: typeof CommercialCleaningRoute
@@ -431,6 +457,20 @@ declare module '@tanstack/react-router' {
       path: '/booking'
       fullPath: '/booking'
       preLoaderRoute: typeof BookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking_/cancelled': {
+      id: '/booking_/cancelled'
+      path: '/booking/cancelled'
+      fullPath: '/booking/cancelled'
+      preLoaderRoute: typeof BookingCancelledRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking_/success': {
+      id: '/booking_/success'
+      path: '/booking/success'
+      fullPath: '/booking/success'
+      preLoaderRoute: typeof BookingSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/careers': {
@@ -602,6 +642,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  BookingCancelledRoute: BookingCancelledRoute,
+  BookingSuccessRoute: BookingSuccessRoute,
   BookingRoute: BookingRoute,
   CareersRoute: CareersRoute,
   CommercialCleaningRoute: CommercialCleaningRoute,

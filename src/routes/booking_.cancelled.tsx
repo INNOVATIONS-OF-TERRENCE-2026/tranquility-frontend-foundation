@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/language/LanguageProvider";
 
-export const Route = createFileRoute("/booking/cancelled")({
+export const Route = createFileRoute("/booking_/cancelled")({
   head: () => ({ meta: [{ title: "Checkout Cancelled | Tranquility Level Cleaning" }, { name: "robots", content: "noindex,nofollow" }] }),
   component: CancelledPage,
 });

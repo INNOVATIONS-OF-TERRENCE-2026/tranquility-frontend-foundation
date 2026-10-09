@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/language/LanguageProvider";
 
-export const Route = createFileRoute("/booking/success")({
+export const Route = createFileRoute("/booking_/success")({
   ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     session_id: typeof search.session_id === "string" ? search.session_id.slice(0, 200) : "",
