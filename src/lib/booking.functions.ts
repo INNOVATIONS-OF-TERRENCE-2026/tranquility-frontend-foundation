@@ -74,7 +74,7 @@ export const getBookingAvailability = createServerFn({ method: "GET" })
   .handler(async ({ data }): Promise<Availability> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const [holds, paid, blocks] = await Promise.all([
+    const [holds, paid, blocks, checkout] = await Promise.all([
       supabaseAdmin
         .from("booking_holds")
         .select("service_date, arrival_window")
@@ -95,14 +95,21 @@ export const getBookingAvailability = createServerFn({ method: "GET" })
         .lte("start_date", data.endDate)
         .gte("end_date", data.startDate)
         .or(`service_type.is.null,service_type.eq.${data.service}`),
+      (import.meta.env.VITE_STRIPE_CHECKOUT_ENABLED === "true" ? supabaseAdmin
+        .from("checkout_reservations")
+        .select("service_date, arrival_window")
+        .eq("service_type", data.service)
+        .gte("service_date", data.startDate)
+        .lte("service_date", data.endDate)
+        .in("status", ["creating", "awaiting_payment", "processing", "payment_exception"]) : Promise.resolve({ data: [], error: null })),
     ]);
 
-    if (holds.error || paid.error || blocks.error) {
+    if (holds.error || paid.error || blocks.error || checkout.error) {
       throw new Error("Unable to load availability.");
     }
 
     const used = new Map<string, number>();
-    for (const row of [...(holds.data ?? []), ...(paid.data ?? [])]) {
+    for (const row of [...(holds.data ?? []), ...(paid.data ?? []), ...(checkout.data ?? [])]) {
       const key = `${row.service_date}:${row.arrival_window}`;
       used.set(key, (used.get(key) ?? 0) + 1);
     }

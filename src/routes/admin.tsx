@@ -326,6 +326,7 @@ function AdminPage() {
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 ["Booking requests", data.bookings.length],
+                ["Paid online", data.payments.filter((item) => item.status === "paid").length],
                 ["Quotes", data.quotes.length],
                 ["Careers", data.careers.length],
                 ["Inquiries", data.inquiries.length],
@@ -351,6 +352,7 @@ function AdminPage() {
                 <TabsList className="h-auto w-full justify-start overflow-x-auto bg-card p-1">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="bookings">Bookings</TabsTrigger>
+                  <TabsTrigger value="payments">Payments</TabsTrigger>
                   <TabsTrigger value="quotes">Quotes</TabsTrigger>
                   <TabsTrigger value="careers">Careers</TabsTrigger>
                   <TabsTrigger value="inquiries">Inquiries</TabsTrigger>
@@ -453,6 +455,44 @@ function AdminPage() {
                     />
                   </TabsContent>
                 ))}
+                <TabsContent value="payments" className="mt-5 rounded-lg border bg-card p-5">
+                  <h2 className="text-xl font-semibold">Stripe payments and checkout attempts</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Verified server records. Refunds and payment status cannot be edited manually.
+                  </p>
+                  <div className="mt-5 space-y-3">
+                    {data.payments.filter((payment) =>
+                      `${payment.customer_name} ${payment.customer_email} ${payment.booking_reference} ${payment.status}`
+                        .toLowerCase().includes(search.trim().toLowerCase())
+                    ).map((payment) => (
+                      <article key={payment.id} className="rounded-lg border border-border p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="font-semibold text-ink">{payment.customer_name} · {payment.booking_reference}</p>
+                          <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold">{payment.status}</span>
+                        </div>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {payment.customer_email} · {payment.service_type} · {payment.service_date} · {payment.arrival_window}
+                        </p>
+                        <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-3">
+                          <div><dt className="text-muted-foreground">Service subtotal</dt><dd className="font-semibold">${(payment.estimate_cents / 100).toFixed(2)}</dd></div>
+                          <div><dt className="text-muted-foreground">Paid incl. tax</dt><dd className="font-semibold">{payment.paid_cents == null ? "Not verified" : `${(payment.paid_cents / 100).toFixed(2)}`}</dd></div>
+                          <div><dt className="text-muted-foreground">Refunded</dt><dd className="font-semibold">${(payment.refunded_cents / 100).toFixed(2)}</dd></div>
+                        </dl>
+                        {payment.stripe_payment_intent_id && (
+                          <a
+                            href={`https://dashboard.stripe.com/payments/${encodeURIComponent(payment.stripe_payment_intent_id)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-3 inline-block text-sm font-semibold text-moss underline"
+                          >
+                            View payment in Stripe
+                          </a>
+                        )}
+                      </article>
+                    ))}
+                    {data.payments.length === 0 && <p className="text-sm text-muted-foreground">No Stripe checkout attempts recorded yet.</p>}
+                  </div>
+                </TabsContent>
                 <TabsContent value="availability" className="mt-5 rounded-lg border bg-card p-5">
                   {data.blocks.length === 0 ? (
                     <p className="text-sm text-muted-foreground">No availability blocks.</p>
