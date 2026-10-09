@@ -5,15 +5,15 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
     handlers: {
       POST: async ({ request }) => {
         const signature = request.headers.get("stripe-signature");
-        const secret = process.env.STRIPE_WEBHOOK_SECRET;
+        const secret = process.env["STRIPE_WEBHOOK_SECRET"];
         if (!signature || !secret) {
           return new Response("Webhook not configured", { status: 400 });
         }
 
         const body = await request.text();
         const { default: Stripe } = await import("stripe");
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-          apiVersion: "2025-08-27.basil",
+        const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
+          apiVersion: "2026-09-30.endive",
         });
 
         let event;
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
 
         if (event.type === "checkout.session.completed") {
           const session = event.data.object;
-          const holdId = session.metadata?.hold_id;
+          const holdId = session.metadata?.["hold_id"];
           if (holdId && session.payment_status === "paid") {
             const { finalizePaidBooking } = await import("@/lib/booking-finalize.server");
             await finalizePaidBooking({
