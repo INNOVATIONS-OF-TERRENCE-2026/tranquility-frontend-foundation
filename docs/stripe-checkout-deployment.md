@@ -122,3 +122,15 @@ The separately supplied additional Move-In / Move-Out product ID must not be use
 ## 2026-10-09 Integration branch based on newest Lovable main
 
 This code was reconciled into branch `feature/stripe-payment-unification-20261009` from the newest `main` after Lovable generated a second uncompleted Stripe server flow. The sole enabled payment fulfillment path must be the signed Supabase `stripe-webhook` Edge Function. The legacy website route `/api/public/stripe-webhook` is retired (HTTP 410) on this integration branch. The GitHub migration filenames match the already-applied Supabase migration history. Do not replay these migrations. The live frontend checkout flag and server feature flags must remain disabled until tested and explicitly approved. Additional owner domain email configuration is outstanding.
+
+## Final activation audit, October 9, 2026
+
+- New consolidated PR: https://github.com/INNOVATIONS-OF-TERRENCE-2026/tranquility-frontend-foundation/pull/3; old conflicting PR #2 is closed without merging.
+- Verified existing destination rows: 5 booking requests, 4 inquiries, 1 quote, 19 cities. Zero processed checkout reservations or Stripe events. Recheck the original source just before deployment to prevent lost submissions.
+- Supabase Edge Functions `stripe-checkout` v3 and `stripe-webhook` v2 are active, but **deploying a function is not proof payment processing works**.
+- The live Stripe webhook `we_1UOEtxK5fdqZqrwTfPqa17P7` is enabled; live signing secret is encrypted in Supabase Vault with service-role-only reader.
+- Stripe Tax settings are active with default tax code `txcd_20010006`, verified as **Residential Cleaning Services**. **Stripe API reports ZERO tax registrations**. Obtain owner's Texas tax permit/registration verification and complete Stripe Tax registration before changing the `STRIPE_TAX_CONFIRMED` guard.
+- The server Checkout API key and test-mode webhook signing secret have **not** been verified in the Supabase Edge environment. They must be installed securely in Supabase Edge Function secrets (never GitHub and never public `VITE_` variables).
+- Owner notification emails from `heytlcleaning.com` remain dependent on verified sender DNS/domain and email service credentials. Existing Lovable email templates are preserved, but Edge webhook notifications have **not** been proven.
+- GitHub Actions quality check continues to fail with ZERO executed steps due to the GitHub organization billing authorization restriction. The `main` branch has the same pre-run failure. Do not claim lint/build/E2E tests passed.
+- Manual production approval is required after a verified Checkout test payment, signed webhook fulfillment, refund/failure tests, tax setup, admin verification, sender verification and final customer data synchronization. Keep production Checkout disabled until then.
