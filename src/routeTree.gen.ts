@@ -36,6 +36,7 @@ import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AdminGiveawayRouteImport } from './routes/admin_.giveaway'
 import { Route as ApiPublicQuoteMediaUploadRouteImport } from './routes/api/public/quote-media-upload'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -174,6 +175,11 @@ const ApiPublicQuoteMediaUploadRoute =
     path: '/api/public/quote-media-upload',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -203,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin/giveaway': typeof AdminGiveawayRoute
   '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin/giveaway': typeof AdminGiveawayRoute
   '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -262,6 +270,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/admin_/giveaway': typeof AdminGiveawayRoute
   '/api/public/quote-media-upload': typeof ApiPublicQuoteMediaUploadRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -293,6 +302,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/giveaway'
     | '/api/public/quote-media-upload'
+    | '/api/public/stripe-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/giveaway'
     | '/api/public/quote-media-upload'
+    | '/api/public/stripe-webhook'
   id:
     | '__root__'
     | '/'
@@ -351,6 +362,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin_/giveaway'
     | '/api/public/quote-media-upload'
+    | '/api/public/stripe-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -381,6 +393,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   AdminGiveawayRoute: typeof AdminGiveawayRoute
   ApiPublicQuoteMediaUploadRoute: typeof ApiPublicQuoteMediaUploadRoute
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -574,6 +587,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicQuoteMediaUploadRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -605,6 +625,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   AdminGiveawayRoute: AdminGiveawayRoute,
   ApiPublicQuoteMediaUploadRoute: ApiPublicQuoteMediaUploadRoute,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
