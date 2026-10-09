@@ -66,8 +66,8 @@ function BookingPage() {
           es: "Crea una solicitud de limpieza que se adapte a tu hogar.",
         })}
         intro={text({
-          en: "Choose the service, frequency, room scope, approved add-ons, and an available date and arrival window. Review your estimate before sending the request. No payment details are collected.",
-          es: "Elige el servicio, la frecuencia, el alcance por habitaciones, los servicios adicionales aprobados y una fecha y ventana de llegada disponibles. Revisa tu estimado antes de enviar la solicitud. No se recopilan datos de pago.",
+          en: "Choose the service, frequency, room scope, approved add-ons, and an available date and arrival window. Review your estimate. When online checkout is enabled, eligible bookings continue to secure Stripe payment. Card details are never entered on this website.",
+          es: "Elige el servicio, la frecuencia, el alcance por habitaciones, los servicios adicionales aprobados y una fecha y ventana de llegada disponibles. Revisa tu estimado. Cuando los pagos en línea estén habilitados, las reservas elegibles continuarán al pago seguro de Stripe. No se ingresan datos de tarjeta en este sitio.",
         })}
       />
       <section className="bg-background py-12 md:py-16 lg:py-20">
