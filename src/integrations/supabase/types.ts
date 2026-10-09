@@ -70,6 +70,7 @@ export type Database = {
           service_date: string
           service_type: string
           status: string
+          stripe_session_id: string | null
           updated_at: string
           zip: string
         }
@@ -92,6 +93,7 @@ export type Database = {
           service_date: string
           service_type: string
           status?: string
+          stripe_session_id?: string | null
           updated_at?: string
           zip: string
         }
@@ -114,6 +116,7 @@ export type Database = {
           service_date?: string
           service_type?: string
           status?: string
+          stripe_session_id?: string | null
           updated_at?: string
           zip?: string
         }

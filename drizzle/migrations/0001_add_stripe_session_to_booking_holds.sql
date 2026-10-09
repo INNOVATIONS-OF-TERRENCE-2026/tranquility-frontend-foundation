@@ -1,0 +1,2 @@
+ALTER TABLE public.booking_holds ADD COLUMN IF NOT EXISTS stripe_session_id text;
+CREATE INDEX IF NOT EXISTS booking_holds_stripe_session_idx ON public.booking_holds (stripe_session_id) WHERE stripe_session_id IS NOT NULL;
