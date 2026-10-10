@@ -51,7 +51,6 @@ const Email = ({
   address,
   total,
   paymentReference,
-  paymentReference,
   <Html lang="en" dir="ltr">
     <Head />
     <Preview>{`Paid booking ${reference ?? ""} - ${customerName ?? "customer"}`}</Preview>
