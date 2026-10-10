@@ -25,7 +25,6 @@ interface Props {
   address?: string;
   total?: string;
   paymentReference?: string;
-  paymentReference?: string;
 }
 
 const serviceLabels: Record<string, string> = {
@@ -53,7 +52,6 @@ const Email = ({
   total,
   paymentReference,
   paymentReference,
-}: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
     <Preview>{`Paid booking ${reference ?? ""} - ${customerName ?? "customer"}`}</Preview>
