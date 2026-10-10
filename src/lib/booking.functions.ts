@@ -190,5 +190,9 @@ export const createBookingRequest = createServerFn({ method: "POST" })
       throw new Error("Unable to save your booking request.");
     }
 
-    return { ok: true as const, reference };
+    // Only scopes with a final, non-"starting at" price and no custom-review
+    // flags may be charged online; everything else stays a request.
+    const payable =
+      estimate.reviewFlags.length === 0 && !estimate.hasStartingAt && estimate.total > 0;
+    return { ok: true as const, reference, payable };
   });
