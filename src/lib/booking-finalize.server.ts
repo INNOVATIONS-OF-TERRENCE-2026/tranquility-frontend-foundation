@@ -10,13 +10,10 @@ interface SessionLike {
   metadata: Record<string, string> | null;
 }
 
-/** Re-derives payability from the stored server estimate. */
+/** Reads the payability decision recorded by the server when the hold was created. */
 export function isPayableHold(payload: unknown) {
-  const p = payload as { estimate?: { total?: number }; partialHome?: boolean; sqft?: number | null };
-  if (!p?.estimate?.total || p.estimate.total <= 0) return false;
-  if (p.partialHome) return false;
-  if (typeof p.sqft === "number" && p.sqft >= 3000) return false;
-  return true;
+  const p = payload as { estimate?: { total?: number; payable?: boolean } } | null;
+  return Boolean(p?.estimate?.payable && (p.estimate.total ?? 0) > 0);
 }
 
 /**

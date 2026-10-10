@@ -159,6 +159,10 @@ export const createBookingRequest = createServerFn({ method: "POST" })
       partialHome: data.partialHome,
     });
 
+    // Only scopes with a final, non-"starting at" price and no custom-review
+    // flags may be charged online; everything else stays a request.
+    const payable =
+      estimate.reviewFlags.length === 0 && !estimate.hasStartingAt && estimate.total > 0;
     const reference = newReference();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -181,6 +185,7 @@ export const createBookingRequest = createServerFn({ method: "POST" })
           serviceSubtotal: estimate.serviceSubtotal,
           addOnTotal: estimate.addOnTotal,
           total: estimate.total,
+          payable,
         },
       },
     });
@@ -190,9 +195,5 @@ export const createBookingRequest = createServerFn({ method: "POST" })
       throw new Error("Unable to save your booking request.");
     }
 
-    // Only scopes with a final, non-"starting at" price and no custom-review
-    // flags may be charged online; everything else stays a request.
-    const payable =
-      estimate.reviewFlags.length === 0 && !estimate.hasStartingAt && estimate.total > 0;
     return { ok: true as const, reference, payable };
   });

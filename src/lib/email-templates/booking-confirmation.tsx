@@ -24,6 +24,7 @@ interface Props {
   arrivalWindow?: string;
   address?: string;
   total?: string;
+  paymentReference?: string;
 }
 
 const serviceLabels: Record<string, string> = {
@@ -49,6 +50,7 @@ const Email = ({
   arrivalWindow,
   address,
   total,
+  paymentReference,
 }: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
