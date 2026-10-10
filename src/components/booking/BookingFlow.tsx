@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { business } from "@/config/business";
 import { createBookingRequest } from "@/lib/booking.functions";
+import { createBookingCheckout } from "@/lib/booking-payments.functions";
 import {
   BASE_BEDROOMS,
   BASE_FULL_BATHS,
@@ -186,6 +187,17 @@ export function BookingFlow({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [reference, setReference] = useState("");
+  const [payable, setPayable] = useState(false);
+  const startCheckout = useServerFn(createBookingCheckout);
+  const [checkoutCancelled, setCheckoutCancelled] = useState(false);
+  useEffect(() => {
+    setCheckoutCancelled(new URLSearchParams(window.location.search).get("checkout") === "cancelled");
+  }, []);
+
+  async function goToCheckout(ref: string) {
+    const { url } = await startCheckout({ data: { reference: ref, origin: window.location.origin } });
+    window.location.assign(url);
+  }
 
   const sqftNumber = sqft ? Number(sqft) : null;
   const estimate = useMemo(
@@ -317,6 +329,20 @@ export function BookingFlow({
         },
       });
       setReference(result.reference);
+      setPayable(result.payable);
+      if (result.payable) {
+        try {
+          await goToCheckout(result.reference);
+          return;
+        } catch {
+          setSubmitError(
+            text({
+              en: "Secure checkout could not start. Your booking is saved; please try again or call us.",
+              es: "No se pudo iniciar el pago seguro. Tu reserva está guardada; inténtalo de nuevo o llámanos.",
+            }),
+          );
+        }
+      }
     } catch (error) {
       setSubmitError(
         error instanceof Error && error.message.includes("SLOT_UNAVAILABLE")
@@ -703,8 +729,8 @@ export function BookingFlow({
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {text({
-                en: "This sends a service request. Your preferred date and window are not confirmed until Tranquility follows up.",
-                es: "Esto envía una solicitud de servicio. La fecha y el horario preferidos no quedan confirmados hasta que Tranquility se comunique contigo.",
+                en: "Choose an open date and arrival window. Bookings with a final online price continue to secure checkout; custom scopes are reviewed by Tranquility first.",
+                es: "Elige una fecha y un horario disponibles. Las reservas con precio final en línea continúan al pago seguro; los alcances personalizados los revisa Tranquility primero.",
               })}
             </p>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
@@ -776,13 +802,23 @@ export function BookingFlow({
           </div>
         )}
 
+        {checkoutCancelled && !reference && (
+          <p className="mb-6 rounded-xl border border-border bg-accent/35 p-4 text-sm" role="status">
+            {text({
+              en: "Checkout was canceled. Your card was not charged.",
+              es: "Se canceló el pago. No se hizo ningún cargo a tu tarjeta.",
+            })}
+          </p>
+        )}
         {step === 5 && reference ? (
           <div className="py-8 text-center" aria-live="polite">
             <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-accent text-moss">
               <Check className="size-7" aria-hidden="true" />
             </span>
             <h2 className="mt-5 text-3xl">
-              {text({ en: "Request received", es: "Solicitud recibida" })}
+              {payable
+                ? text({ en: "Booking saved", es: "Reserva guardada" })
+                : text({ en: "Request received", es: "Solicitud recibida" })}
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
               {text({
@@ -793,6 +829,38 @@ export function BookingFlow({
             <p className="mt-5 text-sm font-semibold text-ink">
               {text({ en: "Reference", es: "Referencia" })}: {reference}
             </p>
+            {payable && (
+              <div className="mt-6">
+                <Button
+                  type="button"
+                  disabled={submitting}
+                  onClick={async () => {
+                    setSubmitting(true);
+                    setSubmitError("");
+                    try {
+                      await goToCheckout(reference);
+                    } catch {
+                      setSubmitError(
+                        text({
+                          en: "Secure checkout could not start. Please try again or call us.",
+                          es: "No se pudo iniciar el pago seguro. Inténtalo de nuevo o llámanos.",
+                        }),
+                      );
+                      setSubmitting(false);
+                    }
+                  }}
+                >
+                  {submitting
+                    ? text({ en: "Preparing secure checkout...", es: "Preparando pago seguro..." })
+                    : text({ en: "Continue to secure checkout", es: "Continuar al pago seguro" })}
+                </Button>
+                {submitError && (
+                  <p className="mt-3 text-sm text-destructive" role="alert">
+                    {submitError}
+                  </p>
+                )}
+              </div>
+            )}
             <Button asChild variant="outline" className="mt-7">
               <a href={business.phoneHref}>
                 {text({ en: "Call", es: "Llama al" })} {business.phoneDisplay}
@@ -806,8 +874,12 @@ export function BookingFlow({
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {text({
-                en: "Confirm the information below, then send your booking request. No payment is collected and the appointment still requires Tranquility's confirmation.",
-                es: "Confirma la información y envía tu solicitud. No se cobra ningún pago y la cita aún requiere confirmación de Tranquility.",
+                en: reviewItems.length > 0
+                  ? "Confirm the information below, then send your request. This scope needs a custom review, so no payment is collected now."
+                  : "Review your service details, then continue to secure checkout. Secure checkout powered by Stripe.",
+                es: reviewItems.length > 0
+                  ? "Confirma la información y envía tu solicitud. Este alcance requiere revisión personalizada, así que no se cobra ahora."
+                  : "Revisa los detalles de tu servicio y continúa al pago seguro. Pago seguro con Stripe.",
               })}
             </p>
 
@@ -858,8 +930,15 @@ export function BookingFlow({
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button type="button" size="lg" disabled={submitting} onClick={handleSubmit}>
                 {submitting
-                  ? text({ en: "Sending request…", es: "Enviando solicitud…" })
-                  : text({ en: "Send booking request", es: "Enviar solicitud de reserva" })}
+                  ? reviewItems.length > 0
+                    ? text({ en: "Sending request...", es: "Enviando solicitud..." })
+                    : text({ en: "Preparing secure checkout...", es: "Preparando pago seguro..." })
+                  : reviewItems.length > 0
+                    ? text({ en: "Send booking request", es: "Enviar solicitud de reserva" })
+                    : text({
+                        en: `Pay ${money(estimate.total)} securely`,
+                        es: `Pagar ${money(estimate.total)} de forma segura`,
+                      })}
               </Button>
               <Button asChild size="lg" variant="outline">
                 <a href={business.phoneHref}>

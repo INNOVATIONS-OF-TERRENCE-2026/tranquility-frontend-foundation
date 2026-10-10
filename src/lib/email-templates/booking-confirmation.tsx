@@ -24,6 +24,7 @@ interface Props {
   arrivalWindow?: string;
   address?: string;
   total?: string;
+  paymentReference?: string;
 }
 
 const serviceLabels: Record<string, string> = {
@@ -49,7 +50,7 @@ const Email = ({
   arrivalWindow,
   address,
   total,
-}: Props) => (
+  paymentReference,
   <Html lang="en" dir="ltr">
     <Head />
     <Preview>{`Paid booking ${reference ?? ""} - ${customerName ?? "customer"}`}</Preview>
@@ -91,6 +92,12 @@ const Email = ({
           <Hr style={divider} />
           <Text style={row}>
             <strong>Paid in full:</strong> {total ?? "-"}
+          </Text>
+          <Text style={row}>
+            <strong>Payment status:</strong> PAID
+          </Text>
+          <Text style={row}>
+            <strong>Stripe payment reference:</strong> {paymentReference ?? "-"}
           </Text>
         </Section>
         <Text style={muted}>

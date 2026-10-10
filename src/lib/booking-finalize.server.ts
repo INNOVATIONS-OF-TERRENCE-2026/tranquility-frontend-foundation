@@ -1,25 +1,52 @@
 import { business } from "@/config/business";
 import { money } from "@/config/pricing";
 
-interface FinalizeInput {
-  holdId: string;
-  paymentReference: string;
+interface SessionLike {
+  id: string;
+  payment_status: string;
+  amount_total: number | null;
+  currency: string | null;
+  payment_intent: string | { id: string } | null;
+  metadata: Record<string, string> | null;
+}
+
+/** Reads the payability decision recorded by the server when the hold was created. */
+export function isPayableHold(payload: unknown) {
+  const p = payload as { estimate?: { total?: number; payable?: boolean } } | null;
+  return Boolean(p?.estimate?.payable && (p.estimate.total ?? 0) > 0);
 }
 
 /**
- * Idempotently converts a booking hold into a paid booking and notifies the
- * owner. Safe to call from both the Stripe webhook and the success-page
- * verification path.
+ * Verifies a Stripe Checkout Session against the booking hold, then
+ * idempotently converts the hold into a paid booking and notifies the owner.
+ * Used by both the webhook (authoritative) and the confirmation page.
  */
-export async function finalizePaidBooking({ holdId, paymentReference }: FinalizeInput) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+export async function finalizeFromSession(session: SessionLike) {
+  const holdId = session.metadata?.["hold_id"];
+  const reference = session.metadata?.["reference"];
+  if (session.payment_status !== "paid" || !holdId || !reference) {
+    throw new Error("Session is not a paid booking.");
+  }
 
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: hold, error: holdError } = await supabaseAdmin
     .from("booking_holds")
     .select("*")
     .eq("id", holdId)
     .maybeSingle();
   if (holdError || !hold) throw new Error("Booking hold not found.");
+  if (hold.booking_reference !== reference) throw new Error("Reference mismatch.");
+  if (hold.stripe_session_id && hold.stripe_session_id !== session.id) {
+    throw new Error("Session mismatch.");
+  }
+  if (session.amount_total !== hold.estimate_cents || session.currency !== "usd") {
+    throw new Error("Amount mismatch.");
+  }
+
+  const paymentReference =
+    typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : (session.payment_intent?.id ?? session.id);
 
   const { data: existing } = await supabaseAdmin
     .from("bookings")
@@ -42,36 +69,52 @@ export async function finalizePaidBooking({ holdId, paymentReference }: Finalize
       city: hold.city,
       zip: hold.zip,
       estimate_cents: hold.estimate_cents,
-      deposit_cents: hold.estimate_cents,
+      deposit_cents: session.amount_total,
       payment_reference: paymentReference,
       payment_status: "paid",
       request_payload: hold.request_payload,
     });
-    if (insertError) throw new Error("Unable to record the paid booking.");
+    // A unique-violation means a concurrent call already recorded it.
+    if (insertError && insertError.code !== "23505") {
+      throw new Error("Unable to record the paid booking.");
+    }
 
-    await supabaseAdmin.from("booking_holds").update({ status: "confirmed" }).eq("id", hold.id);
+    await supabaseAdmin
+      .from("booking_holds")
+      .update({ status: "confirmed", stripe_session_id: session.id })
+      .eq("id", hold.id);
 
-    try {
-      const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
-      await sendTemplateEmail("booking-confirmation", business.email, {
-        templateData: {
-          reference: hold.booking_reference,
-          customerName: hold.customer_name,
-          customerEmail: hold.customer_email,
-          customerPhone: hold.customer_phone,
-          service: hold.service_type,
-          frequency: hold.frequency === "onetime" ? "One-time" : hold.frequency,
-          serviceDate: hold.service_date,
-          arrivalWindow: hold.arrival_window,
-          address: `${hold.service_address}, ${hold.city}, TX ${hold.zip}`,
-          total: money(hold.estimate_cents / 100),
-        },
-        idempotencyKey: `booking-confirmation-${hold.id}`,
-      });
-    } catch (error) {
-      console.error("booking confirmation email failed", error);
+    if (!insertError) {
+      try {
+        const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
+        await sendTemplateEmail("booking-confirmation", business.email, {
+          replyTo: hold.customer_email,
+          subject: `PAID BOOKING | Tranquility Level Cleaning | ${hold.booking_reference}`,
+          templateData: {
+            reference: hold.booking_reference,
+            customerName: hold.customer_name,
+            customerEmail: hold.customer_email,
+            customerPhone: hold.customer_phone,
+            service: hold.service_type,
+            frequency: hold.frequency === "onetime" ? "One-time" : hold.frequency,
+            serviceDate: hold.service_date,
+            arrivalWindow: hold.arrival_window,
+            address: `${hold.service_address}, ${hold.city}, TX ${hold.zip}`,
+            total: money(hold.estimate_cents / 100),
+            paymentReference,
+          },
+          idempotencyKey: `booking-confirmation-${hold.id}`,
+        });
+      } catch (error) {
+        console.error("booking confirmation email failed", error);
+      }
     }
   }
 
-  return { reference: hold.booking_reference as string };
+  return {
+    reference: hold.booking_reference as string,
+    serviceType: hold.service_type as string,
+    serviceDate: hold.service_date as string,
+    amountCents: hold.estimate_cents as number,
+  };
 }

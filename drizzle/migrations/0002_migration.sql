@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS bookings_hold_id_unique ON public.bookings (hold_id) WHERE hold_id IS NOT NULL;
